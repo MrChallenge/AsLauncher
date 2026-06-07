@@ -1,0 +1,141 @@
+{
+  "groups": [
+    {
+      "minecraftVersion": "26.0+",
+      "runtimes": [
+        {
+          "name": "JDK 25 Liberica",
+          "runtimeFolder": "runtime-25-liberica",
+          "downloadUrl": "https://download.bell-sw.com/java/25+37/bellsoft-jdk25+37-windows-amd64.zip",
+          "description": "desc_JDK 25 Liberica"
+        }
+      ]
+    },
+
+    {
+      "minecraftVersion": "1.21.x",
+      "runtimes": [
+        {
+          "name": "JDK 21.0.6 Liberica",
+          "runtimeFolder": "runtime-21-liberica",
+          "downloadUrl": "https://download.bell-sw.com/java/21.0.6+10/bellsoft-jdk21.0.6+10-windows-amd64.zip",
+          "description": "desc_JDK 21.0.6 Liberica"
+        },
+        {
+          "name": "JDK 21.0.10 b7 Temurin",
+          "runtimeFolder": "runtime-21-temurin",
+          "downloadUrl": "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.10%2B7/OpenJDK21U-jdk_x64_windows_hotspot_21.0.10_7.zip",
+          "description": "desc_JDK 21.0.10 b7 Temurin"
+        },
+        {
+          "name": "JDK 21.0.2 GraalVM",
+          "runtimeFolder": "runtime-21-graalvm",
+          "downloadUrl": "https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-21.0.2/graalvm-community-jdk-21.0.2_windows-x64_bin.zip",
+          "description": "desc_JDK 21.0.2 GraalVM"
+        },
+        {
+          "name": "JDK 21.0.2 OpenJDK",
+          "runtimeFolder": "runtime-21-openjdk",
+          "downloadUrl": "https://aka.ms/download-jdk/microsoft-jdk-21.0.6-windows-x64.zip",
+          "description": "desc_JDK 21.0.2 OpenJDK"
+        },
+        {
+          "name": "JDK 21 Corretto",
+          "runtimeFolder": "runtime-21-corretto",
+          "downloadUrl": "https://corretto.aws/downloads/latest/amazon-corretto-21-x64-windows-jdk.zip",
+          "description": "desc_JDK 21 Corretto"
+        }
+      ]
+    },
+
+    {
+      "minecraftVersion": "1.17 - 1.20.6",
+      "runtimes": [
+        {
+          "name": "JDK 17.0.14",
+          "runtimeFolder": "runtime-17",
+          "downloadUrl": "https://cdn.azul.com/zulu/bin/zulu17.56.15-ca-jdk17.0.14-win_x64.zip",
+          "description": "desc_JDK 17.0.14"
+        },
+        {
+          "name": "JDK 17.0.18 Liberica",
+          "runtimeFolder": "runtime-17-liberica",
+          "downloadUrl": "https://download.bell-sw.com/java/17.0.18+10/bellsoft-jdk17.0.18+10-windows-amd64.zip",
+          "description": "desc_JDK 17.0.18 Liberica"
+        },
+        {
+          "name": "JDK 17.0.18 Liberica Full",
+          "runtimeFolder": "runtime-17-liberica-full",
+          "downloadUrl": "https://download.bell-sw.com/java/17.0.18+10/bellsoft-jdk17.0.18+10-windows-amd64-full.zip",
+          "description": "desc_JDK 17.0.18 Liberica Full"
+        },
+        {
+          "name": "JDK 17.0.9 Temurin",
+          "runtimeFolder": "runtime-17-temurin",
+          "downloadUrl": "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.9%2B9.1/OpenJDK17U-jdk_x64_windows_hotspot_17.0.9_9.zip",
+          "description": "desc_JDK 17.0.9 Temurin"
+        }
+      ]
+    },
+
+    {
+      "minecraftVersion": "1.13 - 1.16.5",
+      "runtimes": [
+        {
+          "name": "JRE 8u432",
+          "runtimeFolder": "runtime-8u432",
+          "downloadUrl": "https://cdn.azul.com/zulu/bin/zulu8.82.0.21-ca-jre8.0.432-win_x64.zip",
+          "description": "desc_JRE 8u432"
+        },
+        {
+          "name": "JRE 8u442 Liberica",
+          "runtimeFolder": "runtime-8u442-liberica",
+          "downloadUrl": "https://download.bell-sw.com/java/8u442+7/bellsoft-jre8u442+7-windows-amd64.zip",
+          "description": "desc_JRE 8u442 Liberica"
+        },
+        {
+          "name": "JRE 8u442 Liberica Full",
+          "runtimeFolder": "runtime-8u442-liberica-full",
+          "downloadUrl": "https://download.bell-sw.com/java/8u442+7/bellsoft-jdk8u442+7-windows-amd64-full.zip",
+          "description": "desc_JRE 8u442 Liberica Full"
+        },
+        {
+          "name": "JRE 8u442 b6 Temurin",
+          "runtimeFolder": "runtime-8u442-temurin",
+          "downloadUrl": "https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u442-b06/OpenJDK8U-jre_x64_windows_hotspot_8u442b06.zip",
+          "description": "desc_JRE 8u442 b6 Temurin"
+        }
+      ]
+    },
+
+    {
+      "minecraftVersion": "1.8 - 1.12.2",
+      "runtimes": [
+        {
+          "name": "JDK 8u392",
+          "runtimeFolder": "runtime-8u392",
+          "downloadUrl": "https://cdn.azul.com/zulu/bin/zulu8.74.0.17-ca-jdk8.0.392-win_x64.zip",
+          "description": "desc_JDK 8u392"
+        },
+        {
+          "name": "JDK 8u372 b7 Temurin",
+          "runtimeFolder": "runtime-8u372-temurin",
+          "downloadUrl": "https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u372-b07/OpenJDK8U-jdk_x64_windows_hotspot_8u372b07.zip",
+          "description": "desc_JDK 8u372 b7 Temurin"
+        }
+      ]
+    },
+
+    {
+      "minecraftVersion": "1.2 - 1.7.10",
+      "runtimes": [
+        {
+          "name": "JRE 8u292",
+          "runtimeFolder": "runtime-8u292",
+          "downloadUrl": "https://cdn.azul.com/zulu/bin/zulu8.54.0.21-ca-jre8.0.292-win_x64.zip",
+          "description": "desc_JRE 8u292"
+        }
+      ]
+    }
+  ]
+}

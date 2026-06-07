@@ -1,0 +1,94 @@
+﻿<Application x:Class="AsLauncher.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:AsLauncher"
+             xmlns:core="clr-namespace:AsLauncher.Core"
+             StartupUri="MainWindow.xaml">
+
+    <Application.Resources>
+
+        <core:ProgressWidthConverter x:Key="ProgressWidthConverter"/>
+        
+        <Style TargetType="ToolTip">
+
+            <Setter Property="ToolTipService.InitialShowDelay" Value="0"/>
+            <Setter Property="ToolTipService.BetweenShowDelay" Value="0"/>
+            <Setter Property="ToolTipService.ShowDuration" Value="60000"/>
+            <Setter Property="Background" Value="#1A1A1A"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#2A2A2A"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="14"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="MaxWidth" Value="320"/>
+            <Setter Property="Template">
+
+                <Setter.Value>
+
+                    <ControlTemplate TargetType="ToolTip">
+
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="10">
+
+                            <ContentPresenter Margin="2"/>
+
+                        </Border>
+
+                    </ControlTemplate>
+
+                </Setter.Value>
+
+            </Setter>
+
+        </Style>
+
+        <Style x:Key="ModernProgressBar" TargetType="ProgressBar">
+
+            <Setter Property="Height" Value="6"/>
+            <Setter Property="Background" Value="#2A2A2A"/>
+            <Setter Property="Foreground" Value="#4CC2FF"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+
+                <Setter.Value>
+
+                    <ControlTemplate TargetType="ProgressBar">
+
+                        <Grid ClipToBounds="True">
+
+                            <Border Background="{TemplateBinding Background}" CornerRadius="3"/>
+
+                            <Border x:Name="PART_Indicator"
+                                    Background="{TemplateBinding Foreground}"
+                                    CornerRadius="3"
+                                    HorizontalAlignment="Left">
+
+                                <Border.Width>
+
+                                    <MultiBinding Converter="{StaticResource ProgressWidthConverter}">
+
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="ActualWidth"/>
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Value"/>
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Maximum"/>
+
+                                    </MultiBinding>
+
+                                </Border.Width>
+
+                            </Border>
+
+                        </Grid>
+
+                    </ControlTemplate>
+
+                </Setter.Value>
+
+            </Setter>
+
+        </Style>
+
+    </Application.Resources>
+
+</Application>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="256"
+   height="256"
+   viewBox="0 0 67.733333 67.733333"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.2 (f4327f4, 2025-05-13)"
+   sodipodi:docname="IconModpacks.svg"
+   xml:space="preserve"
+   inkscape:export-filename="..\Assets\Icons\Sidebar\IconModpacks.png"
+   inkscape:export-xdpi="36"
+   inkscape:export-ydpi="36"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="2.8284271"
+     inkscape:cx="128.16311"
+     inkscape:cy="133.28963"
+     inkscape:window-width="1920"
+     inkscape:window-height="991"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" /><defs
+     id="defs1" /><g
+     inkscape:groupmode="layer"
+     id="layer1"
+     inkscape:label="all"><path
+       id="rect6"
+       style="fill:#ffffff;stroke-width:1.35592;stroke-linecap:round;stroke-linejoin:round"
+       transform="matrix(0.86702276,-0.49826854,0.86702276,0.49826854,0,0)"
+       d="M -1.6075867,52.96559 H -13.688937 l 0,-32.216935 12.0813503,0 m 0,0 8.0542335,0 m 0,0 H 18.527997 V 52.96559 H 6.4466467"
+       sodipodi:nodetypes="cccccccccc"
+       inkscape:label="shape1" /><path
+       id="rect7"
+       style="fill:#ffffff;stroke-width:1.27531;stroke-linecap:round;stroke-linejoin:round"
+       d="m 34.704952,34.738857 10.593896,-6.151563 v 10.583334 l 3.531299,-4.696354 3.531298,0.595312 V 24.486253 L 62.955341,18.33469 V 50.326851 L 34.704952,66.731018 Z"
+       sodipodi:nodetypes="cccccccccc"
+       inkscape:label="shape2" /><path
+       id="rect7-6"
+       style="display:inline;fill:#ffffff;stroke-width:1.27531;stroke-linecap:round;stroke-linejoin:round"
+       d="M 33.321989,34.738857 5.071603,18.33469 v 31.992161 l 28.250386,16.404167 z"
+       sodipodi:nodetypes="ccccc"
+       inkscape:label="shape3" /></g></svg>

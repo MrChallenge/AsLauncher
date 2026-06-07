@@ -1,0 +1,212 @@
+﻿<UserControl x:Class="AsLauncher.Views.Components.JavaRuntimeCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:lang="clr-namespace:AsLauncher.Resources.Localization"
+             xmlns:models="clr-namespace:AsLauncher.Models">
+
+    <Border Background="#1A1A1A"
+            CornerRadius="12"
+            Padding="10"
+            Margin="0,0,0,10">
+
+        <Grid>
+
+            <Grid.ColumnDefinitions>
+
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+
+            </Grid.ColumnDefinitions>
+
+            <StackPanel>
+
+                <TextBlock Text="{Binding MinecraftVersion, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                           Foreground="White"
+                           FontSize="22"
+                           FontWeight="SemiBold"/>
+
+                <ItemsControl ItemsSource="{Binding RuntimeList, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                              Margin="0,6,0,0">
+
+                    <ItemsControl.ItemTemplate>
+
+                        <DataTemplate>
+
+                            <Grid Margin="0,4,0,0">
+
+                                <Grid.ColumnDefinitions>
+
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="{Binding Name}"
+                                           Foreground="#AAAAAA"
+                                           FontSize="13"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Left">
+
+                                    <TextBlock.ToolTip>
+
+                                        <TextBlock Text="{Binding Description}" TextWrapping="Wrap"/>
+
+                                    </TextBlock.ToolTip>
+                                    
+                                </TextBlock>
+
+                                <ProgressBar Width="300"
+                                             Margin="0,8,0,0"
+                                             Minimum="0"
+                                             Maximum="100"
+                                             Value="{Binding Progress}"
+                                             Visibility="{Binding IsProgressVisible}"
+                                             Style="{StaticResource ModernProgressBar}"
+                                             HorizontalAlignment="Right"/>
+
+                                <Button Grid.Column="1"
+                                        Tag="{Binding}"
+                                        Width="86"
+                                        Height="28"
+                                        Margin="14,0,0,0"
+                                        FontSize="12"
+                                        FontWeight="SemiBold"
+                                        Cursor="Hand"
+                                        Click="InstallButton_Click">
+
+                                    <Button.Style>
+
+                                        <Style TargetType="Button">
+
+                                            <!-- DEFAULT -->
+
+                                            <Setter Property="Content" Value="{x:Static lang:Resources.ButtonInstallJava}"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="Background" Value="#16A34A"/>
+                                            <Setter Property="BorderBrush" Value="Transparent"/>
+                                            <Setter Property="BorderThickness" Value="1"/>
+
+                                            <!-- TEMPLATE -->
+
+                                            <Setter Property="Template">
+
+                                                <Setter.Value>
+
+                                                    <ControlTemplate TargetType="Button">
+
+                                                        <Border Background="{TemplateBinding Background}"
+                                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                                CornerRadius="8"
+                                                                SnapsToDevicePixels="True">
+
+                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                                                        </Border>
+
+                                                    </ControlTemplate>
+
+                                                </Setter.Value>
+
+                                            </Setter>
+
+                                            <!-- TRIGGERS -->
+
+                                            <Style.Triggers>
+
+                                                <!-- HOVER -->
+
+                                                <Trigger Property="IsMouseOver" Value="True">
+
+                                                    <Setter Property="Background" Value="#15803D"/>
+
+                                                </Trigger>
+
+                                                <!-- INSTALL -->
+
+                                                <DataTrigger Binding="{Binding InstallState}"
+                                                             Value="{x:Static models:RuntimeInstallState.NotInstalled}">
+
+                                                    <Setter Property="Content" Value="{x:Static lang:Resources.ButtonInstallJava}"/>
+                                                    <Setter Property="Background" Value="#16A34A"/>
+
+                                                </DataTrigger>
+
+                                                <!-- DOWNLOADING -->
+
+                                                <DataTrigger Binding="{Binding InstallState}"
+                                                             Value="{x:Static models:RuntimeInstallState.Downloading}">
+
+                                                    <Setter Property="Content" Value="Отменить"/>
+                                                    <Setter Property="Background" Value="#5865F2"/>
+
+                                                </DataTrigger>
+
+                                                <!-- INSTALLING -->
+
+                                                <DataTrigger Binding="{Binding InstallState}"
+                                                             Value="{x:Static models:RuntimeInstallState.Installing}">
+
+                                                    <Setter Property="Content" Value="Установка..."/>
+                                                    <Setter Property="Background" Value="#01000000"/>
+                                                    <Setter Property="BorderBrush" Value="#3f48a8"/>
+                                                    <Setter Property="IsEnabled" Value="False"/>
+
+                                                </DataTrigger>
+
+                                                <!-- INSTALLED -->
+
+                                                <DataTrigger Binding="{Binding InstallState}"
+                                                             Value="{x:Static models:RuntimeInstallState.Installed}">
+
+                                                    <Setter Property="Content"  Value="Удалить"/>
+                                                    <Setter Property="Background" Value="#DA373C"/>
+
+                                                </DataTrigger>
+
+                                                <!-- REMOVING -->
+
+                                                <DataTrigger Binding="{Binding InstallState}"
+                                                             Value="{x:Static models:RuntimeInstallState.Removing}">
+
+                                                    <Setter Property="Content" Value="Удаление..."/>
+                                                    <Setter Property="Background" Value="#1A1A1A"/>
+                                                    <Setter Property="BorderBrush" Value="#DA373C"/>
+                                                    <Setter Property="IsEnabled" Value="False"/>
+
+                                                </DataTrigger>
+
+                                                <!-- DELETED -->
+
+                                                <DataTrigger Binding="{Binding InstallState}" Value="{x:Static models:RuntimeInstallState.Deleted}">
+
+                                                    <Setter Property="Content" Value="Восстановить"/>
+                                                    <Setter Property="Background" Value="White"/>
+                                                    <Setter Property="Foreground" Value="#111111"/>
+                                                    <Setter Property="BorderBrush" Value="#01000000"/>
+
+                                                </DataTrigger>
+
+                                            </Style.Triggers>
+
+                                        </Style>
+
+                                    </Button.Style>
+
+                                </Button>
+
+                            </Grid>
+
+                        </DataTemplate>
+
+                    </ItemsControl.ItemTemplate>
+
+                </ItemsControl>
+
+            </StackPanel>
+
+        </Grid>
+
+    </Border>
+
+</UserControl>

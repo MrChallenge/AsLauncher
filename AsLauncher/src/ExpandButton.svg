@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="256"
+   height="256"
+   viewBox="0 0 67.733335 67.733335"
+   version="1.1"
+   id="svg1"
+   xml:space="preserve"
+   inkscape:export-filename="..\Assets\Buttons\Sidebar\ExpandButton.png"
+   inkscape:export-xdpi="36"
+   inkscape:export-ydpi="36"
+   inkscape:version="1.4.2 (f4327f4, 2025-05-13)"
+   sodipodi:docname="ExpandButton.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="1.9653759"
+     inkscape:cx="76.066874"
+     inkscape:cy="107.86741"
+     inkscape:window-width="1920"
+     inkscape:window-height="991"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer2" /><defs
+     id="defs1" /><g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="all"
+     transform="rotate(180,33.88846,33.88846)"><path
+       id="rect2"
+       style="fill:none;stroke:#ffffff;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
+       d="m 30.946104,41.804167 -7.9375,-7.9375 7.9375,-7.9375"
+       sodipodi:nodetypes="ccc"
+       inkscape:label="shape2" /><path
+       id="rect1"
+       style="fill:none;stroke:#ffffff;stroke-width:3.75797;stroke-opacity:1"
+       d="M 45.514833,7.6847539 H 10.635715 c -1.6348327,0 -2.9509616,1.3161289 -2.9509616,2.9509611 v 46.505491 c 0,1.634833 1.3161289,2.950961 2.9509616,2.950961 H 45.514833 V 7.6847539 h 11.626372 c 1.634833,0 2.950962,1.3161289 2.950962,2.9509611 v 46.505491 c 0,1.634833 -1.316129,2.950961 -2.950962,2.950961 H 45.514833"
+       sodipodi:nodetypes="cssssccssssc"
+       inkscape:label="shape1" /></g></svg>

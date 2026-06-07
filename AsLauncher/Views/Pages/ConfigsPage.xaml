@@ -1,0 +1,51 @@
+﻿<UserControl x:Class="AsLauncher.Views.Pages.ConfigsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:lang="clr-namespace:AsLauncher.Resources.Localization"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:AsLauncher.Views.Pages"
+             xmlns:components="clr-namespace:AsLauncher.Views.Components"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:models="clr-namespace:AsLauncher.Models"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800">
+
+    <Grid Background="#111111">
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+
+            <StackPanel Margin="24">
+
+                <!-- Title -->
+                <TextBlock Text="Java Runtimes"
+                           Foreground="White"
+                           FontSize="24"
+                           FontWeight="SemiBold"
+                           Margin="0,0,0,24"/>
+
+                <!-- Java Runtimes -->
+                <ItemsControl ItemsSource="{Binding RuntimeGroups}">
+
+                    <ItemsControl.ItemTemplate>
+
+                        <DataTemplate>
+
+                            <components:JavaRuntimeCard
+                                MinecraftVersion="{Binding MinecraftVersion}"
+                                RuntimeList="{Binding Runtimes}" />
+
+                        </DataTemplate>
+
+                    </ItemsControl.ItemTemplate>
+
+                </ItemsControl>
+
+            </StackPanel>
+
+        </ScrollViewer>
+
+    </Grid>
+
+</UserControl>
