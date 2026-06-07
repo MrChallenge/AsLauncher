@@ -31,6 +31,7 @@ namespace AsLauncher
                 SidebarTitle.Text = "As";
 
                 NavGeneralText.Visibility = Visibility.Collapsed;
+                NavVanillaText.Visibility = Visibility.Collapsed;
                 NavModpacksText.Visibility = Visibility.Collapsed;
                 NavConfigsText.Visibility = Visibility.Collapsed;
 
@@ -43,6 +44,7 @@ namespace AsLauncher
                 SidebarTitle.Text = "AsLauncher";
 
                 NavGeneralText.Visibility = Visibility.Visible;
+                NavVanillaText.Visibility = Visibility.Visible;
                 NavModpacksText.Visibility = Visibility.Visible;
                 NavConfigsText.Visibility = Visibility.Visible;
 
@@ -60,6 +62,11 @@ namespace AsLauncher
         private void GeneralButton_Click(object sender, RoutedEventArgs e)
         {
             MainContent.Content = new GeneralPage();
+        }
+
+        private void VanillaButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainContent.Content = new VanillaPage();
         }
 
         private void ModpacksButton_Click(object sender, RoutedEventArgs e)

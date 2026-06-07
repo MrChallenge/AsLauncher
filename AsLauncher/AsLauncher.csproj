@@ -34,6 +34,7 @@
     <Resource Include="Assets\Icons\Sidebar\IconConfigs.png" />
     <Resource Include="Assets\Icons\Sidebar\IconGeneral.png" />
     <Resource Include="Assets\Icons\Sidebar\IconModpacks.png" />
+    <Resource Include="Assets\Icons\Sidebar\IconVanilla.png" />
   </ItemGroup>
 
   <ItemGroup>

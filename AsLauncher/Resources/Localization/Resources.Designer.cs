@@ -106,6 +106,15 @@ namespace AsLauncher.Resources.Localization {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Vanilla.
+        /// </summary>
+        public static string MainLabelsVanilla {
+            get {
+                return ResourceManager.GetString("MainLabelsVanilla", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на no desc.
         /// </summary>
         public static string PagespaceGeneralDesc {

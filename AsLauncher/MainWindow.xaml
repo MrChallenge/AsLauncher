@@ -177,6 +177,30 @@
 
                 </Button>
 
+                <!-- Vanilla -->
+                <Button x:Name="VanillaButton"
+                        Click="VanillaButton_Click"
+                        Style="{StaticResource SidebarButtonStyle}">
+
+                    <StackPanel x:Name="VanillaStackPanel" Orientation="Horizontal">
+
+                        <Image Source="Assets/Icons/Sidebar/IconVanilla.png"
+                               Width="22"
+                               Height="22"
+                               Margin="10,0,12,0"
+                               VerticalAlignment="Center"
+                               RenderOptions.BitmapScalingMode="HighQuality"
+                               SnapsToDevicePixels="True"
+                               UseLayoutRounding="True"/>
+
+                        <TextBlock x:Name="NavVanillaText"
+                                   Text="{x:Static lang:Resources.MainLabelsVanilla}"
+                                   VerticalAlignment="Center"/>
+
+                    </StackPanel>
+
+                </Button>
+
                 <!-- Modpacks -->
                 <Button x:Name="ModpacksButton"
                         Click="ModpacksButton_Click"

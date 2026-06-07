@@ -34,7 +34,7 @@
 
                             <components:JavaRuntimeCard
                                 MinecraftVersion="{Binding MinecraftVersion}"
-                                RuntimeList="{Binding Runtimes}" />
+                                RuntimeList="{Binding Runtimes}"/>
 
                         </DataTemplate>
 

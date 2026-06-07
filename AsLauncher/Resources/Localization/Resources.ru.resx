@@ -129,6 +129,9 @@
   <data name="MainLabelsGeneral" xml:space="preserve">
     <value>Главная</value>
   </data>
+  <data name="MainLabelsVanilla" xml:space="preserve">
+    <value>Ванила</value>
+  </data>
   <data name="MainLabelsModpacks" xml:space="preserve">
     <value>Модпаки</value>
   </data>
