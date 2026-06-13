@@ -61,20 +61,74 @@ namespace AsLauncher.Resources.Localization {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Installed.
+        ///   Ищет локализованную строку, похожую на Cancel.
         /// </summary>
-        public static string ButtonInstalledJava {
+        public static string ButtonCancel {
             get {
-                return ResourceManager.GetString("ButtonInstalledJava", resourceCulture);
+                return ResourceManager.GetString("ButtonCancel", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Install.
         /// </summary>
-        public static string ButtonInstallJava {
+        public static string ButtonInstall {
             get {
-                return ResourceManager.GetString("ButtonInstallJava", resourceCulture);
+                return ResourceManager.GetString("ButtonInstall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Installed.
+        /// </summary>
+        public static string ButtonInstalled {
+            get {
+                return ResourceManager.GetString("ButtonInstalled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Installing.
+        /// </summary>
+        public static string ButtonInstalling {
+            get {
+                return ResourceManager.GetString("ButtonInstalling", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Launch.
+        /// </summary>
+        public static string ButtonLaunch {
+            get {
+                return ResourceManager.GetString("ButtonLaunch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Reinstall.
+        /// </summary>
+        public static string ButtonReinstall {
+            get {
+                return ResourceManager.GetString("ButtonReinstall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Remove.
+        /// </summary>
+        public static string ButtonRemove {
+            get {
+                return ResourceManager.GetString("ButtonRemove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Removing.
+        /// </summary>
+        public static string ButtonRemoving {
+            get {
+                return ResourceManager.GetString("ButtonRemoving", resourceCulture);
             }
         }
         
@@ -111,6 +165,60 @@ namespace AsLauncher.Resources.Localization {
         public static string MainLabelsVanilla {
             get {
                 return ResourceManager.GetString("MainLabelsVanilla", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Alpha.
+        /// </summary>
+        public static string MinecraftVersionAlpha {
+            get {
+                return ResourceManager.GetString("MinecraftVersionAlpha", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Beta.
+        /// </summary>
+        public static string MinecraftVersionBeta {
+            get {
+                return ResourceManager.GetString("MinecraftVersionBeta", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Release.
+        /// </summary>
+        public static string MinecraftVersionRelease {
+            get {
+                return ResourceManager.GetString("MinecraftVersionRelease", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Example: 1.21.1 / 1 21 1 / 1211.
+        /// </summary>
+        public static string MinecraftVersionSearchExample {
+            get {
+                return ResourceManager.GetString("MinecraftVersionSearchExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Minecraft Versions.
+        /// </summary>
+        public static string MinecraftVersionsList {
+            get {
+                return ResourceManager.GetString("MinecraftVersionsList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Snapshot.
+        /// </summary>
+        public static string MinecraftVersionSnapshot {
+            get {
+                return ResourceManager.GetString("MinecraftVersionSnapshot", resourceCulture);
             }
         }
         

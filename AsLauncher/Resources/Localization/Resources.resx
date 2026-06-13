@@ -117,10 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ButtonInstallJava" xml:space="preserve">
+  <data name="ButtonInstall" xml:space="preserve">
     <value>Install</value>
   </data>
-  <data name="ButtonInstalledJava" xml:space="preserve">
+  <data name="ButtonReinstall" xml:space="preserve">
+    <value>Reinstall</value>
+  </data>
+  <data name="ButtonRemoving" xml:space="preserve">
+    <value>Removing</value>
+  </data>
+  <data name="ButtonRemove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="ButtonInstalling" xml:space="preserve">
+    <value>Installing</value>
+  </data>
+  <data name="ButtonInstalled" xml:space="preserve">
     <value>Installed</value>
   </data>
   <data name="MainLabelsConfigs" xml:space="preserve">
@@ -137,5 +149,29 @@
   </data>
   <data name="PagespaceGeneralDesc" xml:space="preserve">
     <value>no desc</value>
+  </data>
+  <data name="ButtonCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ButtonLaunch" xml:space="preserve">
+    <value>Launch</value>
+  </data>
+  <data name="MinecraftVersionRelease" xml:space="preserve">
+    <value>Release</value>
+  </data>
+  <data name="MinecraftVersionSnapshot" xml:space="preserve">
+    <value>Snapshot</value>
+  </data>
+  <data name="MinecraftVersionBeta" xml:space="preserve">
+    <value>Beta</value>
+  </data>
+  <data name="MinecraftVersionAlpha" xml:space="preserve">
+    <value>Alpha</value>
+  </data>
+  <data name="MinecraftVersionSearchExample" xml:space="preserve">
+    <value>Example: 1.21.1 / 1 21 1 / 1211</value>
+  </data>
+  <data name="MinecraftVersionsList" xml:space="preserve">
+    <value>Minecraft Versions</value>
   </data>
 </root>

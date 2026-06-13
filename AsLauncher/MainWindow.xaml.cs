@@ -1,7 +1,9 @@
-﻿using AsLauncher.Views.Pages;
+﻿using AsLauncher.Core;
+using AsLauncher.Services;
+using AsLauncher.Views.Pages;
 using System.Windows;
 using System.Windows.Media;
-using AsLauncher.Services;
+using System.Windows.Media.Imaging;
 
 namespace AsLauncher
 {
@@ -11,9 +13,13 @@ namespace AsLauncher
         {
             InitializeComponent();
 
+            Icon = BitmapFrame.Create(Core.Theme.LauncherIcon);
+
             UpdateSidebarState();
 
             RuntimeManager.Initialize();
+
+            MinecraftVersionManager.Initialize();
 
             RuntimeManager.CleanupDeletedFolder();
 

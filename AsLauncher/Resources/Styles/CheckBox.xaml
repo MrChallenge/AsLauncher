@@ -1,0 +1,59 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:core="clr-namespace:AsLauncher.Core">
+
+    <Style x:Key="ModernCheckBox" TargetType="CheckBox">
+
+        <Setter Property="Foreground" Value="{x:Static core:Theme.White}"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+
+            <Setter.Value>
+
+                <ControlTemplate TargetType="CheckBox">
+
+                    <StackPanel Orientation="Horizontal">
+
+                        <Border x:Name="Box"
+                                Width="18"
+                                Height="18"
+                                CornerRadius="4"
+                                Background="{x:Static core:Theme.Middleground}"
+                                BorderBrush="{x:Static core:Theme.Grey}"
+                                BorderThickness="1">
+
+                            <Path x:Name="CheckMark"
+                                  Visibility="Collapsed"
+                                  Stroke="{x:Static core:Theme.White}"
+                                  StrokeThickness="3"
+                                  StrokeStartLineCap="Square"
+                                  StrokeEndLineCap="Square"
+                                  Data="{x:Static core:Theme.CheckBoxMark}"/>
+
+                        </Border>
+
+                        <ContentPresenter Margin="8,0,0,0" VerticalAlignment="Center"/>
+
+                    </StackPanel>
+
+                    <ControlTemplate.Triggers>
+
+                        <Trigger Property="IsChecked" Value="True">
+
+                            <Setter TargetName="Box" Property="Background" Value="{x:Static core:Theme.Green}"/>
+                            <Setter TargetName="Box" Property="BorderBrush" Value="{x:Static core:Theme.Transparent}"/>
+                            <Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/>
+
+                        </Trigger>
+
+                    </ControlTemplate.Triggers>
+
+                </ControlTemplate>
+
+            </Setter.Value>
+
+        </Setter>
+
+    </Style>
+
+</ResourceDictionary>

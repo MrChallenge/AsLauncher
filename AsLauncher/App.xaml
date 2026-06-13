@@ -7,87 +7,97 @@
 
     <Application.Resources>
 
-        <core:ProgressWidthConverter x:Key="ProgressWidthConverter"/>
-        
-        <Style TargetType="ToolTip">
+        <ResourceDictionary>
 
-            <Setter Property="ToolTipService.InitialShowDelay" Value="0"/>
-            <Setter Property="ToolTipService.BetweenShowDelay" Value="0"/>
-            <Setter Property="ToolTipService.ShowDuration" Value="60000"/>
-            <Setter Property="Background" Value="#1A1A1A"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderBrush" Value="#2A2A2A"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="14"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="MaxWidth" Value="320"/>
-            <Setter Property="Template">
+            <ResourceDictionary.MergedDictionaries>
 
-                <Setter.Value>
+                <ResourceDictionary Source="Resources\Styles\CheckBox.xaml"/>
+                
+            </ResourceDictionary.MergedDictionaries>
 
-                    <ControlTemplate TargetType="ToolTip">
+            <core:ProgressWidthConverter x:Key="ProgressWidthConverter"/>
 
-                        <Border Background="{TemplateBinding Background}"
+            <Style TargetType="ToolTip">
+
+                <Setter Property="ToolTipService.InitialShowDelay" Value="0"/>
+                <Setter Property="ToolTipService.BetweenShowDelay" Value="0"/>
+                <Setter Property="ToolTipService.ShowDuration" Value="60000"/>
+                <Setter Property="Background" Value="{x:Static core:Theme.Background}"/>
+                <Setter Property="Foreground" Value="{x:Static core:Theme.White}"/>
+                <Setter Property="BorderBrush" Value="{x:Static core:Theme.ProgressBar}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Padding" Value="14"/>
+                <Setter Property="FontSize" Value="13"/>
+                <Setter Property="MaxWidth" Value="320"/>
+                <Setter Property="Template">
+
+                    <Setter.Value>
+
+                        <ControlTemplate TargetType="ToolTip">
+
+                            <Border Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 CornerRadius="10">
 
-                            <ContentPresenter Margin="2"/>
+                                <ContentPresenter Margin="2"/>
 
-                        </Border>
+                            </Border>
 
-                    </ControlTemplate>
+                        </ControlTemplate>
 
-                </Setter.Value>
+                    </Setter.Value>
 
-            </Setter>
+                </Setter>
 
-        </Style>
+            </Style>
 
-        <Style x:Key="ModernProgressBar" TargetType="ProgressBar">
+            <Style x:Key="ModernProgressBar" TargetType="ProgressBar">
 
-            <Setter Property="Height" Value="6"/>
-            <Setter Property="Background" Value="#2A2A2A"/>
-            <Setter Property="Foreground" Value="#4CC2FF"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Template">
+                <Setter Property="Height" Value="6"/>
+                <Setter Property="Background" Value="{x:Static core:Theme.ProgressBar}"/>
+                <Setter Property="Foreground" Value="{x:Static core:Theme.LightBlue}"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Template">
 
-                <Setter.Value>
+                    <Setter.Value>
 
-                    <ControlTemplate TargetType="ProgressBar">
+                        <ControlTemplate TargetType="ProgressBar">
 
-                        <Grid ClipToBounds="True">
+                            <Grid ClipToBounds="True">
 
-                            <Border Background="{TemplateBinding Background}" CornerRadius="3"/>
+                                <Border Background="{TemplateBinding Background}" CornerRadius="3"/>
 
-                            <Border x:Name="PART_Indicator"
+                                <Border x:Name="PART_Indicator"
                                     Background="{TemplateBinding Foreground}"
                                     CornerRadius="3"
                                     HorizontalAlignment="Left">
 
-                                <Border.Width>
+                                    <Border.Width>
 
-                                    <MultiBinding Converter="{StaticResource ProgressWidthConverter}">
+                                        <MultiBinding Converter="{StaticResource ProgressWidthConverter}">
 
-                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="ActualWidth"/>
-                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Value"/>
-                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Maximum"/>
+                                            <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="ActualWidth"/>
+                                            <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Value"/>
+                                            <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Maximum"/>
 
-                                    </MultiBinding>
+                                        </MultiBinding>
 
-                                </Border.Width>
+                                    </Border.Width>
 
-                            </Border>
+                                </Border>
 
-                        </Grid>
+                            </Grid>
 
-                    </ControlTemplate>
+                        </ControlTemplate>
 
-                </Setter.Value>
+                    </Setter.Value>
 
-            </Setter>
+                </Setter>
 
-        </Style>
+            </Style>
+
+        </ResourceDictionary>
 
     </Application.Resources>
 

@@ -117,10 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ButtonInstallJava" xml:space="preserve">
+  <data name="ButtonInstall" xml:space="preserve">
     <value>Установить</value>
   </data>
-  <data name="ButtonInstalledJava" xml:space="preserve">
+  <data name="ButtonReinstall" xml:space="preserve">
+    <value>Восстановить</value>
+  </data>
+  <data name="ButtonRemoving" xml:space="preserve">
+    <value>Удаление...</value>
+  </data>
+  <data name="ButtonRemove" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="ButtonInstalling" xml:space="preserve">
+    <value>Установка...</value>
+  </data>
+  <data name="ButtonInstalled" xml:space="preserve">
     <value>Установлено</value>
   </data>
   <data name="MainLabelsConfigs" xml:space="preserve">
@@ -137,5 +149,29 @@
   </data>
   <data name="PagespaceGeneralDesc" xml:space="preserve">
     <value>Здесь пока ничего нет :(</value>
+  </data>
+  <data name="ButtonCancel" xml:space="preserve">
+    <value>Отменить</value>
+  </data>
+  <data name="ButtonLaunch" xml:space="preserve">
+    <value>Запустить</value>
+  </data>
+  <data name="MinecraftVersionRelease" xml:space="preserve">
+    <value>Релиз</value>
+  </data>
+  <data name="MinecraftVersionSnapshot" xml:space="preserve">
+    <value>Снапшот</value>
+  </data>
+  <data name="MinecraftVersionBeta" xml:space="preserve">
+    <value>Бета</value>
+  </data>
+  <data name="MinecraftVersionAlpha" xml:space="preserve">
+    <value>Альфа</value>
+  </data>
+  <data name="MinecraftVersionSearchExample" xml:space="preserve">
+    <value>Пример: 1.21.1 / 1 21 1 / 1211</value>
+  </data>
+  <data name="MinecraftVersionsList" xml:space="preserve">
+    <value>Версии Майнкрафта</value>
   </data>
 </root>

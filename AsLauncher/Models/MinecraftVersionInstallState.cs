@@ -1,14 +1,12 @@
-﻿
-namespace AsLauncher.Models
+﻿namespace AsLauncher.Models
 {
-    public enum RuntimeInstallState
+    public enum MinecraftVersionInstallState
     {
         NotInstalled,
         Downloading,
         Installing,
         Installed,
         Removing,
-        Removed,
-        Cancelled
+        Removed
     }
 }

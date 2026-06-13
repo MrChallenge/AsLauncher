@@ -2,14 +2,14 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:lang="clr-namespace:AsLauncher.Resources.Localization"
+        xmlns:core="clr-namespace:AsLauncher.Core"
         Title="AsLauncher"
-        Icon="Assets/Icons/App/AsLauncher.ico"
         Width="1280"
         Height="720"
         MinWidth="854"
         MinHeight="480"
         WindowStartupLocation="CenterScreen"
-        Background="#111111"
+        Background="{x:Static core:Theme.Background}"
         FontFamily="Segoe UI">
 
     <Window.Resources>
@@ -17,8 +17,8 @@
         <!-- Sidebar Button Style -->
         <Style x:Key="SidebarButtonStyle" TargetType="Button">
 
-            <Setter Property="Background" Value="#181818"/>
-            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="{x:Static core:Theme.Middleground}"/>
+            <Setter Property="Foreground" Value="{x:Static core:Theme.White}"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="Height" Value="45"/>
@@ -50,7 +50,7 @@
 
                                 <Setter TargetName="Border"
                                         Property="Background"
-                                        Value="#252525"/>
+                                        Value="{x:Static core:Theme.Foreground}"/>
 
                             </Trigger>
 
@@ -58,7 +58,7 @@
 
                                 <Setter TargetName="Border"
                                         Property="Background"
-                                        Value="#303030"/>
+                                        Value="{x:Static core:Theme.ForegroundHovered}"/>
 
                             </Trigger>
 
@@ -85,7 +85,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- Sidebar -->
-        <Border Grid.Column="0" Background="#181818">
+        <Border Grid.Column="0" Background="{x:Static core:Theme.Middleground}">
 
             <StackPanel Margin="20">
 
@@ -94,7 +94,7 @@
                         Height="32"
                         HorizontalAlignment="Right"
                         Margin="0,0,0,20"
-                        Background="Transparent"
+                        Background="{x:Static core:Theme.Transparent}"
                         BorderThickness="0"
                         Cursor="Hand"
                         FocusVisualStyle="{x:Null}"
@@ -105,7 +105,7 @@
                         <ControlTemplate TargetType="Button">
 
                             <Border x:Name="ButtonBorder"
-                                    Background="Transparent"
+                                    Background="{x:Static core:Theme.Transparent}"
                                     Opacity="1">
 
                                 <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -131,7 +131,7 @@
                     <Image x:Name="SidebarToggleIcon"
                            Width="18"
                            Height="18"
-                           Source="Assets/Buttons/Sidebar/ExpandButton.png"
+                           Source="{x:Static core:Theme.ExpandButton}"
                            RenderTransformOrigin="0.5,0.5">
 
                         <Image.RenderTransform>
@@ -146,11 +146,11 @@
 
                 <!--- Sidebar Title -->
                 <TextBlock x:Name="SidebarTitle"
-                               Text="AsLauncher"
-                               FontSize="28"
-                               FontWeight="SemiBold"
-                               Foreground="White"
-                               Margin="0,10,0,40"/>
+                           Text="AsLauncher"
+                           FontSize="28"
+                           FontWeight="SemiBold"
+                           Foreground="{x:Static core:Theme.White}"
+                           Margin="0,10,0,40"/>
 
                 <!--- Sidebar Buttons -->
                 <!-- General -->
@@ -160,7 +160,7 @@
 
                     <StackPanel x:Name="GeneralStackPanel" Orientation="Horizontal">
 
-                        <Image Source="Assets/Icons/Sidebar/IconGeneral.png"
+                        <Image Source="{x:Static core:Theme.IconGeneral}"
                                Width="22"
                                Height="22"
                                Margin="10,0,12,0"
@@ -184,7 +184,7 @@
 
                     <StackPanel x:Name="VanillaStackPanel" Orientation="Horizontal">
 
-                        <Image Source="Assets/Icons/Sidebar/IconVanilla.png"
+                        <Image Source="{x:Static core:Theme.IconVanilla}"
                                Width="22"
                                Height="22"
                                Margin="10,0,12,0"
@@ -208,7 +208,7 @@
 
                     <StackPanel x:Name="ModpacksStackPanel" Orientation="Horizontal">
 
-                        <Image Source="Assets/Icons/Sidebar/IconModpacks.png"
+                        <Image Source="{x:Static core:Theme.IconModpacks}"
                                Width="22"
                                Height="22"
                                Margin="10,0,12,0"
@@ -232,7 +232,7 @@
 
                     <StackPanel x:Name="ConfigsStackPanel" Orientation="Horizontal">
 
-                        <Image Source="Assets/Icons/Sidebar/IconConfigs.png"
+                        <Image Source="{x:Static core:Theme.IconConfigs}"
                                Width="22"
                                Height="22"
                                Margin="10,0,12,0"

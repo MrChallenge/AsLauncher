@@ -8,17 +8,15 @@ namespace AsLauncher.Views.Components
 {
     public partial class JavaRuntimeCard : UserControl
     {
-        public static readonly DependencyProperty MinecraftVersionProperty =
-            DependencyProperty.Register(
-                nameof(MinecraftVersion),
-                typeof(string),
-                typeof(JavaRuntimeCard));
+        public static readonly DependencyProperty MinecraftVersionProperty = DependencyProperty.Register(
+            nameof(MinecraftVersion),
+            typeof(string),
+            typeof(JavaRuntimeCard));
 
-        public static readonly DependencyProperty RuntimeListProperty =
-            DependencyProperty.Register(
-                nameof(RuntimeList),
-                typeof(List<JavaRuntimeEntry>),
-                typeof(JavaRuntimeCard));
+        public static readonly DependencyProperty RuntimeListProperty = DependencyProperty.Register(
+            nameof(RuntimeList),
+            typeof(List<JavaRuntimeEntry>),
+            typeof(JavaRuntimeCard));
 
         public List<JavaRuntimeEntry> RuntimeList
         {
@@ -56,7 +54,7 @@ namespace AsLauncher.Views.Components
                 }
                 else if (deleted)
                 {
-                    runtime.InstallState = RuntimeInstallState.Deleted;
+                    runtime.InstallState = RuntimeInstallState.Removed;
                 }
                 else
                 {
@@ -157,12 +155,12 @@ namespace AsLauncher.Views.Components
                     bool deleted = RuntimeManager.DeleteRuntime(runtime.RuntimeFolder);
 
                     runtime.InstallState = deleted
-                        ? RuntimeInstallState.Deleted
+                        ? RuntimeInstallState.Removed
                         : RuntimeInstallState.Installed;
 
                     break;
 
-                case RuntimeInstallState.Deleted:
+                case RuntimeInstallState.Removed:
 
                     runtime.InstallState = RuntimeInstallState.Installing;
 
@@ -172,7 +170,7 @@ namespace AsLauncher.Views.Components
 
                     runtime.InstallState = restored
                         ? RuntimeInstallState.Installed
-                        :RuntimeInstallState.Deleted;
+                        :RuntimeInstallState.Removed;
 
                     break;
             }

@@ -9,10 +9,26 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Assets\Buttons\Sidebar\ExpandButton.png" />
-    <None Remove="Assets\Icons\App\AsLauncher.svg" />
-    <None Remove="Assets\Icons\Sidebar\IconConfigs.png" />
-    <None Remove="Assets\Icons\Sidebar\IconGeneral.png" />
+    <Compile Remove="Assets\Buttons\**" />
+    <Compile Remove="Assets\Icons\**" />
+    <EmbeddedResource Remove="Assets\Buttons\**" />
+    <EmbeddedResource Remove="Assets\Icons\**" />
+    <None Remove="Assets\Buttons\**" />
+    <None Remove="Assets\Icons\**" />
+    <Page Remove="Assets\Buttons\**" />
+    <Page Remove="Assets\Icons\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\Logo\AsLauncher.ico" />
+    <None Remove="Assets\Logo\AsLauncher.png" />
+    <None Remove="Assets\Logo\AsLauncher.svg" />
+    <None Remove="Assets\Textures\ExpandButton.png" />
+    <None Remove="Assets\Textures\IconConfigs.png" />
+    <None Remove="Assets\Textures\IconGeneral.png" />
+    <None Remove="Assets\Textures\IconModpacks.png" />
+    <None Remove="Assets\Textures\IconVanilla.png" />
+    <None Remove="Assets\Textures\RemoveButton.png" />
     <None Remove="Data\runtimes.json" />
   </ItemGroup>
 
@@ -27,14 +43,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Assets\Buttons\Sidebar\ExpandButton.png" />
-    <Resource Include="Assets\Icons\App\AsLauncher.ico" />
-    <Resource Include="Assets\Icons\App\AsLauncher.png" />
-    <Resource Include="Assets\Icons\App\AsLauncher.svg" />
-    <Resource Include="Assets\Icons\Sidebar\IconConfigs.png" />
-    <Resource Include="Assets\Icons\Sidebar\IconGeneral.png" />
-    <Resource Include="Assets\Icons\Sidebar\IconModpacks.png" />
-    <Resource Include="Assets\Icons\Sidebar\IconVanilla.png" />
+    <Resource Include="Assets\Logo\AsLauncher.ico" />
+    <Resource Include="Assets\Logo\AsLauncher.png" />
+    <Resource Include="Assets\Logo\AsLauncher.svg" />
+    <Resource Include="Assets\Textures\ExpandButton.png" />
+    <Resource Include="Assets\Textures\IconConfigs.png" />
+    <Resource Include="Assets\Textures\IconGeneral.png" />
+    <Resource Include="Assets\Textures\IconModpacks.png" />
+    <Resource Include="Assets\Textures\IconVanilla.png" />
+    <Resource Include="Assets\Textures\RemoveButton.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -50,6 +67,12 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Resources\Styles\CheckBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,92 @@
+﻿<UserControl x:Class="AsLauncher.Views.Components.MinecraftVersionCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:lang="clr-namespace:AsLauncher.Resources.Localization"
+             xmlns:core="clr-namespace:AsLauncher.Core"
+             xmlns:components="clr-namespace:AsLauncher.Views.Components"
+             xmlns:models="clr-namespace:AsLauncher.Models">
+
+    <Border Background="{x:Static core:Theme.Middleground}"
+            CornerRadius="12"
+            Margin="0,0,0,6"
+            Padding="8">
+
+        <Grid>
+
+            <Grid.ColumnDefinitions>
+
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="120"/>
+
+            </Grid.ColumnDefinitions>
+
+            <Ellipse x:Name="VersionTypeIndicator"
+                     Width="10"
+                     Height="10"
+                     Margin="0,0,8,0"
+                     VerticalAlignment="Center"/>
+
+            <TextBlock Grid.Column="1"
+                       Text="{Binding Version.Id, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       Foreground="{x:Static core:Theme.White}"
+                       FontSize="14"
+                       VerticalAlignment="Center">
+
+                <TextBlock.Style>
+
+                    <Style TargetType="TextBlock">
+
+                        <Setter Property="FontWeight" Value="Normal"/>
+
+                        <Style.Triggers>
+
+                            <DataTrigger Binding="{Binding Version.Type, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                         Value="release">
+
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+
+                            </DataTrigger>
+
+                        </Style.Triggers>
+
+                    </Style>
+
+                </TextBlock.Style>
+
+            </TextBlock>
+
+            <StackPanel Grid.Column="2" Orientation="Horizontal">
+
+                <components:ActionButton x:Name="MainButton"
+                                         Click="MainButton_Click"
+                                         Width="86"
+                                         Height="28"
+                                         ButtonContent="{x:Static lang:Resources.ButtonInstall}"/>
+
+                <components:ActionButton x:Name="RemoveButton"
+                                         Click="RemoveButton_Click"
+                                         Width="28"
+                                         Height="28"
+                                         Margin="6,0,0,0"
+                                         Visibility="Collapsed"
+                                         ButtonBackground="{x:Static core:Theme.RedHovered}">
+
+                    <components:ActionButton.ButtonContent>
+
+                        <Image Source="{x:Static core:Theme.RemoveButton}"
+                               Width="14"
+                               Height="14"
+                               Stretch="Uniform"/>
+
+                    </components:ActionButton.ButtonContent>
+
+                </components:ActionButton>
+
+            </StackPanel>
+
+        </Grid>
+
+    </Border>
+
+</UserControl>
