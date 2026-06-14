@@ -9,6 +9,7 @@
         Removing,
         Removed,
         Corrupted,
-        Reinstall
+        Reinstall,
+        Unavailable
     }
 }

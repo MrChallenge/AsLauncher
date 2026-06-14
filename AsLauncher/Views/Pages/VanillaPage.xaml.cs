@@ -113,13 +113,15 @@ namespace AsLauncher.Views.Pages
         {
             var versions = await MinecraftVersionService.LoadVersions();
 
+            bool hasInternet = MinecraftVersionManager.HasInternetConnection();
+
             foreach (var version in versions)
             {
                 if (MinecraftVersionManager.IsVersionCorrupted(version.Id))
                 {
                     version.InstallState = MinecraftVersionInstallState.Corrupted;
 
-                    _ = Task.Run(async () =>
+                    _ = Dispatcher.InvokeAsync(async () =>
                     {
                         await Task.Delay(500);
 
@@ -136,7 +138,9 @@ namespace AsLauncher.Views.Pages
                 }
                 else
                 {
-                    version.InstallState = MinecraftVersionInstallState.NotInstalled;
+                    version.InstallState = hasInternet
+                        ? MinecraftVersionInstallState.NotInstalled
+                        : MinecraftVersionInstallState.Unavailable;
                 }
             }
 

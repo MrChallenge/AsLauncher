@@ -141,6 +141,18 @@ namespace AsLauncher.Views.Components
                     MainButton.ButtonForeground = Theme.Middleground;
 
                     break;
+
+                // Unavailable
+                case MinecraftVersionInstallState.Unavailable:
+
+                    MainButton.ButtonContent = Localization.ButtonUnavailable;
+                    MainButton.IsEnabled = false;
+
+                    MainButton.ButtonBorderBrush = Theme.Grey;
+                    MainButton.ButtonBackground = Theme.Transparent;
+                    MainButton.ButtonForeground = Theme.White;
+
+                    break;
             }
         }
 
@@ -244,7 +256,7 @@ namespace AsLauncher.Views.Components
 
                     break;
 
-                // Canceling
+                // Downloading -> Canceling
                 case MinecraftVersionInstallState.Downloading:
 
                     Version.CancellationTokenSource?.Cancel();
@@ -273,7 +285,7 @@ namespace AsLauncher.Views.Components
                         break;
                     }
 
-                // Restoring
+                // Removed -> Restoring
                 case MinecraftVersionInstallState.Removed:
 
                     Version.InstallState = MinecraftVersionInstallState.Installing;
@@ -281,6 +293,25 @@ namespace AsLauncher.Views.Components
                     await Task.Delay(300);
 
                     MinecraftVersionManager.RestoreVersion(Version.Id);
+
+                    Version.InstallState = MinecraftVersionInstallState.Installed;
+
+                    break;
+
+                // Corrupted -> Reinstalling
+                case MinecraftVersionInstallState.Reinstall:
+
+                    MinecraftVersionManager.CleanupIncompleteVersion(Version.Id);
+
+                    Version.CancellationTokenSource = new();
+
+                    Version.InstallState = MinecraftVersionInstallState.Downloading;
+
+                    await MinecraftVersionManager.InstallVersionAsync(Version, Version.CancellationTokenSource.Token);
+
+                    Version.InstallState = MinecraftVersionInstallState.Installing;
+
+                    await Task.Delay(300);
 
                     Version.InstallState = MinecraftVersionInstallState.Installed;
 

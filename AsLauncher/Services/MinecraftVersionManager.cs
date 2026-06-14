@@ -202,6 +202,26 @@ namespace AsLauncher.Services
             return false;
         }
 
+        // Check internet connection
+        public static bool HasInternetConnection()
+        {
+            try
+            {
+                using HttpClient client = new();
+
+                client.Timeout = TimeSpan.FromSeconds(3);
+
+                using HttpResponseMessage response = client.GetAsync("https://piston-meta.mojang.com",
+                    HttpCompletionOption.ResponseHeadersRead).Result;
+
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         // Load version.json
         public static JsonDocument LoadVersionJson(string versionId)
         {
