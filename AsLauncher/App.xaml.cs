@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Runtime.InteropServices;
 
 namespace AsLauncher
 {
@@ -16,5 +17,13 @@ namespace AsLauncher
                 MessageBox.Show(ex.ToString(), "Startup Crash");
             }
         }
+        /*
+        public App()
+        {
+            AllocConsole();
+        }
+        */
+        [DllImport("kernel32.dll")]
+        private static extern bool AllocConsole();
     }
 }

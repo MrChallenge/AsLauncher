@@ -20,17 +20,16 @@ namespace AsLauncher.Views.Pages
 
             DataContext = this;
 
+            ReleaseCheckBox.IsChecked = SettingsManager.Settings.ShowReleases;
+
+            SnapshotCheckBox.IsChecked = SettingsManager.Settings.ShowSnapshots;
+
+            BetaCheckBox.IsChecked = SettingsManager.Settings.ShowBetas;
+
+            AlphaCheckBox.IsChecked = SettingsManager.Settings.ShowAlphas;
+
             Loaded += VanillaPage_Loaded;
         }
-
-        // Default filter settings
-        public bool ShowReleases { get; set; } = true;
-
-        public bool ShowSnapshots { get; set; } = true;
-
-        public bool ShowBetas { get; set; } = true;
-
-        public bool ShowAlphas { get; set; } = true;
 
         // Check if version matches search query
         private static bool MatchesSearch(string versionId, string search)
@@ -91,8 +90,23 @@ namespace AsLauncher.Views.Pages
         // Refresh versions when filter checkboxes change
         private void FilterChanged(object sender, RoutedEventArgs e)
         {
+            if (!_settingsLoaded)
+                return;
+
+            SettingsManager.Settings.ShowReleases = ReleaseCheckBox.IsChecked == true;
+
+            SettingsManager.Settings.ShowSnapshots = SnapshotCheckBox.IsChecked == true;
+
+            SettingsManager.Settings.ShowBetas = BetaCheckBox.IsChecked == true;
+
+            SettingsManager.Settings.ShowAlphas = AlphaCheckBox.IsChecked == true;
+
+            SettingsManager.Save();
+
             RefreshVersions();
         }
+
+        private bool _settingsLoaded;
 
         // Load versions when page is loaded
         private async void VanillaPage_Loaded(object sender, System.Windows.RoutedEventArgs e)
@@ -116,6 +130,8 @@ namespace AsLauncher.Views.Pages
             }
 
             AllVersions = versions.ToList();
+
+            _settingsLoaded = true;
 
             RefreshVersions();
         }

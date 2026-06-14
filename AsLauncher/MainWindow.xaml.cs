@@ -1,4 +1,5 @@
 ﻿using AsLauncher.Core;
+using AsLauncher.Models;
 using AsLauncher.Services;
 using AsLauncher.Views.Pages;
 using System.Windows;
@@ -15,15 +16,36 @@ namespace AsLauncher
 
             Icon = BitmapFrame.Create(Core.Theme.LauncherIcon);
 
+            RuntimeManager.CleanupDeletedFolder();
+
+            // вставить сюда очистку папок с версиями
+
             UpdateSidebarState();
+
+            SettingsManager.Load();
 
             RuntimeManager.Initialize();
 
             MinecraftVersionManager.Initialize();
 
-            RuntimeManager.CleanupDeletedFolder();
+            switch (SettingsManager.Settings.LastPage)
+            {
+                case LauncherPage.Vanilla: MainContent.Content = new VanillaPage();
 
-            MainContent.Content = new GeneralPage();
+                    break;
+
+                case LauncherPage.Modpacks: MainContent.Content = new ModpacksPage();
+
+                    break;
+
+                case LauncherPage.Configs: MainContent.Content = new ConfigsPage();
+
+                    break;
+
+                default: MainContent.Content = new GeneralPage();
+
+                    break;
+            }
         }
        
         private bool _sidebarCollapsed = false;
@@ -67,21 +89,37 @@ namespace AsLauncher
 
         private void GeneralButton_Click(object sender, RoutedEventArgs e)
         {
+            SettingsManager.Settings.LastPage = LauncherPage.General;
+
+            SettingsManager.Save();
+
             MainContent.Content = new GeneralPage();
         }
 
         private void VanillaButton_Click(object sender, RoutedEventArgs e)
         {
+            SettingsManager.Settings.LastPage = LauncherPage.Vanilla;
+
+            SettingsManager.Save();
+
             MainContent.Content = new VanillaPage();
         }
 
         private void ModpacksButton_Click(object sender, RoutedEventArgs e)
         {
+            SettingsManager.Settings.LastPage = LauncherPage.Modpacks;
+
+            SettingsManager.Save();
+
             MainContent.Content = new ModpacksPage();
         }
 
         private void ConfigsButton_Click(object sender, RoutedEventArgs e)
         {
+            SettingsManager.Settings.LastPage = LauncherPage.Configs;
+
+            SettingsManager.Save();
+
             MainContent.Content = new ConfigsPage();
         }
     }
