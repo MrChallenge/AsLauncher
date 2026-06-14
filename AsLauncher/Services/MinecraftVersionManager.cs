@@ -130,7 +130,7 @@ namespace AsLauncher.Services
 
             await DownloadAssetIndexAsync(document, client);
 
-            Console.WriteLine($"Libraries finished for {version.Id}");
+            Console.WriteLine($"Asset index finished for {version.Id}");
 
             string assetIndexId = document.RootElement
                                           .GetProperty("assetIndex")
@@ -164,6 +164,14 @@ namespace AsLauncher.Services
             return
 
                 File.Exists(GetVersionJsonPath(versionId)) && File.Exists(GetVersionJarPath(versionId));
+        }
+
+        // Load version.json
+        public static JsonDocument LoadVersionJson(string versionId)
+        {
+            string path = GetVersionJsonPath(versionId);
+
+            return JsonDocument.Parse(File.ReadAllText(path));
         }
 
         // Download libraries
@@ -280,6 +288,88 @@ namespace AsLauncher.Services
             }
 
             Console.WriteLine($"Assets: Processed={processedAssets}, Downloaded={downloadedAssets}, Skipped={skippedAssets}");
+        }
+
+        // Build classpath for launch
+        public static string BuildClassPath(string versionId)
+        {
+            using JsonDocument document = LoadVersionJson(versionId);
+
+            List<string> paths = new();
+
+            JsonElement libraries = document.RootElement.GetProperty("libraries");
+
+            foreach (JsonElement library in libraries.EnumerateArray())
+            {
+                if (!library.TryGetProperty("downloads", out var downloads))
+                    continue;
+
+                if (!downloads.TryGetProperty("artifact", out var artifact))
+                    continue;
+
+                string libraryPath = artifact.GetProperty("path").GetString()!;
+
+                paths.Add(Path.Combine(LibrariesFolder, libraryPath));
+            }
+
+            paths.Add(GetVersionJarPath(versionId));
+
+            return string.Join(Path.PathSeparator, paths);
+        }
+
+        // Get required Java version
+        public static int GetRequiredJavaVersion(string versionId)
+        {
+            using JsonDocument document = LoadVersionJson(versionId);
+
+            return document.RootElement
+                           .GetProperty("javaVersion")
+                           .GetProperty("majorVersion")
+                           .GetInt32();
+        }
+
+        // Get JVM arguments
+        public static List<string> GetJvmArguments(string versionId)
+        {
+            using JsonDocument document = LoadVersionJson(versionId);
+
+            List<string> arguments = new();
+
+            JsonElement jvmArguments = document.RootElement
+                                               .GetProperty("arguments")
+                                               .GetProperty("jvm");
+
+            foreach (JsonElement argument in jvmArguments.EnumerateArray())
+            {
+                if (argument.ValueKind == JsonValueKind.String)
+                {
+                    arguments.Add(argument.GetString()!);
+                }
+            }
+
+            return arguments;
+        }
+
+        // Get game arguments
+        public static List<string> GetGameArguments(string versionId)
+        {
+            using JsonDocument document = LoadVersionJson(versionId);
+
+            List<string> arguments = new();
+
+            JsonElement gameArguments = document.RootElement
+                                                .GetProperty("arguments")
+                                                .GetProperty("game");
+
+            foreach (JsonElement argument in gameArguments.EnumerateArray())
+            {
+                if (argument.ValueKind == JsonValueKind.String)
+                {
+                    arguments.Add(argument.GetString()!);
+                }
+            }
+
+            return arguments;
         }
     }
 }

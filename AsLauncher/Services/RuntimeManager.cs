@@ -8,32 +8,32 @@ namespace AsLauncher.Services
 {
     public static class RuntimeManager
     {
-        public static readonly string RuntimeFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Runtime");
+        public static readonly string RuntimesFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Runtimes");
 
         public static readonly string TempFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Temp");
 
-        public static readonly string ExtractedFolder = Path.Combine(TempFolder, "Extracted");
+        public static readonly string ExtractedRuntimesFolder = Path.Combine(TempFolder, "ExtractedRuntimes");
 
-        public static readonly string DeletedFolder = Path.Combine(TempFolder, "Deleted");
+        public static readonly string DeletedRuntimesFolder = Path.Combine(TempFolder, "DeletedRuntimes");
 
-        public static readonly string DownloadsFolder = Path.Combine(TempFolder, "Downloads");
+        public static readonly string DownloadedRuntimesFolder = Path.Combine(TempFolder, "DownloadedRuntimes");
 
         public static void Initialize()
         {
-            Directory.CreateDirectory(RuntimeFolder);
+            Directory.CreateDirectory(RuntimesFolder);
 
             Directory.CreateDirectory(TempFolder);
 
-            Directory.CreateDirectory(ExtractedFolder);
+            Directory.CreateDirectory(ExtractedRuntimesFolder);
 
-            Directory.CreateDirectory(DeletedFolder);
+            Directory.CreateDirectory(DeletedRuntimesFolder);
 
-            Directory.CreateDirectory(DownloadsFolder);
+            Directory.CreateDirectory(DownloadedRuntimesFolder);
         }
 
         public static async Task<bool> InstallRuntime(string archivePath, string runtimeFolderName)
         {
-            string extractPath = Path.Combine(ExtractedFolder, runtimeFolderName, "Extracted");
+            string extractPath = Path.Combine(ExtractedRuntimesFolder, runtimeFolderName, "Extracted");
 
             if (Directory.Exists(extractPath))
             {
@@ -60,7 +60,7 @@ namespace AsLauncher.Services
 
                 return false;
             }
-            string finalPath = Path.Combine(RuntimeFolder, runtimeFolderName);
+            string finalPath = Path.Combine(RuntimesFolder, runtimeFolderName);
 
             if (Directory.Exists(finalPath))
             {
@@ -78,7 +78,7 @@ namespace AsLauncher.Services
 
         public static bool IsRuntimeInstalled(string folderName)
         {
-            string runtimePath = Path.Combine(RuntimeFolder, folderName);
+            string runtimePath = Path.Combine(RuntimesFolder, folderName);
 
             return
                 RuntimeValidator.IsValidRuntime(runtimePath);
@@ -90,7 +90,7 @@ namespace AsLauncher.Services
             CancellationToken cancellationToken,
             Action<double>? progressCallback = null)
         {
-            string archivePath = Path.Combine(DownloadsFolder, archiveName);
+            string archivePath = Path.Combine(DownloadedRuntimesFolder, archiveName);
 
             using HttpClient client = new();
 
@@ -138,14 +138,14 @@ namespace AsLauncher.Services
 
         public static bool DeleteRuntime(string runtimeFolderName)
         {
-            string runtimePath = Path.Combine(RuntimeFolder, runtimeFolderName);
+            string runtimePath = Path.Combine(RuntimesFolder, runtimeFolderName);
 
             if (!Directory.Exists(runtimePath))
                 return false;
 
-            Directory.CreateDirectory(DeletedFolder);
+            Directory.CreateDirectory(DeletedRuntimesFolder);
 
-            string deletedPath = Path.Combine(DeletedFolder, runtimeFolderName + ".deleted");
+            string deletedPath = Path.Combine(DeletedRuntimesFolder, runtimeFolderName + ".deleted");
 
             if (Directory.Exists(deletedPath))
             {
@@ -159,12 +159,12 @@ namespace AsLauncher.Services
 
         public static bool RestoreRuntime(string runtimeFolderName)
         {
-            string deletedPath = Path.Combine(DeletedFolder, runtimeFolderName + ".deleted");
+            string deletedPath = Path.Combine(DeletedRuntimesFolder, runtimeFolderName + ".deleted");
 
             if (!Directory.Exists(deletedPath))
                 return false;
 
-            string runtimePath = Path.Combine(RuntimeFolder, runtimeFolderName);
+            string runtimePath = Path.Combine(RuntimesFolder, runtimeFolderName);
 
             if (Directory.Exists(runtimePath))
             {
@@ -178,21 +178,21 @@ namespace AsLauncher.Services
 
         public static bool IsRuntimeDeleted(string runtimeFolderName)
         {
-            string deletedPath = Path.Combine(DeletedFolder, runtimeFolderName);
+            string deletedPath = Path.Combine(DeletedRuntimesFolder, runtimeFolderName);
 
             return Directory.Exists(deletedPath);
         }
 
         public static void CleanupTemp(string runtimeFolderName)
         {
-            string archivePath = Path.Combine(DownloadsFolder, runtimeFolderName + ".zip");
+            string archivePath = Path.Combine(DownloadedRuntimesFolder, runtimeFolderName + ".zip");
 
             if (File.Exists(archivePath))
             {
                 File.Delete(archivePath);
             }
 
-            string extractedPath = Path.Combine(ExtractedFolder, runtimeFolderName);
+            string extractedPath = Path.Combine(ExtractedRuntimesFolder, runtimeFolderName);
 
             if (Directory.Exists(extractedPath))
             {
@@ -202,12 +202,12 @@ namespace AsLauncher.Services
 
         public static void CleanupDeletedFolder()
         {
-            if (!Directory.Exists(DeletedFolder))
+            if (!Directory.Exists(DeletedRuntimesFolder))
             {
                 return;
             }
 
-            foreach (string directory in Directory.GetDirectories(DeletedFolder))
+            foreach (string directory in Directory.GetDirectories(DeletedRuntimesFolder))
             {
                 try
                 {

@@ -1,11 +1,14 @@
 ﻿using AsLauncher.Core;
 using AsLauncher.Models;
+using AsLauncher.Resources.Localization;
 using AsLauncher.Services;
 using System.ComponentModel;
+using System.Text.Json;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Shapes;
-using AsLauncher.Resources.Localization;
+using System.IO;
 
 using Localization = AsLauncher.Resources.Localization.Resources;
 
@@ -141,6 +144,7 @@ namespace AsLauncher.Views.Components
             }
         }
 
+        // Update event handlers when version changes
         private static void OnVersionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is not MinecraftVersionCard card)
@@ -202,10 +206,25 @@ namespace AsLauncher.Views.Components
 
                 // Launching
                 case MinecraftVersionInstallState.Installed:
+                    {
+                        using JsonDocument document = MinecraftVersionManager.LoadVersionJson(Version.Id);
+                        
+                        string mainClass = document.RootElement
+                                                   .GetProperty("mainClass")
+                                                   .GetString()!;
 
-                    MessageBox.Show($"Запуск версии {Version.Id}");
+                        string classPath = MinecraftVersionManager.BuildClassPath(Version.Id);
 
-                    break;
+                        MessageBox.Show($"MainClass:\n{mainClass}\n\nClasspath entries:{classPath.Split(System.IO.Path.PathSeparator).Length}");
+
+                        List<string> jvmArguments = MinecraftVersionManager.GetJvmArguments(Version.Id);
+
+                        List<string> gameArguments = MinecraftVersionManager.GetGameArguments(Version.Id);
+
+                        MessageBox.Show($"JVM: {jvmArguments.Count}\nGame: {gameArguments.Count}");
+
+                        break;
+                    }
 
                 // Reinstalling
                 case MinecraftVersionInstallState.Removed:
