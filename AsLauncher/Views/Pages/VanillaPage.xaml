@@ -3,8 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:lang="clr-namespace:AsLauncher.Resources.Localization"
              xmlns:core="clr-namespace:AsLauncher.Core"
-             xmlns:components="clr-namespace:AsLauncher.Views.Components"
-             >
+             xmlns:components="clr-namespace:AsLauncher.Views.Components">
 
     <Grid Background="{x:Static core:Theme.Background}">
 

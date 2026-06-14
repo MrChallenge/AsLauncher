@@ -118,6 +118,13 @@ namespace AsLauncher.Views.Pages
                 if (MinecraftVersionManager.IsVersionCorrupted(version.Id))
                 {
                     version.InstallState = MinecraftVersionInstallState.Corrupted;
+
+                    _ = Task.Run(async () =>
+                    {
+                        await Task.Delay(500);
+
+                        version.InstallState = MinecraftVersionInstallState.Reinstall;
+                    });
                 }
                 else if (MinecraftVersionManager.IsVersionInstalled(version.Id))
                 {

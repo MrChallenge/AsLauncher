@@ -121,7 +121,7 @@
     <value>Установить</value>
   </data>
   <data name="ButtonReinstall" xml:space="preserve">
-    <value>Переустановить</value>
+    <value>Исправить</value>
   </data>
   <data name="ButtonRemoving" xml:space="preserve">
     <value>Удаление...</value>
