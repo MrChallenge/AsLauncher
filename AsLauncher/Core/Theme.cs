@@ -50,8 +50,6 @@ namespace AsLauncher.Core
         // Grey
         public static readonly Brush Grey = (Brush)new BrushConverter().ConvertFrom("#3A3A3A")!;
 
-        public static readonly Brush GreyHovered = (Brush)new BrushConverter().ConvertFrom("#4A4A4A")!;
-
         public static readonly Brush LightGrey = (Brush)new BrushConverter().ConvertFrom("#BBBBBB")!;
 
         // Black
@@ -60,34 +58,15 @@ namespace AsLauncher.Core
         // Green
         public static readonly Brush Green = (Brush)new BrushConverter().ConvertFrom("#16A34A")!;
 
-        public static readonly Brush GreenHovered = (Brush)new BrushConverter().ConvertFrom("#15803D")!;
-
-        public static readonly Brush GreenUnactive = (Brush)new BrushConverter().ConvertFrom("#107236")!;
-
         // Blue
         public static readonly Brush Blue = (Brush)new BrushConverter().ConvertFrom("#5865F2")!;
-
-        public static readonly Brush BlueHovered = (Brush)new BrushConverter().ConvertFrom("#4752C4")!;
-
-        public static readonly Brush BlueUnactive = (Brush)new BrushConverter().ConvertFrom("#3F48A8")!;
 
         public static readonly Brush LightBlue = (Brush)new BrushConverter().ConvertFrom("#4CC2FF")!;
 
         // Red
         public static readonly Brush Red = (Brush)new BrushConverter().ConvertFrom("#DA373C")!;
 
-        public static readonly Brush RedHovered = (Brush)new BrushConverter().ConvertFrom("#B91C1C")!;
-
-        public static readonly Brush RedUnactive = (Brush)new BrushConverter().ConvertFrom("#99272A")!;
-
         // Yellow
         public static readonly Brush Yellow = (Brush)new BrushConverter().ConvertFrom("#FAA61A")!;
-
-        public static readonly Brush YellowHovered = (Brush)new BrushConverter().ConvertFrom("#D98E14")!;
-
-        public static readonly Brush YellowUnactive = (Brush)new BrushConverter().ConvertFrom("#AF7412")!;
-
-        // لا تحاول حتى فهم ذلك
-        public static readonly Brush 卐 = (Brush)new BrushConverter().ConvertFrom("#001488")!;
     }
 }

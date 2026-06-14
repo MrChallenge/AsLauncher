@@ -8,6 +8,7 @@ namespace AsLauncher.Views.Components
 {
     public partial class JavaRuntimeCard : UserControl
     {
+        // Dependency Properties
         public static readonly DependencyProperty MinecraftVersionProperty = DependencyProperty.Register(
             nameof(MinecraftVersion),
             typeof(string),
@@ -30,6 +31,7 @@ namespace AsLauncher.Views.Components
             set => SetValue(MinecraftVersionProperty, value);
         }
 
+        // Initialize
         public JavaRuntimeCard()
         {
             InitializeComponent();
@@ -37,6 +39,7 @@ namespace AsLauncher.Views.Components
             Loaded += JavaRuntimeCard_Loaded;
         }
 
+        // Event Handlers
         private void JavaRuntimeCard_Loaded(object sender, RoutedEventArgs e)
         {
             if (RuntimeList == null)
@@ -44,25 +47,11 @@ namespace AsLauncher.Views.Components
 
             foreach (JavaRuntimeEntry runtime in RuntimeList)
             {
-                bool installed = RuntimeManager.IsRuntimeInstalled(runtime.RuntimeFolder);
-
-                bool deleted = RuntimeManager.IsRuntimeDeleted(runtime.RuntimeFolder);
-
-                if (installed)
-                {
-                    runtime.InstallState = RuntimeInstallState.Installed;
-                }
-                else if (deleted)
-                {
-                    runtime.InstallState = RuntimeInstallState.Removed;
-                }
-                else
-                {
-                    runtime.InstallState = RuntimeInstallState.NotInstalled;
-                }
+                runtime.InstallState = RuntimeManager.GetRuntimeState(runtime.RuntimeFolder);
             }
         }
 
+        // Install/Remove Button Click Handler
         private async void InstallButton_Click(object sender, RoutedEventArgs e)
         {
             if (sender is not Button button)

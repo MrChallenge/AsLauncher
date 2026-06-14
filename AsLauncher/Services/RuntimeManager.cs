@@ -8,6 +8,7 @@ namespace AsLauncher.Services
 {
     public static class RuntimeManager
     {
+        // Create folders for runtimes and temp files
         public static readonly string RuntimesFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Runtimes");
 
         public static readonly string TempFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Temp");
@@ -18,6 +19,7 @@ namespace AsLauncher.Services
 
         public static readonly string DownloadedRuntimesFolder = Path.Combine(TempFolder, "DownloadedRuntimes");
 
+        // Initialize folders
         public static void Initialize()
         {
             Directory.CreateDirectory(RuntimesFolder);
@@ -31,6 +33,7 @@ namespace AsLauncher.Services
             Directory.CreateDirectory(DownloadedRuntimesFolder);
         }
 
+        // Install runtime from archive
         public static async Task<bool> InstallRuntime(string archivePath, string runtimeFolderName)
         {
             string extractPath = Path.Combine(ExtractedRuntimesFolder, runtimeFolderName, "Extracted");
@@ -76,6 +79,7 @@ namespace AsLauncher.Services
             return true;
         }
 
+        // Check if runtime is installed
         public static bool IsRuntimeInstalled(string folderName)
         {
             string runtimePath = Path.Combine(RuntimesFolder, folderName);
@@ -84,6 +88,7 @@ namespace AsLauncher.Services
                 RuntimeValidator.IsValidRuntime(runtimePath);
         }
 
+        // Download runtime archive with progress reporting
         public static async Task<string?> DownloadRuntime(
             string downloadUrl,
             string archiveName,
@@ -136,6 +141,7 @@ namespace AsLauncher.Services
             return archivePath;
         }
 
+        // Mark runtime as deleted by moving it to temp folder
         public static bool DeleteRuntime(string runtimeFolderName)
         {
             string runtimePath = Path.Combine(RuntimesFolder, runtimeFolderName);
@@ -157,6 +163,7 @@ namespace AsLauncher.Services
             return true;
         }
 
+        // Restore deleted runtime by moving it back to runtimes folder
         public static bool RestoreRuntime(string runtimeFolderName)
         {
             string deletedPath = Path.Combine(DeletedRuntimesFolder, runtimeFolderName + ".deleted");
@@ -176,6 +183,7 @@ namespace AsLauncher.Services
             return true;
         }
 
+        // Check if runtime is marked as deleted
         public static bool IsRuntimeDeleted(string runtimeFolderName)
         {
             string deletedPath = Path.Combine(DeletedRuntimesFolder, runtimeFolderName);
@@ -183,6 +191,23 @@ namespace AsLauncher.Services
             return Directory.Exists(deletedPath);
         }
 
+        // Get runtime installation state
+        public static RuntimeInstallState GetRuntimeState(string runtimeFolder)
+        {
+            if (IsRuntimeInstalled(runtimeFolder))
+            {
+                return RuntimeInstallState.Installed;
+            }
+
+            if (IsRuntimeDeleted(runtimeFolder))
+            {
+                return RuntimeInstallState.Removed;
+            }
+
+            return RuntimeInstallState.NotInstalled;
+        }
+
+        // Cleanup temp files related to runtime
         public static void CleanupTemp(string runtimeFolderName)
         {
             string archivePath = Path.Combine(DownloadedRuntimesFolder, runtimeFolderName + ".zip");
@@ -200,6 +225,7 @@ namespace AsLauncher.Services
             }
         }
 
+        // Cleanup deleted runtimes that are still in temp folder
         public static void CleanupDeletedFolder()
         {
             if (!Directory.Exists(DeletedRuntimesFolder))

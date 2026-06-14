@@ -39,7 +39,7 @@ namespace AsLauncher.Services
         // Check if version is installed
         public static bool IsVersionInstalled(string versionId)
         {
-            return Directory.Exists(Path.Combine(VersionsFolder, versionId));
+            return IsVersionComplete(versionId);
         }
 
         // Check if version is deleted
@@ -90,8 +90,19 @@ namespace AsLauncher.Services
             return true;
         }
 
+        // Cleanup incomplete version
+        public static void CleanupIncompleteVersion(string versionId)
+        {
+            string versionFolder = Path.Combine(VersionsFolder, versionId);
+
+            if (Directory.Exists(versionFolder))
+            {
+                Directory.Delete(versionFolder, true);
+            }
+        }
+
         // Install process : parcing version.json and download client.jar
-        public static async Task InstallVersionAsync(MinecraftVersionEntry version)
+        public static async Task InstallVersionAsync(MinecraftVersionEntry version, CancellationToken token)
         {
             string versionFolder = Path.Combine(VersionsFolder, version.Id);
 
@@ -100,6 +111,8 @@ namespace AsLauncher.Services
             using HttpClient client = new();
 
             string versionJson = await client.GetStringAsync(version.Url);
+
+            token.ThrowIfCancellationRequested();
 
             string versionJsonPath = Path.Combine(versionFolder, $"{version.Id}.json");
 
@@ -124,11 +137,17 @@ namespace AsLauncher.Services
 
             await File.WriteAllBytesAsync(clientJarPath, clientData);
 
-            await DownloadLibrariesAsync(document, client);
+            token.ThrowIfCancellationRequested();
+
+            await DownloadLibrariesAsync(document, client, token);
+
+            token.ThrowIfCancellationRequested();
 
             Console.WriteLine($"Libraries finished for {version.Id}");
 
-            await DownloadAssetIndexAsync(document, client);
+            await DownloadAssetIndexAsync(document, client, token);
+
+            token.ThrowIfCancellationRequested();
 
             Console.WriteLine($"Asset index finished for {version.Id}");
 
@@ -141,7 +160,7 @@ namespace AsLauncher.Services
 
             using JsonDocument assetIndexDocument = JsonDocument.Parse(await File.ReadAllTextAsync(assetIndexPath));
 
-            await DownloadAssetsAsync(assetIndexDocument, client);
+            await DownloadAssetsAsync(assetIndexDocument, client, token);
 
             Console.WriteLine($"Assets finished for {version.Id}");
         }
@@ -166,6 +185,23 @@ namespace AsLauncher.Services
                 File.Exists(GetVersionJsonPath(versionId)) && File.Exists(GetVersionJarPath(versionId));
         }
 
+        // Check if version corrupted
+        public static bool IsVersionCorrupted(string versionId)
+        {
+            string versionFolder = Path.Combine(VersionsFolder, versionId);
+
+            if (!Directory.Exists(versionFolder))
+                return false;
+
+            if (!File.Exists(GetVersionJsonPath(versionId)))
+                return true;
+
+            if (!File.Exists(GetVersionJarPath(versionId)))
+                return true;
+
+            return false;
+        }
+
         // Load version.json
         public static JsonDocument LoadVersionJson(string versionId)
         {
@@ -175,7 +211,7 @@ namespace AsLauncher.Services
         }
 
         // Download libraries
-        private static async Task DownloadLibrariesAsync(JsonDocument document, HttpClient client)
+        private static async Task DownloadLibrariesAsync(JsonDocument document, HttpClient client, CancellationToken token)
         {
             int processedLibraries = 0;
 
@@ -187,6 +223,8 @@ namespace AsLauncher.Services
 
             foreach (JsonElement library in libraries.EnumerateArray())
             {
+                token.ThrowIfCancellationRequested();
+
                 processedLibraries++;
 
                 if (!library.TryGetProperty("downloads", out var downloads))
@@ -212,6 +250,8 @@ namespace AsLauncher.Services
 
                 byte[] data = await client.GetByteArrayAsync(url);
 
+                token.ThrowIfCancellationRequested();
+
                 await File.WriteAllBytesAsync(localPath, data);
 
                 downloadedLibraries++;
@@ -221,7 +261,7 @@ namespace AsLauncher.Services
         }
 
         // Download asset index
-        private static async Task DownloadAssetIndexAsync(JsonDocument document, HttpClient client)
+        private static async Task DownloadAssetIndexAsync(JsonDocument document, HttpClient client, CancellationToken token)
         {
             JsonElement assetIndex = document.RootElement.GetProperty("assetIndex");
 
@@ -240,11 +280,13 @@ namespace AsLauncher.Services
 
             string assetIndexJson = await client.GetStringAsync(assetIndexUrl);
 
+            token.ThrowIfCancellationRequested();
+
             await File.WriteAllTextAsync(assetIndexPath, assetIndexJson);
         }
 
         // Download assets from asset index
-        private static async Task DownloadAssetsAsync(JsonDocument assetIndexDocument, HttpClient client)
+        private static async Task DownloadAssetsAsync(JsonDocument assetIndexDocument, HttpClient client, CancellationToken token)
         {
             JsonElement objects = assetIndexDocument.RootElement.GetProperty("objects");
 
@@ -256,6 +298,8 @@ namespace AsLauncher.Services
 
             foreach (JsonProperty asset in objects.EnumerateObject())
             {
+                token.ThrowIfCancellationRequested();
+
                 processedAssets++;
 
                 string hash = asset.Value.GetProperty("hash").GetString()!;
@@ -278,6 +322,8 @@ namespace AsLauncher.Services
                 }
 
                 byte[] data = await client.GetByteArrayAsync(url);
+                
+                token.ThrowIfCancellationRequested();
 
                 await File.WriteAllBytesAsync(localPath, data);
 
@@ -370,6 +416,23 @@ namespace AsLauncher.Services
             }
 
             return arguments;
+        }
+
+        // Cleanup deleted versions
+        public static void CleanupDeletedFolder()
+        {
+            if (!Directory.Exists(DeletedFolder))
+                return;
+
+            foreach (string directory in Directory.GetDirectories(DeletedFolder))
+            {
+                try
+                {
+                    Directory.Delete(directory, true);
+                }
+                catch
+                {}
+            }
         }
     }
 }

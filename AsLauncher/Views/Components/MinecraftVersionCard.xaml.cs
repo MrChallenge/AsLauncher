@@ -46,6 +46,7 @@ namespace AsLauncher.Views.Components
 
             switch (Version.InstallState)
             {
+                // Install
                 case MinecraftVersionInstallState.NotInstalled:
                     MainButton.ButtonContent = Localization.ButtonInstall;
                     MainButton.IsEnabled = true;
@@ -56,6 +57,7 @@ namespace AsLauncher.Views.Components
 
                     break;
 
+                // Cancel
                 case MinecraftVersionInstallState.Downloading:
                     MainButton.ButtonContent = Localization.ButtonCancel;
                     MainButton.IsEnabled = true;
@@ -66,16 +68,18 @@ namespace AsLauncher.Views.Components
 
                     break;
 
+                // Installing
                 case MinecraftVersionInstallState.Installing:
                     MainButton.ButtonContent = Localization.ButtonInstalling;
                     MainButton.IsEnabled = false;
 
-                    MainButton.ButtonBorderBrush = Theme.BlueUnactive;
+                    MainButton.ButtonBorderBrush = Theme.Blue;
                     MainButton.ButtonBackground = Theme.Transparent;
                     MainButton.ButtonForeground = Theme.White;
 
                     break;
 
+                // Launch
                 case MinecraftVersionInstallState.Installed:
                     MainButton.ButtonContent = Localization.ButtonLaunch;
                     MainButton.IsEnabled = true;
@@ -84,6 +88,7 @@ namespace AsLauncher.Views.Components
                     MainButton.ButtonBackground = Theme.Green;
                     MainButton.ButtonForeground = Theme.White;
 
+                    // Remove
                     RemoveButton.Visibility = Visibility.Visible;
 
                     MainButton.ButtonBorderBrush = Theme.Transparent;
@@ -92,22 +97,47 @@ namespace AsLauncher.Views.Components
 
                     break;
 
+                // Removing
                 case MinecraftVersionInstallState.Removing:
                     MainButton.ButtonContent = Localization.ButtonRemoving;
                     MainButton.IsEnabled = false;
 
-                    MainButton.ButtonBorderBrush = Theme.RedUnactive;
+                    MainButton.ButtonBorderBrush = Theme.Red;
                     MainButton.ButtonBackground = Theme.Transparent;
                     MainButton.ButtonForeground = Theme.White;
 
                     break;
 
+                // Restore
                 case MinecraftVersionInstallState.Removed:
-                    MainButton.ButtonContent = Localization.ButtonReinstall;
+                    MainButton.ButtonContent = Localization.ButtonRestore;
                     MainButton.IsEnabled = true;
 
                     MainButton.ButtonBorderBrush = Theme.Transparent;
                     MainButton.ButtonBackground = Theme.White;
+                    MainButton.ButtonForeground = Theme.Middleground;
+
+                    break;
+
+                // Corrupted
+                case MinecraftVersionInstallState.Corrupted:
+
+                    MainButton.ButtonContent = Localization.ButtonCorrupted;
+                    MainButton.IsEnabled = false;
+
+                    MainButton.ButtonBorderBrush = Theme.Yellow;
+                    MainButton.ButtonBackground = Theme.Transparent;
+                    MainButton.ButtonForeground = Theme.White;
+
+                    break;
+
+                // Reinstall
+                case MinecraftVersionInstallState.Reinstall:
+                    MainButton.ButtonContent = Localization.ButtonReinstall;
+                    MainButton.IsEnabled = true;
+
+                    MainButton.ButtonBorderBrush = Theme.Transparent;
+                    MainButton.ButtonBackground = Theme.Yellow;
                     MainButton.ButtonForeground = Theme.Middleground;
 
                     break;
@@ -185,9 +215,11 @@ namespace AsLauncher.Views.Components
 
                     try
                     {
+                        Version.CancellationTokenSource = new();
+
                         Version.InstallState = MinecraftVersionInstallState.Downloading;
 
-                        await MinecraftVersionManager.InstallVersionAsync(Version);
+                        await MinecraftVersionManager.InstallVersionAsync(Version, Version.CancellationTokenSource.Token);
 
                         Version.InstallState = MinecraftVersionInstallState.Installing;
 
@@ -195,12 +227,27 @@ namespace AsLauncher.Views.Components
 
                         Version.InstallState = MinecraftVersionInstallState.Installed;
                     }
+                    catch (OperationCanceledException)
+                    {
+                        MinecraftVersionManager.CleanupIncompleteVersion(Version.Id);
+
+                        Version.InstallState = MinecraftVersionInstallState.NotInstalled;
+                    }
                     catch (Exception ex)
                     {
+                        MinecraftVersionManager.CleanupIncompleteVersion(Version.Id);
+
                         MessageBox.Show(ex.Message);
 
                         Version.InstallState = MinecraftVersionInstallState.NotInstalled;
                     }
+
+                    break;
+
+                // Canceling
+                case MinecraftVersionInstallState.Downloading:
+
+                    Version.CancellationTokenSource?.Cancel();
 
                     break;
 
@@ -226,16 +273,14 @@ namespace AsLauncher.Views.Components
                         break;
                     }
 
-                // Reinstalling
+                // Restoring
                 case MinecraftVersionInstallState.Removed:
-
-                    Version.InstallState = MinecraftVersionInstallState.Downloading;
-
-                    await MinecraftVersionManager.InstallVersionAsync(Version);
 
                     Version.InstallState = MinecraftVersionInstallState.Installing;
 
                     await Task.Delay(300);
+
+                    MinecraftVersionManager.RestoreVersion(Version.Id);
 
                     Version.InstallState = MinecraftVersionInstallState.Installed;
 

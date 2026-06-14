@@ -8,7 +8,6 @@ namespace AsLauncher.Models
         Installing,
         Installed,
         Removing,
-        Removed,
-        Cancelled
+        Removed
     }
 }

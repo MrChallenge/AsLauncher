@@ -153,6 +153,15 @@
   <data name="ButtonCancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="ButtonCorrupted" xml:space="preserve">
+    <value>Corrupted</value>
+  </data>
+  <data name="ButtonUnavailable" xml:space="preserve">
+    <value>Unavailable</value>
+  </data>
+  <data name="ButtonRestore" xml:space="preserve">
+    <value>Restore</value>
+  </data>
   <data name="ButtonLaunch" xml:space="preserve">
     <value>Launch</value>
   </data>

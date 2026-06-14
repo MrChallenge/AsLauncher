@@ -70,6 +70,15 @@ namespace AsLauncher.Resources.Localization {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Corrupted.
+        /// </summary>
+        public static string ButtonCorrupted {
+            get {
+                return ResourceManager.GetString("ButtonCorrupted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Install.
         /// </summary>
         public static string ButtonInstall {
@@ -129,6 +138,24 @@ namespace AsLauncher.Resources.Localization {
         public static string ButtonRemoving {
             get {
                 return ResourceManager.GetString("ButtonRemoving", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Restore.
+        /// </summary>
+        public static string ButtonRestore {
+            get {
+                return ResourceManager.GetString("ButtonRestore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Unavailable.
+        /// </summary>
+        public static string ButtonUnavailable {
+            get {
+                return ResourceManager.GetString("ButtonUnavailable", resourceCulture);
             }
         }
         

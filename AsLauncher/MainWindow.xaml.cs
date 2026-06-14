@@ -2,6 +2,7 @@
 using AsLauncher.Models;
 using AsLauncher.Services;
 using AsLauncher.Views.Pages;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -16,9 +17,7 @@ namespace AsLauncher
 
             Icon = BitmapFrame.Create(Core.Theme.LauncherIcon);
 
-            RuntimeManager.CleanupDeletedFolder();
-
-            // вставить сюда очистку папок с версиями
+            Closing += MainWindow_Closing;
 
             UpdateSidebarState();
 
@@ -47,7 +46,7 @@ namespace AsLauncher
                     break;
             }
         }
-       
+
         private bool _sidebarCollapsed = false;
 
         private void UpdateSidebarState()
@@ -121,6 +120,13 @@ namespace AsLauncher
             SettingsManager.Save();
 
             MainContent.Content = new ConfigsPage();
+        }
+
+        private void MainWindow_Closing(object? sender, CancelEventArgs e)
+        {
+            RuntimeManager.CleanupDeletedFolder();
+
+            MinecraftVersionManager.CleanupDeletedFolder();
         }
     }
 }

@@ -7,6 +7,8 @@
         Installing,
         Installed,
         Removing,
-        Removed
+        Removed,
+        Corrupted,
+        Reinstall
     }
 }

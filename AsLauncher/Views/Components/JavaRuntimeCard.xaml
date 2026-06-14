@@ -119,7 +119,7 @@
 
                                                 <Trigger Property="IsMouseOver" Value="True">
 
-                                                    <Setter Property="Background" Value="{x:Static core:Theme.GreenHovered}"/>
+                                                    <Setter Property="Background" Value="{x:Static core:Theme.Green}"/>
 
                                                 </Trigger>
 
@@ -150,7 +150,7 @@
 
                                                     <Setter Property="Content" Value="Установка..."/>
                                                     <Setter Property="Background" Value="{x:Static core:Theme.Transparent}"/>
-                                                    <Setter Property="BorderBrush" Value="{x:Static core:Theme.BlueUnactive}"/>
+                                                    <Setter Property="BorderBrush" Value="{x:Static core:Theme.Blue}"/>
                                                     <Setter Property="IsEnabled" Value="False"/>
 
                                                 </DataTrigger>

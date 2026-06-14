@@ -121,7 +121,7 @@
     <value>Установить</value>
   </data>
   <data name="ButtonReinstall" xml:space="preserve">
-    <value>Восстановить</value>
+    <value>Переустановить</value>
   </data>
   <data name="ButtonRemoving" xml:space="preserve">
     <value>Удаление...</value>
@@ -152,6 +152,15 @@
   </data>
   <data name="ButtonCancel" xml:space="preserve">
     <value>Отменить</value>
+  </data>
+  <data name="ButtonCorrupted" xml:space="preserve">
+    <value>Повреждено</value>
+  </data>
+  <data name="ButtonUnavailable" xml:space="preserve">
+    <value>Недоступно</value>
+  </data>
+  <data name="ButtonRestore" xml:space="preserve">
+    <value>Восстановить</value>
   </data>
   <data name="ButtonLaunch" xml:space="preserve">
     <value>Запустить</value>

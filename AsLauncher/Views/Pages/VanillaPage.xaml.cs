@@ -115,7 +115,11 @@ namespace AsLauncher.Views.Pages
 
             foreach (var version in versions)
             {
-                if (MinecraftVersionManager.IsVersionInstalled(version.Id))
+                if (MinecraftVersionManager.IsVersionCorrupted(version.Id))
+                {
+                    version.InstallState = MinecraftVersionInstallState.Corrupted;
+                }
+                else if (MinecraftVersionManager.IsVersionInstalled(version.Id))
                 {
                     version.InstallState = MinecraftVersionInstallState.Installed;
                 }

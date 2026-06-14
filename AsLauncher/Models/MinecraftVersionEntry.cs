@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Threading;
 
 namespace AsLauncher.Models
 {
@@ -11,6 +12,8 @@ namespace AsLauncher.Models
         public string Type { get; set; } = "";
 
         public string Url { get; set; } = "";
+
+        public CancellationTokenSource? CancellationTokenSource { get; set; }
 
         public MinecraftVersionInstallState InstallState
         {
