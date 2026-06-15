@@ -181,6 +181,15 @@
             </ListBox>
 
         </Grid>
+        
+        <TextBlock x:Name="NoInternetText"
+                   Text="{x:Static lang:Resources.TextNoInternet}"
+                   Visibility="Collapsed"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontSize="32"
+                   FontWeight="SemiBold"
+                   Foreground="{x:Static core:Theme.White}"/>
 
     </Grid>
 

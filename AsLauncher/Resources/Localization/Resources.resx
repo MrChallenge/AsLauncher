@@ -183,4 +183,7 @@
   <data name="MinecraftVersionsList" xml:space="preserve">
     <value>Minecraft Versions</value>
   </data>
+  <data name="TextNoInternet" xml:space="preserve">
+    <value>404 Not Found</value>
+  </data>
 </root>

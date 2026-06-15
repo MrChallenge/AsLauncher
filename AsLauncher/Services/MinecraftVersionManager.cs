@@ -203,23 +203,78 @@ namespace AsLauncher.Services
         }
 
         // Check internet connection
-        public static bool HasInternetConnection()
+        public static async Task<bool> HasInternetAsync()
         {
+            using HttpClient client = new();
+
+            client.Timeout = TimeSpan.FromSeconds(5);
+
             try
             {
-                using HttpClient client = new();
+                using HttpResponseMessage response = await client.GetAsync(
+                    "https://launchermeta.mojang.com",
+                    HttpCompletionOption.ResponseHeadersRead);
 
-                client.Timeout = TimeSpan.FromSeconds(3);
-
-                using HttpResponseMessage response = client.GetAsync("https://piston-meta.mojang.com",
-                    HttpCompletionOption.ResponseHeadersRead).Result;
-
-                return response.IsSuccessStatusCode;
+                return true;
             }
             catch
             {
                 return false;
             }
+        }
+
+        // Check if any versions are installed (else 404 Not Found)
+        public static bool HasInstalledVersions()
+        {
+            if (!Directory.Exists(VersionsFolder))
+                return false;
+
+            foreach (string directory in Directory.GetDirectories(VersionsFolder))
+            {
+                string versionId = Path.GetFileName(directory);
+
+                if (IsVersionComplete(versionId))
+                    return true;
+            }
+
+            return false;
+        }
+
+        // Get list of installed versions
+        public static List<MinecraftVersionEntry> GetInstalledVersions()
+        {
+            List<MinecraftVersionEntry> versions = new();
+
+            if (Directory.Exists(VersionsFolder))
+            {
+                foreach (string directory in Directory.GetDirectories(VersionsFolder))
+                {
+                    string versionId = Path.GetFileName(directory);
+                    versions.Add(new MinecraftVersionEntry
+                    {
+                        Id = versionId,
+                        Type = "release"
+                    });
+                }
+            }
+
+            if (Directory.Exists(DeletedFolder))
+            {
+                foreach (string directory in Directory.GetDirectories(DeletedFolder))
+                {
+                    string versionId = Path.GetFileName(directory)
+                                           .Replace(".deleted", "");
+
+                    versions.Add(new MinecraftVersionEntry
+                    {
+                        Id = versionId,
+                        Type = "release",
+                        InstallState = MinecraftVersionInstallState.Removed
+                    });
+                }
+            }
+
+            return versions;
         }
 
         // Load version.json

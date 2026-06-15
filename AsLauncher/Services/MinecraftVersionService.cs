@@ -12,25 +12,32 @@ namespace AsLauncher.Services
         // Load versions from manifest
         public static async Task<List<MinecraftVersionEntry>> LoadVersions()
         {
-            using HttpClient client = new();
-
-            string json = await client.GetStringAsync(ManifestUrl);
-
-            using JsonDocument document = JsonDocument.Parse(json);
-
-            List<MinecraftVersionEntry> versions = new();
-
-            foreach (JsonElement version in document.RootElement.GetProperty("versions").EnumerateArray())
+            try
             {
-                versions.Add(new MinecraftVersionEntry
-                {
-                    Id = version.GetProperty("id").GetString() ?? "",
-                    Type = version.GetProperty("type").GetString() ?? "",
-                    Url = version.GetProperty("url").GetString() ?? ""
-                });
-            }
+                using HttpClient client = new();
 
-            return versions;
+                string json = await client.GetStringAsync(ManifestUrl);
+
+                using JsonDocument document = JsonDocument.Parse(json);
+
+                List<MinecraftVersionEntry> versions = new();
+
+                foreach (JsonElement version in document.RootElement.GetProperty("versions").EnumerateArray())
+                {
+                    versions.Add(new MinecraftVersionEntry
+                    {
+                        Id = version.GetProperty("id").GetString() ?? "",
+                        Type = version.GetProperty("type").GetString() ?? "",
+                        Url = version.GetProperty("url").GetString() ?? ""
+                    });
+                }
+
+                return versions;
+            }
+            catch
+            {
+                return new List<MinecraftVersionEntry>();
+            }
         }
     }
 }

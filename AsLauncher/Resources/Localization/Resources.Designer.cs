@@ -257,5 +257,14 @@ namespace AsLauncher.Resources.Localization {
                 return ResourceManager.GetString("PagespaceGeneralDesc", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на 404 Not Found.
+        /// </summary>
+        public static string TextNoInternet {
+            get {
+                return ResourceManager.GetString("TextNoInternet", resourceCulture);
+            }
+        }
     }
 }

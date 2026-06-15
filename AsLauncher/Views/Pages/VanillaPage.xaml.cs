@@ -4,6 +4,7 @@ using AsLauncher.Services;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace AsLauncher.Views.Pages
 {
@@ -29,6 +30,12 @@ namespace AsLauncher.Views.Pages
             AlphaCheckBox.IsChecked = SettingsManager.Settings.ShowAlphas;
 
             Loaded += VanillaPage_Loaded;
+
+            _internetTimer.Interval = TimeSpan.FromSeconds(5);
+
+            _internetTimer.Tick += InternetTimer_Tick;
+
+            _internetTimer.Start();
         }
 
         // Check if version matches search query
@@ -108,12 +115,26 @@ namespace AsLauncher.Views.Pages
 
         private bool _settingsLoaded;
 
-        // Load versions when page is loaded
+        // Load versions when page is loaded + check internet connection
         private async void VanillaPage_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
             var versions = await MinecraftVersionService.LoadVersions();
 
-            bool hasInternet = MinecraftVersionManager.HasInternetConnection();
+            NoInternetText.Visibility = Visibility.Collapsed;
+
+            if (versions.Count == 0)
+            {
+                versions = MinecraftVersionManager.GetInstalledVersions();
+
+                if (versions.Count == 0)
+                {
+                    NoInternetText.Visibility = Visibility.Visible;
+
+                    return;
+                }
+            }
+
+            bool internetAvailable = await MinecraftVersionManager.HasInternetAsync();
 
             foreach (var version in versions)
             {
@@ -128,19 +149,27 @@ namespace AsLauncher.Views.Pages
                         version.InstallState = MinecraftVersionInstallState.Reinstall;
                     });
                 }
+
+                else if (!internetAvailable &&
+                         !MinecraftVersionManager.IsVersionInstalled(version.Id) &&
+                         !MinecraftVersionManager.IsVersionDeleted(version.Id))
+                {
+                    version.InstallState = MinecraftVersionInstallState.Unavailable;
+                }
+
                 else if (MinecraftVersionManager.IsVersionInstalled(version.Id))
                 {
                     version.InstallState = MinecraftVersionInstallState.Installed;
                 }
+
                 else if (MinecraftVersionManager.IsVersionDeleted(version.Id))
                 {
                     version.InstallState = MinecraftVersionInstallState.Removed;
                 }
+
                 else
                 {
-                    version.InstallState = hasInternet
-                        ? MinecraftVersionInstallState.NotInstalled
-                        : MinecraftVersionInstallState.Unavailable;
+                    version.InstallState = MinecraftVersionInstallState.NotInstalled;
                 }
             }
 
@@ -149,6 +178,32 @@ namespace AsLauncher.Views.Pages
             _settingsLoaded = true;
 
             RefreshVersions();
+        }
+
+        // Check internet connection every 5 seconds
+        private readonly DispatcherTimer _internetTimer = new();
+
+        // Update install states based on internet availability
+        private async void InternetTimer_Tick(object? sender, EventArgs e)
+        {
+            bool internetAvailable = await MinecraftVersionManager.HasInternetAsync();
+
+            foreach (var version in Versions)
+            {
+                if (version.InstallState == MinecraftVersionInstallState.NotInstalled)
+                {
+                    version.InstallState = internetAvailable
+                        ? MinecraftVersionInstallState.NotInstalled
+                        : MinecraftVersionInstallState.Unavailable;
+                }
+
+                if (version.InstallState == MinecraftVersionInstallState.Unavailable)
+                {
+                    version.InstallState = internetAvailable
+                        ? MinecraftVersionInstallState.NotInstalled
+                        : MinecraftVersionInstallState.Unavailable;
+                }
+            }
         }
     }
 }
