@@ -3,11 +3,22 @@ using AsLauncher.Services;
 using System.Windows;
 using System.Windows.Controls;
 using System.Collections.Generic;
+using AsLauncher.Core;
+using AsLauncher.Resources.Localization;
+using AsLauncher.Views.Components;
+
+using Localization = AsLauncher.Resources.Localization.Resources;
 
 namespace AsLauncher.Views.Components
 {
     public partial class JavaRuntimeCard : UserControl
     {
+        // Initialize
+        public JavaRuntimeCard()
+        {
+            InitializeComponent();
+        }
+
         // Dependency Properties
         public static readonly DependencyProperty MinecraftVersionProperty = DependencyProperty.Register(
             nameof(MinecraftVersion),
@@ -31,30 +42,116 @@ namespace AsLauncher.Views.Components
             set => SetValue(MinecraftVersionProperty, value);
         }
 
-        // Initialize
-        public JavaRuntimeCard()
+        // Load ActionButton State
+        private void ActionButton_Loaded(object sender, RoutedEventArgs e)
         {
-            InitializeComponent();
-
-            Loaded += JavaRuntimeCard_Loaded;
-        }
-
-        // Event Handlers
-        private void JavaRuntimeCard_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (RuntimeList == null)
+            if (sender is not ActionButton button)
                 return;
 
-            foreach (JavaRuntimeEntry runtime in RuntimeList)
+            if (button.Tag is not JavaRuntimeEntry runtime)
+                return;
+
+            JavaRuntimeButton_Click(button, runtime);
+
+            runtime.PropertyChanged += (_, e) =>
             {
-                runtime.InstallState = RuntimeManager.GetRuntimeState(runtime.RuntimeFolder);
+                if (e.PropertyName == nameof(JavaRuntimeEntry.InstallState))
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        JavaRuntimeButton_Click(button, runtime);
+                    });
+                }
+            };
+        }
+
+        private static void JavaRuntimeButton_Click(ActionButton JavaRuntimeMainButton, JavaRuntimeEntry JavaRuntime)
+        {
+            switch (JavaRuntime.InstallState)
+            {
+                // Install
+                case JavaRuntimeInstallState.NotInstalled:
+                    JavaRuntimeMainButton.ButtonContent = Localization.ButtonInstall;
+                    JavaRuntimeMainButton.IsEnabled = true;
+
+                    JavaRuntimeMainButton.ButtonBackground = Theme.Green;
+                    JavaRuntimeMainButton.ButtonForeground = Theme.White;
+                    JavaRuntimeMainButton.ButtonBorderBrush = Theme.Transparent;
+
+                    break;
+
+                // Cancel
+                case JavaRuntimeInstallState.Downloading:
+                    JavaRuntimeMainButton.ButtonContent = Localization.ButtonCancel;
+                    JavaRuntimeMainButton.IsEnabled = true;
+
+                    JavaRuntimeMainButton.ButtonBackground = Theme.Blue;
+                    JavaRuntimeMainButton.ButtonForeground = Theme.White;
+                    JavaRuntimeMainButton.ButtonBorderBrush = Theme.Transparent;
+
+                    break;
+
+                // Installing
+                case JavaRuntimeInstallState.Installing:
+                    JavaRuntimeMainButton.ButtonContent = Localization.ButtonInstalling;
+                    JavaRuntimeMainButton.IsEnabled = false;
+
+                    JavaRuntimeMainButton.ButtonBackground = Theme.Transparent;
+                    JavaRuntimeMainButton.ButtonForeground = Theme.White;
+                    JavaRuntimeMainButton.ButtonBorderBrush = Theme.Blue;
+
+                    break;
+
+                // Remove
+                case JavaRuntimeInstallState.Installed:
+                    JavaRuntimeMainButton.ButtonContent = Localization.ButtonRemove;
+                    JavaRuntimeMainButton.IsEnabled = true;
+
+                    JavaRuntimeMainButton.ButtonBackground = Theme.Red;
+                    JavaRuntimeMainButton.ButtonForeground = Theme.White;
+                    JavaRuntimeMainButton.ButtonBorderBrush = Theme.Transparent;
+
+                    break;
+
+                // Removing
+                case JavaRuntimeInstallState.Removing:
+                    JavaRuntimeMainButton.ButtonContent = Localization.ButtonRemoving;
+                    JavaRuntimeMainButton.IsEnabled = false;
+
+                    JavaRuntimeMainButton.ButtonBackground = Theme.Transparent;
+                    JavaRuntimeMainButton.ButtonForeground = Theme.White;
+                    JavaRuntimeMainButton.ButtonBorderBrush = Theme.Red;
+
+                    break;
+
+                // Restore
+                case JavaRuntimeInstallState.Removed:
+                    JavaRuntimeMainButton.ButtonContent = Localization.ButtonRestore;
+                    JavaRuntimeMainButton.IsEnabled = true;
+
+                    JavaRuntimeMainButton.ButtonBackground = Theme.White;
+                    JavaRuntimeMainButton.ButtonForeground = Theme.Middleground;
+                    JavaRuntimeMainButton.ButtonBorderBrush = Theme.Transparent;
+
+                    break;
+
+                case JavaRuntimeInstallState.Unavailable:
+                    JavaRuntimeMainButton.ButtonContent = Localization.ButtonUnavailable;
+
+                    JavaRuntimeMainButton.IsEnabled = false;
+
+                    JavaRuntimeMainButton.ButtonBackground = Theme.Transparent;
+                    JavaRuntimeMainButton.ButtonForeground = Theme.White;
+                    JavaRuntimeMainButton.ButtonBorderBrush = Theme.Grey;
+
+                    break;
             }
         }
 
-        // Install/Remove Button Click Handler
+        // Install/Remove ActionButton Click Handler
         private async void InstallButton_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is not Button button)
+            if (sender is not ActionButton button)
                 return;
 
             if (button.Tag is not JavaRuntimeEntry runtime)
@@ -62,17 +159,17 @@ namespace AsLauncher.Views.Components
 
             switch (runtime.InstallState)
             {
-                case RuntimeInstallState.NotInstalled:
+                case JavaRuntimeInstallState.NotInstalled:
 
                     runtime.CancellationTokenSource = new();
 
                     try
                     {
-                        runtime.InstallState = RuntimeInstallState.Downloading;
+                        runtime.InstallState = JavaRuntimeInstallState.Downloading;
 
                         runtime.IsProgressVisible = Visibility.Visible;
 
-                        string? archivePath = await RuntimeManager.DownloadRuntime(
+                        string? archivePath = await JavaRuntimeManager.DownloadRuntime(
                             runtime.DownloadUrl,
                             runtime.RuntimeFolder + ".zip",
                             runtime.CancellationTokenSource.Token,
@@ -86,23 +183,23 @@ namespace AsLauncher.Views.Components
 
                         if (archivePath == null)
                         {
-                            runtime.InstallState = RuntimeInstallState.NotInstalled;
+                            runtime.InstallState = JavaRuntimeInstallState.NotInstalled;
                             return;
                         }
 
-                        runtime.InstallState = RuntimeInstallState.Installing;
+                        runtime.InstallState = JavaRuntimeInstallState.Installing;
 
-                        await Task.Delay(300);
+                        await Task.Delay(Theme.InstallStateDelay);
 
-                        bool installed = await RuntimeManager.InstallRuntime(archivePath, runtime.RuntimeFolder);
+                        bool installed = await JavaRuntimeManager.InstallRuntime(archivePath, runtime.RuntimeFolder);
 
                         runtime.Progress = 100;
 
                         runtime.IsProgressVisible = Visibility.Collapsed;
 
                         runtime.InstallState = installed
-                            ? RuntimeInstallState.Installed
-                            : RuntimeInstallState.NotInstalled;
+                            ? JavaRuntimeInstallState.Installed
+                            : JavaRuntimeInstallState.NotInstalled;
                     }
                     catch (OperationCanceledException)
                     {
@@ -110,56 +207,54 @@ namespace AsLauncher.Views.Components
 
                         runtime.Progress = 0;
 
-                        RuntimeManager.CleanupTemp(runtime.RuntimeFolder);
+                        JavaRuntimeManager.CleanupTemp(runtime.RuntimeFolder);
 
-                        runtime.InstallState = RuntimeInstallState.NotInstalled;
+                        runtime.InstallState = JavaRuntimeInstallState.NotInstalled;
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.ToString());
-
                         runtime.IsProgressVisible = Visibility.Collapsed;
 
                         runtime.Progress = 0;
 
-                        RuntimeManager.CleanupTemp(runtime.RuntimeFolder);
+                        JavaRuntimeManager.CleanupTemp(runtime.RuntimeFolder);
 
-                        runtime.InstallState = RuntimeInstallState.NotInstalled;
+                        runtime.InstallState = JavaRuntimeInstallState.NotInstalled;
                     }
 
                     break;
 
-                case RuntimeInstallState.Downloading:
+                case JavaRuntimeInstallState.Downloading:
 
                     runtime.CancellationTokenSource?.Cancel();
 
                     break;
 
-                case RuntimeInstallState.Installed:
+                case JavaRuntimeInstallState.Installed:
 
-                    runtime.InstallState = RuntimeInstallState.Removing;
+                    runtime.InstallState = JavaRuntimeInstallState.Removing;
 
-                    await Task.Delay(300);
+                    await Task.Delay(Theme.InstallStateDelay);
 
-                    bool deleted = RuntimeManager.DeleteRuntime(runtime.RuntimeFolder);
+                    bool deleted = JavaRuntimeManager.DeleteRuntime(runtime.RuntimeFolder);
 
                     runtime.InstallState = deleted
-                        ? RuntimeInstallState.Removed
-                        : RuntimeInstallState.Installed;
+                        ? JavaRuntimeInstallState.Removed
+                        : JavaRuntimeInstallState.Installed;
 
                     break;
 
-                case RuntimeInstallState.Removed:
+                case JavaRuntimeInstallState.Removed:
 
-                    runtime.InstallState = RuntimeInstallState.Installing;
+                    runtime.InstallState = JavaRuntimeInstallState.Installing;
 
-                    await Task.Delay(300);
+                    await Task.Delay(Theme.InstallStateDelay);
 
-                    bool restored = RuntimeManager.RestoreRuntime(runtime.RuntimeFolder);
+                    bool restored = JavaRuntimeManager.RestoreRuntime(runtime.RuntimeFolder);
 
                     runtime.InstallState = restored
-                        ? RuntimeInstallState.Installed
-                        :RuntimeInstallState.Removed;
+                        ? JavaRuntimeInstallState.Installed
+                        :JavaRuntimeInstallState.Removed;
 
                     break;
             }

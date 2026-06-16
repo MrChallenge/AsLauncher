@@ -5,6 +5,7 @@ namespace AsLauncher.Core
 {
     public static class Theme
     {
+    // Style
         // App Icon
         public static readonly Uri LauncherIcon = new Uri("pack://application:,,,/Assets/Logo/AsLauncher.ico");
         
@@ -68,5 +69,13 @@ namespace AsLauncher.Core
 
         // Yellow
         public static readonly Brush Yellow = (Brush)new BrushConverter().ConvertFrom("#FAA61A")!;
+
+    // Variables
+        // Delays
+        public static readonly TimeSpan InternetCheckInterval = TimeSpan.FromSeconds(10);
+
+        public static readonly TimeSpan InstallStateDelay = TimeSpan.FromMilliseconds(300);
+
+        public static readonly TimeSpan CorruptedStateDelay = TimeSpan.FromMilliseconds(500);
     }
 }

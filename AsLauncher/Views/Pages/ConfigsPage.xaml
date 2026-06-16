@@ -15,26 +15,26 @@
 
     <Grid Background="{x:Static core:Theme.Background}">
 
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <ScrollViewer VerticalScrollBarVisibility="Hidden">
 
             <StackPanel Margin="24">
 
                 <!-- Title -->
-                <TextBlock Text="Java Runtimes"
+                <TextBlock Text="{x:Static lang:Resources.JavaRuntimesList}"
                            Foreground="{x:Static core:Theme.White}"
                            FontSize="24"
                            FontWeight="SemiBold"
                            Margin="0,0,0,24"/>
 
                 <!-- Java Runtimes -->
-                <ItemsControl ItemsSource="{Binding RuntimeGroups}">
+                <ItemsControl ItemsSource="{Binding JavaRuntimeGroups}">
 
                     <ItemsControl.ItemTemplate>
 
                         <DataTemplate>
 
                             <components:JavaRuntimeCard MinecraftVersion="{Binding MinecraftVersion}"
-                                                        RuntimeList="{Binding Runtimes}"/>
+                                                        RuntimeList="{Binding JavaRuntimes}"/>
 
                         </DataTemplate>
 

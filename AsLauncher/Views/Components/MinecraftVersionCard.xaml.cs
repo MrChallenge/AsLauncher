@@ -37,120 +37,119 @@ namespace AsLauncher.Views.Components
             set => SetValue(VersionProperty, value);
         }
 
-        private void UpdateButtons()
+        private void UpdateMinecraftVersionButtons()
         {
             if (Version == null)
                 return;
 
-            RemoveButton.Visibility = Visibility.Collapsed;
+            MinecraftVersionRemoveButton.Visibility = Visibility.Collapsed;
 
             switch (Version.InstallState)
             {
                 // Install
                 case MinecraftVersionInstallState.NotInstalled:
-                    MainButton.ButtonContent = Localization.ButtonInstall;
-                    MainButton.IsEnabled = true;
+                    MinecraftVersionMainButton.ButtonContent = Localization.ButtonInstall;
+                    MinecraftVersionMainButton.IsEnabled = true;
 
-                    MainButton.ButtonBorderBrush = Theme.Transparent;
-                    MainButton.ButtonBackground = Theme.Green;
-                    MainButton.ButtonForeground = Theme.White;
+                    MinecraftVersionMainButton.ButtonBorderBrush = Theme.Transparent;
+                    MinecraftVersionMainButton.ButtonBackground = Theme.Green;
+                    MinecraftVersionMainButton.ButtonForeground = Theme.White;
 
                     break;
 
                 // Cancel
                 case MinecraftVersionInstallState.Downloading:
-                    MainButton.ButtonContent = Localization.ButtonCancel;
-                    MainButton.IsEnabled = true;
+                    MinecraftVersionMainButton.ButtonContent = Localization.ButtonCancel;
+                    MinecraftVersionMainButton.IsEnabled = true;
 
-                    MainButton.ButtonBorderBrush = Theme.Transparent;
-                    MainButton.ButtonBackground = Theme.Blue;
-                    MainButton.ButtonForeground = Theme.White;
+                    MinecraftVersionMainButton.ButtonBorderBrush = Theme.Transparent;
+                    MinecraftVersionMainButton.ButtonBackground = Theme.Blue;
+                    MinecraftVersionMainButton.ButtonForeground = Theme.White;
 
                     break;
 
                 // Installing
                 case MinecraftVersionInstallState.Installing:
-                    MainButton.ButtonContent = Localization.ButtonInstalling;
-                    MainButton.IsEnabled = false;
+                    MinecraftVersionMainButton.ButtonContent = Localization.ButtonInstalling;
+                    MinecraftVersionMainButton.IsEnabled = false;
 
-                    MainButton.ButtonBorderBrush = Theme.Blue;
-                    MainButton.ButtonBackground = Theme.Transparent;
-                    MainButton.ButtonForeground = Theme.White;
+                    MinecraftVersionMainButton.ButtonBorderBrush = Theme.Blue;
+                    MinecraftVersionMainButton.ButtonBackground = Theme.Transparent;
+                    MinecraftVersionMainButton.ButtonForeground = Theme.White;
 
                     break;
 
                 // Launch
                 case MinecraftVersionInstallState.Installed:
-                    MainButton.ButtonContent = Localization.ButtonLaunch;
-                    MainButton.IsEnabled = true;
+                    MinecraftVersionMainButton.ButtonContent = Localization.ButtonLaunch;
+                    MinecraftVersionMainButton.IsEnabled = true;
 
-                    MainButton.ButtonBorderBrush = Theme.Transparent;
-                    MainButton.ButtonBackground = Theme.Green;
-                    MainButton.ButtonForeground = Theme.White;
+                    MinecraftVersionMainButton.ButtonBorderBrush = Theme.Transparent;
+                    MinecraftVersionMainButton.ButtonBackground = Theme.Green;
+                    MinecraftVersionMainButton.ButtonForeground = Theme.White;
 
                     // Remove
-                    RemoveButton.Visibility = Visibility.Visible;
+                    MinecraftVersionRemoveButton.Visibility = Visibility.Visible;
 
-                    MainButton.ButtonBorderBrush = Theme.Transparent;
-                    RemoveButton.ButtonBackground = Theme.Red;
-                    RemoveButton.ButtonForeground = Theme.White;
+                    MinecraftVersionMainButton.ButtonBorderBrush = Theme.Transparent;
+                    MinecraftVersionRemoveButton.ButtonBackground = Theme.Red;
+                    MinecraftVersionRemoveButton.ButtonForeground = Theme.White;
 
                     break;
 
                 // Removing
                 case MinecraftVersionInstallState.Removing:
-                    MainButton.ButtonContent = Localization.ButtonRemoving;
-                    MainButton.IsEnabled = false;
+                    MinecraftVersionMainButton.ButtonContent = Localization.ButtonRemoving;
+                    MinecraftVersionMainButton.IsEnabled = false;
 
-                    MainButton.ButtonBorderBrush = Theme.Red;
-                    MainButton.ButtonBackground = Theme.Transparent;
-                    MainButton.ButtonForeground = Theme.White;
+                    MinecraftVersionMainButton.ButtonBorderBrush = Theme.Red;
+                    MinecraftVersionMainButton.ButtonBackground = Theme.Transparent;
+                    MinecraftVersionMainButton.ButtonForeground = Theme.White;
 
                     break;
 
                 // Restore
                 case MinecraftVersionInstallState.Removed:
-                    MainButton.ButtonContent = Localization.ButtonRestore;
-                    MainButton.IsEnabled = true;
+                    MinecraftVersionMainButton.ButtonContent = Localization.ButtonRestore;
+                    MinecraftVersionMainButton.IsEnabled = true;
 
-                    MainButton.ButtonBorderBrush = Theme.Transparent;
-                    MainButton.ButtonBackground = Theme.White;
-                    MainButton.ButtonForeground = Theme.Middleground;
+                    MinecraftVersionMainButton.ButtonBorderBrush = Theme.Transparent;
+                    MinecraftVersionMainButton.ButtonBackground = Theme.White;
+                    MinecraftVersionMainButton.ButtonForeground = Theme.Middleground;
 
                     break;
 
                 // Corrupted
                 case MinecraftVersionInstallState.Corrupted:
 
-                    MainButton.ButtonContent = Localization.ButtonCorrupted;
-                    MainButton.IsEnabled = false;
+                    MinecraftVersionMainButton.ButtonContent = Localization.ButtonCorrupted;
+                    MinecraftVersionMainButton.IsEnabled = false;
 
-                    MainButton.ButtonBorderBrush = Theme.Yellow;
-                    MainButton.ButtonBackground = Theme.Transparent;
-                    MainButton.ButtonForeground = Theme.White;
+                    MinecraftVersionMainButton.ButtonBorderBrush = Theme.Yellow;
+                    MinecraftVersionMainButton.ButtonBackground = Theme.Transparent;
+                    MinecraftVersionMainButton.ButtonForeground = Theme.White;
 
                     break;
 
                 // Reinstall
                 case MinecraftVersionInstallState.Reinstall:
-                    MainButton.ButtonContent = Localization.ButtonReinstall;
-                    MainButton.IsEnabled = true;
+                    MinecraftVersionMainButton.ButtonContent = Localization.ButtonReinstall;
+                    MinecraftVersionMainButton.IsEnabled = true;
 
-                    MainButton.ButtonBorderBrush = Theme.Transparent;
-                    MainButton.ButtonBackground = Theme.Yellow;
-                    MainButton.ButtonForeground = Theme.Middleground;
+                    MinecraftVersionMainButton.ButtonBorderBrush = Theme.Transparent;
+                    MinecraftVersionMainButton.ButtonBackground = Theme.Yellow;
+                    MinecraftVersionMainButton.ButtonForeground = Theme.Middleground;
 
                     break;
 
                 // Unavailable
                 case MinecraftVersionInstallState.Unavailable:
+                    MinecraftVersionMainButton.ButtonContent = Localization.ButtonUnavailable;
+                    MinecraftVersionMainButton.IsEnabled = false;
 
-                    MainButton.ButtonContent = Localization.ButtonUnavailable;
-                    MainButton.IsEnabled = false;
-
-                    MainButton.ButtonBorderBrush = Theme.Grey;
-                    MainButton.ButtonBackground = Theme.Transparent;
-                    MainButton.ButtonForeground = Theme.White;
+                    MinecraftVersionMainButton.ButtonBorderBrush = Theme.Grey;
+                    MinecraftVersionMainButton.ButtonBackground = Theme.Transparent;
+                    MinecraftVersionMainButton.ButtonForeground = Theme.White;
 
                     break;
             }
@@ -202,7 +201,7 @@ namespace AsLauncher.Views.Components
                 newVersion.PropertyChanged += card.Version_PropertyChanged;
             }
 
-            card.UpdateButtons();
+            card.UpdateMinecraftVersionButtons();
         }
 
         // Update buttons when version's install state changes
@@ -210,12 +209,12 @@ namespace AsLauncher.Views.Components
         {
             if (e.PropertyName == nameof(MinecraftVersionEntry.InstallState))
             {
-                Dispatcher.Invoke(UpdateButtons);
+                Dispatcher.Invoke(UpdateMinecraftVersionButtons);
             }
         }
 
         // Install manager
-        private async void MainButton_Click(object sender, RoutedEventArgs e)
+        private async void MinecraftVersionButton_Click(object sender, RoutedEventArgs e)
         {
             if (Version == null)
                 return;
@@ -229,24 +228,36 @@ namespace AsLauncher.Views.Components
                     {
                         Version.CancellationTokenSource = new();
 
+                        Version.Progress = 0;
+                        Version.IsProgressVisible = Visibility.Visible;
+
                         Version.InstallState = MinecraftVersionInstallState.Downloading;
 
                         await MinecraftVersionManager.InstallVersionAsync(Version, Version.CancellationTokenSource.Token);
 
                         Version.InstallState = MinecraftVersionInstallState.Installing;
 
-                        await Task.Delay(300);
+                        await Task.Delay(Theme.InstallStateDelay);
 
                         Version.InstallState = MinecraftVersionInstallState.Installed;
+
+                        Version.Progress = 100;
+                        Version.IsProgressVisible = Visibility.Collapsed;
                     }
                     catch (OperationCanceledException)
                     {
+                        Version.Progress = 0;
+                        Version.IsProgressVisible = Visibility.Collapsed;
+
                         MinecraftVersionManager.CleanupIncompleteVersion(Version.Id);
 
                         Version.InstallState = MinecraftVersionInstallState.NotInstalled;
                     }
                     catch (Exception ex)
                     {
+                        Version.Progress = 0;
+                        Version.IsProgressVisible = Visibility.Collapsed;
+
                         MinecraftVersionManager.CleanupIncompleteVersion(Version.Id);
 
                         MessageBox.Show(ex.Message);
@@ -290,7 +301,7 @@ namespace AsLauncher.Views.Components
 
                     Version.InstallState = MinecraftVersionInstallState.Installing;
 
-                    await Task.Delay(300);
+                    await Task.Delay(Theme.InstallStateDelay);
 
                     MinecraftVersionManager.RestoreVersion(Version.Id);
 
@@ -311,7 +322,7 @@ namespace AsLauncher.Views.Components
 
                     Version.InstallState = MinecraftVersionInstallState.Installing;
 
-                    await Task.Delay(300);
+                    await Task.Delay(Theme.InstallStateDelay);
 
                     Version.InstallState = MinecraftVersionInstallState.Installed;
 
@@ -327,7 +338,7 @@ namespace AsLauncher.Views.Components
 
             Version.InstallState = MinecraftVersionInstallState.Removing;
 
-            await Task.Delay(300);
+            await Task.Delay(Theme.InstallStateDelay);
 
             MinecraftVersionManager.DeleteVersion(Version.Id);
 
@@ -337,7 +348,7 @@ namespace AsLauncher.Views.Components
         // Update buttons and version indicator when card is loaded
         private void MinecraftVersionCard_Loaded(object sender, RoutedEventArgs e)
         {
-            UpdateButtons();
+            UpdateMinecraftVersionButtons();
 
             UpdateVersionIndicator();
         }

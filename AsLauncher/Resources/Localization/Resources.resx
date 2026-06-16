@@ -183,7 +183,16 @@
   <data name="MinecraftVersionsList" xml:space="preserve">
     <value>Minecraft Versions</value>
   </data>
+  <data name="JavaRuntimesList" xml:space="preserve">
+    <value>Java Runtimes</value>
+  </data>
   <data name="TextNoInternet" xml:space="preserve">
     <value>404 Not Found</value>
+  </data>
+  <data name="JavaArguments" xml:space="preserve">
+    <value>Java Arguments</value>
+  </data>
+  <data name="MemoryUsage" xml:space="preserve">
+    <value>Memory Usage</value>
   </data>
 </root>

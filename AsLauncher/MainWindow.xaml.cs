@@ -23,7 +23,7 @@ namespace AsLauncher
 
             SettingsManager.Load();
 
-            RuntimeManager.Initialize();
+            JavaRuntimeManager.Initialize();
 
             MinecraftVersionManager.Initialize();
 
@@ -124,7 +124,7 @@ namespace AsLauncher
 
         private void MainWindow_Closing(object? sender, CancelEventArgs e)
         {
-            RuntimeManager.CleanupDeletedFolder();
+            JavaRuntimeManager.CleanupDeletedFolder();
 
             MinecraftVersionManager.CleanupDeletedFolder();
         }

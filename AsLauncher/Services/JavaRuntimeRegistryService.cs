@@ -5,17 +5,17 @@ using System.Windows;
 
 namespace AsLauncher.Services
 {
-    public static class RuntimeRegistryService
+    public static class JavaRuntimeRegistryService
     {
-        public static RuntimeRegistry Load()
+        public static JavaRuntimeRegistry Load()
         {
             string json = File.ReadAllText("Data/runtimes.json");
 
-            return JsonSerializer.Deserialize<RuntimeRegistry>(json, new JsonSerializerOptions
+            return JsonSerializer.Deserialize<JavaRuntimeRegistry>(json, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             })
-                ?? new RuntimeRegistry();
+                ?? new JavaRuntimeRegistry();
         }
     }
 }

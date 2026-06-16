@@ -17,7 +17,7 @@
 
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="Auto"/>
 
             </Grid.ColumnDefinitions>
 
@@ -56,15 +56,36 @@
 
             </TextBlock>
 
-            <StackPanel Grid.Column="2" Orientation="Horizontal">
+            <Grid Grid.Column="2"
+                  Margin="-120,0,0,0">
 
-                <components:ActionButton x:Name="MainButton"
-                                         Click="MainButton_Click"
+                <Grid.ColumnDefinitions>
+                    
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="86"/>
+                    <ColumnDefinition Width="34"/>
+                    
+                </Grid.ColumnDefinitions>
+
+                <ProgressBar Grid.Column="0"
+                             Width="300"
+                             Margin="0,0,10,0"
+                             VerticalAlignment="Center"
+                             Minimum="0"
+                             Maximum="100"
+                             Value="{Binding Version.Progress, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                             Visibility="{Binding Version.IsProgressVisible, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                             Style="{StaticResource ModernProgressBar}"/>
+
+                <components:ActionButton Grid.Column="1"
+                                         x:Name="MinecraftVersionMainButton"
+                                         Click="MinecraftVersionButton_Click"
                                          Width="86"
                                          Height="28"
                                          ButtonContent="{x:Static lang:Resources.ButtonInstall}"/>
 
-                <components:ActionButton x:Name="RemoveButton"
+                <components:ActionButton Grid.Column="2"
+                                         x:Name="MinecraftVersionRemoveButton"
                                          Click="RemoveButton_Click"
                                          Width="28"
                                          Height="28"
@@ -83,7 +104,7 @@
 
                 </components:ActionButton>
 
-            </StackPanel>
+            </Grid>
 
         </Grid>
 

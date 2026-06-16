@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AsLauncher.Services
 {
-    public static class RuntimeManager
+    public static class JavaRuntimeManager
     {
         // Create folders for runtimes and temp files
         public static readonly string RuntimesFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Runtimes");
@@ -57,7 +57,7 @@ namespace AsLauncher.Services
             }
             string runtimeRoot = directories[0];
 
-            if (!RuntimeValidator.IsValidRuntime(runtimeRoot))
+            if (!JavaRuntimeValidator.IsValidRuntime(runtimeRoot))
             {
                 CleanupTemp(runtimeFolderName);
 
@@ -85,7 +85,7 @@ namespace AsLauncher.Services
             string runtimePath = Path.Combine(RuntimesFolder, folderName);
 
             return
-                RuntimeValidator.IsValidRuntime(runtimePath);
+                JavaRuntimeValidator.IsValidRuntime(runtimePath);
         }
 
         // Download runtime archive with progress reporting
@@ -186,25 +186,25 @@ namespace AsLauncher.Services
         // Check if runtime is marked as deleted
         public static bool IsRuntimeDeleted(string runtimeFolderName)
         {
-            string deletedPath = Path.Combine(DeletedRuntimesFolder, runtimeFolderName);
+            string deletedPath = Path.Combine(DeletedRuntimesFolder, runtimeFolderName + ".deleted");
 
             return Directory.Exists(deletedPath);
         }
 
         // Get runtime installation state
-        public static RuntimeInstallState GetRuntimeState(string runtimeFolder)
+        public static JavaRuntimeInstallState GetRuntimeState(string runtimeFolder)
         {
             if (IsRuntimeInstalled(runtimeFolder))
             {
-                return RuntimeInstallState.Installed;
+                return JavaRuntimeInstallState.Installed;
             }
 
             if (IsRuntimeDeleted(runtimeFolder))
             {
-                return RuntimeInstallState.Removed;
+                return JavaRuntimeInstallState.Removed;
             }
 
-            return RuntimeInstallState.NotInstalled;
+            return JavaRuntimeInstallState.NotInstalled;
         }
 
         // Cleanup temp files related to runtime

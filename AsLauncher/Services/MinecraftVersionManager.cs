@@ -133,9 +133,10 @@ namespace AsLauncher.Services
                                        .GetProperty("url")
                                        .GetString()!;
 
-            byte[] clientData = await client.GetByteArrayAsync(clientUrl);
-
-            await File.WriteAllBytesAsync(clientJarPath, clientData);
+            await DownloadFileWithProgressAsync(client, clientUrl, clientJarPath, token, progress =>
+            {
+                version.Progress = progress;
+            });
 
             token.ThrowIfCancellationRequested();
 
@@ -163,6 +164,45 @@ namespace AsLauncher.Services
             await DownloadAssetsAsync(assetIndexDocument, client, token);
 
             Console.WriteLine($"Assets finished for {version.Id}");
+        }
+
+        // Download with progress
+        private static async Task DownloadFileWithProgressAsync(
+            HttpClient client,
+            string url,
+            string destination,
+            CancellationToken token,
+            Action<double>? progressCallback = null)
+        {
+            using HttpResponseMessage response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, token);
+
+            response.EnsureSuccessStatusCode();
+
+            long? totalBytes = response.Content.Headers.ContentLength;
+
+            await using Stream contentStream = await response.Content.ReadAsStreamAsync(token);
+
+            await using FileStream fileStream = new(destination, FileMode.Create, FileAccess.Write, FileShare.None, 8192, true);
+
+            byte[] buffer = new byte[8192];
+
+            long totalRead = 0;
+
+            int read;
+
+            while ((read = await contentStream.ReadAsync(buffer, token)) > 0)
+            {
+                await fileStream.WriteAsync(buffer.AsMemory(0, read), token);
+
+                totalRead += read;
+
+                if (totalBytes.HasValue)
+                {
+                    double progress = (double)totalRead / totalBytes.Value * 100;
+
+                    progressCallback?.Invoke(progress);
+                }
+            }
         }
 
         // Get version.json path

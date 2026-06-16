@@ -2,7 +2,7 @@
   "groups": [
     {
       "minecraftVersion": "26.0+",
-      "runtimes": [
+      "javaRuntimes": [
         {
           "name": "JDK 25 Liberica",
           "runtimeFolder": "runtime-25-liberica",
@@ -14,7 +14,7 @@
 
     {
       "minecraftVersion": "1.21.x",
-      "runtimes": [
+      "javaRuntimes": [
         {
           "name": "JDK 21.0.6 Liberica",
           "runtimeFolder": "runtime-21-liberica",
@@ -50,7 +50,7 @@
 
     {
       "minecraftVersion": "1.17 - 1.20.6",
-      "runtimes": [
+      "javaRuntimes": [
         {
           "name": "JDK 17.0.14",
           "runtimeFolder": "runtime-17",
@@ -80,7 +80,7 @@
 
     {
       "minecraftVersion": "1.13 - 1.16.5",
-      "runtimes": [
+      "javaRuntimes": [
         {
           "name": "JRE 8u432",
           "runtimeFolder": "runtime-8u432",
@@ -110,7 +110,7 @@
 
     {
       "minecraftVersion": "1.8 - 1.12.2",
-      "runtimes": [
+      "javaRuntimes": [
         {
           "name": "JDK 8u392",
           "runtimeFolder": "runtime-8u392",
@@ -128,7 +128,7 @@
 
     {
       "minecraftVersion": "1.2 - 1.7.10",
-      "runtimes": [
+      "javaRuntimes": [
         {
           "name": "JRE 8u292",
           "runtimeFolder": "runtime-8u292",

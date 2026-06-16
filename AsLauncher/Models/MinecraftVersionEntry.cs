@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Threading;
+using System.Windows;
 
 namespace AsLauncher.Models
 {
@@ -28,5 +29,31 @@ namespace AsLauncher.Models
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
+
+        private double _progress;
+
+        public double Progress
+        {
+            get => _progress;
+            set
+            {
+                _progress = value;
+
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Progress)));
+            }
+        }
+
+        private Visibility _isProgressVisible = Visibility.Collapsed;
+
+        public Visibility IsProgressVisible
+        {
+            get => _isProgressVisible;
+            set
+            {
+                _isProgressVisible = value;
+
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsProgressVisible)));
+            }
+        }
     }
 }

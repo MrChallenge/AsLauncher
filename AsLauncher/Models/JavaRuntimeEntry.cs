@@ -6,7 +6,7 @@ namespace AsLauncher.Models
 {
     public class JavaRuntimeEntry : INotifyPropertyChanged
     {
-        private RuntimeInstallState _installState = RuntimeInstallState.NotInstalled;
+        private JavaRuntimeInstallState _installState = JavaRuntimeInstallState.NotInstalled;
 
         private double _progress;
 
@@ -37,15 +37,15 @@ namespace AsLauncher.Models
         }
         public CancellationTokenSource? CancellationTokenSource { get; set; }
 
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
-        public string RuntimeFolder { get; set; }
+        public string RuntimeFolder { get; set; } = "";
 
         public string DownloadUrl { get; set; } = "";
 
         public string Description { get; set; } = "";
 
-        public RuntimeInstallState InstallState
+        public JavaRuntimeInstallState InstallState
         {
             get => _installState;
 

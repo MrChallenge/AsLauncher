@@ -31,7 +31,7 @@ namespace AsLauncher.Views.Pages
 
             Loaded += VanillaPage_Loaded;
 
-            _internetTimer.Interval = TimeSpan.FromSeconds(5);
+            _internetTimer.Interval = AsLauncher.Core.Theme.InternetCheckInterval;
 
             _internetTimer.Tick += InternetTimer_Tick;
 
@@ -144,7 +144,7 @@ namespace AsLauncher.Views.Pages
 
                     _ = Dispatcher.InvokeAsync(async () =>
                     {
-                        await Task.Delay(500);
+                        await Task.Delay(Theme.CorruptedStateDelay);
 
                         version.InstallState = MinecraftVersionInstallState.Reinstall;
                     });

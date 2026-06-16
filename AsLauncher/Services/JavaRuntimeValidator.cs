@@ -2,7 +2,7 @@
 
 namespace AsLauncher.Services
 {
-    public static class RuntimeValidator
+    public static class JavaRuntimeValidator
     {
         public static bool IsValidRuntime(string path)
         {

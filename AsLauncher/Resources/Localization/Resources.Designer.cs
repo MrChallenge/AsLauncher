@@ -160,6 +160,24 @@ namespace AsLauncher.Resources.Localization {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Java Arguments.
+        /// </summary>
+        public static string JavaArguments {
+            get {
+                return ResourceManager.GetString("JavaArguments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Java Runtimes.
+        /// </summary>
+        public static string JavaRuntimesList {
+            get {
+                return ResourceManager.GetString("JavaRuntimesList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Configs.
         /// </summary>
         public static string MainLabelsConfigs {
@@ -192,6 +210,15 @@ namespace AsLauncher.Resources.Localization {
         public static string MainLabelsVanilla {
             get {
                 return ResourceManager.GetString("MainLabelsVanilla", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Memory Usage.
+        /// </summary>
+        public static string MemoryUsage {
+            get {
+                return ResourceManager.GetString("MemoryUsage", resourceCulture);
             }
         }
         

@@ -1,13 +1,14 @@
 ﻿
 namespace AsLauncher.Models
 {
-    public enum RuntimeInstallState
+    public enum JavaRuntimeInstallState
     {
         NotInstalled,
         Downloading,
         Installing,
         Installed,
         Removing,
-        Removed
+        Removed,
+        Unavailable
     }
 }
