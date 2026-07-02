@@ -165,6 +165,12 @@
   <data name="ButtonLaunch" xml:space="preserve">
     <value>Запустить</value>
   </data>
+  <data name="ButtonLaunching" xml:space="preserve">
+    <value>Запуск...</value>
+  </data>
+  <data name="ButtonLaunched" xml:space="preserve">
+    <value>Запущено</value>
+  </data>
   <data name="MinecraftVersionRelease" xml:space="preserve">
     <value>Релиз</value>
   </data>
@@ -187,12 +193,33 @@
     <value>Среды Java</value>
   </data>
   <data name="TextNoInternet" xml:space="preserve">
-    <value>404 Not Found</value>
+    <value>404 Ошибка сети</value>
   </data>
   <data name="JavaArguments" xml:space="preserve">
     <value>Аргументы Java</value>
   </data>
   <data name="MemoryUsage" xml:space="preserve">
     <value>Использовано памяти</value>
+  </data>
+  <data name="PlayerNameAttention" xml:space="preserve">
+    <value>Многие сервера не поддерживают нестандартные символы!</value>
+  </data>
+  <data name="PlayerNameWarning" xml:space="preserve">
+    <value>Поле не может быть пустым!</value>
+  </data>
+  <data name="JavaDesc_universal" xml:space="preserve">
+    <value>Универсальная, подходит для всего.</value>
+  </data>
+  <data name="JavaDesc_modpack" xml:space="preserve">
+    <value>Подходит для тяжелых модпаков.</value>
+  </data>
+  <data name="JavaDesc_vanilaOrLiteModpack" xml:space="preserve">
+    <value>Лучше всего подходит для ванилы и легких модпаков.</value>
+  </data>
+  <data name="JavaDesc_hardModpackOrLongPlay" xml:space="preserve">
+    <value>Хорошо подходит для тяжелых модпаков и длительных сессий. Слабая поддержка от сообщества - могут быть баги!</value>
+  </data>
+  <data name="JavaDesc_alternative" xml:space="preserve">
+    <value>Если есть проблемы с производительностью Liberica.</value>
   </data>
 </root>

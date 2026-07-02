@@ -87,169 +87,254 @@
         <!-- Sidebar -->
         <Border Grid.Column="0" Background="{x:Static core:Theme.Middleground}">
 
-            <StackPanel Margin="20">
+            <Grid>
 
-                <Button x:Name="SidebarToggleButton"
-                        Width="32"
-                        Height="32"
-                        HorizontalAlignment="Right"
-                        Margin="0,0,0,20"
-                        Background="{x:Static core:Theme.Transparent}"
-                        BorderThickness="0"
-                        Cursor="Hand"
-                        FocusVisualStyle="{x:Null}"
-                        Click="SidebarToggleButton_Click">
+                <StackPanel Margin="20">
 
-                    <Button.Template>
+                    <Button x:Name="SidebarToggleButton"
+                            Width="32"
+                            Height="32"
+                            HorizontalAlignment="Right"
+                            Margin="0,0,0,20"
+                            Background="{x:Static core:Theme.Transparent}"
+                            BorderThickness="0"
+                            Cursor="Hand"
+                            FocusVisualStyle="{x:Null}"
+                            Click="SidebarToggleButton_Click">
 
-                        <ControlTemplate TargetType="Button">
+                        <Button.Template>
 
-                            <Border x:Name="ButtonBorder"
-                                    Background="{x:Static core:Theme.Transparent}"
-                                    Opacity="1">
+                            <ControlTemplate TargetType="Button">
 
-                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <Border x:Name="ButtonBorder"
+                                        Background="{x:Static core:Theme.Transparent}"
+                                        Opacity="1">
 
-                            </Border>
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-                            <ControlTemplate.Triggers>
+                                </Border>
 
-                                <Trigger Property="IsMouseOver" Value="True">
+                                <ControlTemplate.Triggers>
 
-                                    <Setter TargetName="ButtonBorder"
-                                            Property="Opacity"
-                                            Value="0.8"/>
+                                    <Trigger Property="IsMouseOver" Value="True">
 
-                                </Trigger>
+                                        <Setter TargetName="ButtonBorder" Property="Opacity" Value="0.8"/>
 
-                            </ControlTemplate.Triggers>
+                                    </Trigger>
 
-                        </ControlTemplate>
+                                </ControlTemplate.Triggers>
 
-                    </Button.Template>
+                            </ControlTemplate>
 
-                    <Image x:Name="SidebarToggleIcon"
-                           Width="18"
-                           Height="18"
-                           Source="{x:Static core:Theme.ExpandButton}"
-                           RenderTransformOrigin="0.5,0.5">
+                        </Button.Template>
 
-                        <Image.RenderTransform>
+                        <Image x:Name="SidebarToggleIcon"
+                               Width="18"
+                               Height="18"
+                               Source="{x:Static core:Theme.ExpandButton}"
+                               RenderTransformOrigin="0.5,0.5">
 
-                            <RotateTransform Angle="0"/>
+                            <Image.RenderTransform>
 
-                        </Image.RenderTransform>
+                                <RotateTransform Angle="0"/>
 
-                    </Image>
+                            </Image.RenderTransform>
 
-                </Button>
+                        </Image>
 
-                <!--- Sidebar Title -->
-                <TextBlock x:Name="SidebarTitle"
-                           Text="AsLauncher"
-                           FontSize="28"
-                           FontWeight="SemiBold"
-                           Foreground="{x:Static core:Theme.White}"
-                           Margin="0,10,0,40"/>
+                    </Button>
 
-                <!--- Sidebar Buttons -->
-                <!-- General -->
-                <Button x:Name="GeneralButton"
-                        Click="GeneralButton_Click"
-                        Style="{StaticResource SidebarButtonStyle}">
+                    <!--- Sidebar Title -->
+                    <TextBlock x:Name="SidebarTitle"
+                               Text="AsLauncher"
+                               FontSize="28"
+                               FontWeight="SemiBold"
+                               Foreground="{x:Static core:Theme.White}"
+                               Margin="0,10,0,40"/>
 
-                    <StackPanel x:Name="GeneralStackPanel" Orientation="Horizontal">
+                    <!--- Sidebar Buttons -->
+                    <!-- General -->
+                    <Button x:Name="GeneralButton"
+                            Click="GeneralButton_Click"
+                            Style="{StaticResource SidebarButtonStyle}">
 
-                        <Image Source="{x:Static core:Theme.IconGeneral}"
-                               Width="22"
-                               Height="22"
-                               Margin="10,0,12,0"
+                        <StackPanel x:Name="GeneralStackPanel" Orientation="Horizontal">
+
+                            <Image Source="{x:Static core:Theme.IconGeneral}"
+                                   Width="22"
+                                   Height="22"
+                                   Margin="10,0,12,0"
+                                   VerticalAlignment="Center"
+                                   RenderOptions.BitmapScalingMode="HighQuality"
+                                   SnapsToDevicePixels="True"
+                                   UseLayoutRounding="True"/>
+
+                            <TextBlock x:Name="NavGeneralText"
+                                       Text="{x:Static lang:Resources.MainLabelsGeneral}"
+                                       VerticalAlignment="Center"/>
+
+                        </StackPanel>
+
+                    </Button>
+
+                    <!-- Vanilla -->
+                    <Button x:Name="VanillaButton"
+                            Click="VanillaButton_Click"
+                            Style="{StaticResource SidebarButtonStyle}">
+
+                        <StackPanel x:Name="VanillaStackPanel" Orientation="Horizontal">
+
+                            <Image Source="{x:Static core:Theme.IconVanilla}"
+                                   Width="22"
+                                   Height="22"
+                                   Margin="10,0,12,0"
+                                   VerticalAlignment="Center"
+                                   RenderOptions.BitmapScalingMode="HighQuality"
+                                   SnapsToDevicePixels="True"
+                                   UseLayoutRounding="True"/>
+
+                            <TextBlock x:Name="NavVanillaText"
+                                       Text="{x:Static lang:Resources.MainLabelsVanilla}"
+                                       VerticalAlignment="Center"/>
+
+                        </StackPanel>
+
+                    </Button>
+
+                    <!-- Modpacks -->
+                    <Button x:Name="ModpacksButton"
+                            Click="ModpacksButton_Click"
+                            Style="{StaticResource SidebarButtonStyle}">
+
+                        <StackPanel x:Name="ModpacksStackPanel" Orientation="Horizontal">
+
+                            <Image Source="{x:Static core:Theme.IconModpacks}"
+                                   Width="22"
+                                   Height="22"
+                                   Margin="10,0,12,0"
+                                   VerticalAlignment="Center"
+                                   RenderOptions.BitmapScalingMode="HighQuality"
+                                   SnapsToDevicePixels="True"
+                                   UseLayoutRounding="True"/>
+
+                            <TextBlock x:Name="NavModpacksText"
+                                       Text="{x:Static lang:Resources.MainLabelsModpacks}"
+                                       VerticalAlignment="Center"/>
+
+                        </StackPanel>
+
+                    </Button>
+
+                    <!-- Configs -->
+                    <Button x:Name="ConfigsButton"
+                            Click="ConfigsButton_Click"
+                            Style="{StaticResource SidebarButtonStyle}">
+
+                        <StackPanel x:Name="ConfigsStackPanel" Orientation="Horizontal">
+
+                            <Image Source="{x:Static core:Theme.IconConfigs}"
+                                   Width="22"
+                                   Height="22"
+                                   Margin="10,0,12,0"
+                                   VerticalAlignment="Center"
+                                   RenderOptions.BitmapScalingMode="HighQuality"
+                                   SnapsToDevicePixels="True"
+                                   UseLayoutRounding="True"/>
+
+                            <TextBlock x:Name="NavConfigsText"
+                                       Text="{x:Static lang:Resources.MainLabelsConfigs}"
+                                       VerticalAlignment="Center"/>
+
+                        </StackPanel>
+
+                    </Button>
+
+                </StackPanel>
+
+                <!-- Player Name Box -->
+                <Border Background="{x:Static core:Theme.Middleground}"
+                        BorderBrush="{x:Static core:Theme.Foreground}"
+                        BorderThickness="1"
+                        CornerRadius="6"
+                        Height="36"
+                        VerticalAlignment="Bottom"
+                        Margin="12">
+
+                    <Grid>
+
+                        <!-- Player Name Attention Icon -->
+                        <Image x:Name="PlayerNameAttention"
+                               Width="24"
+                               Height="24"
+                               HorizontalAlignment="Right"
                                VerticalAlignment="Center"
-                               RenderOptions.BitmapScalingMode="HighQuality"
-                               SnapsToDevicePixels="True"
-                               UseLayoutRounding="True"/>
+                               Margin="0,0,8,0"
+                               Visibility="Collapsed"
+                               ToolTipService.InitialShowDelay="0"
+                               Source="{x:Static core:Theme.IconAttention}">
 
-                        <TextBlock x:Name="NavGeneralText"
-                                   Text="{x:Static lang:Resources.MainLabelsGeneral}"
-                                   VerticalAlignment="Center"/>
+                            <Image.ToolTip>
 
-                    </StackPanel>
+                                <ToolTip>
 
-                </Button>
+                                    <TextBlock Text="{x:Static lang:Resources.PlayerNameAttention}"
+                                               TextWrapping="Wrap"
+                                               Width="220"/>
 
-                <!-- Vanilla -->
-                <Button x:Name="VanillaButton"
-                        Click="VanillaButton_Click"
-                        Style="{StaticResource SidebarButtonStyle}">
+                                </ToolTip>
 
-                    <StackPanel x:Name="VanillaStackPanel" Orientation="Horizontal">
+                            </Image.ToolTip>
 
-                        <Image Source="{x:Static core:Theme.IconVanilla}"
-                               Width="22"
-                               Height="22"
-                               Margin="10,0,12,0"
+                        </Image>
+
+                        <!-- Player Name Warning Icon -->
+                        <Image x:Name="PlayerNameWarning"
+                               Width="24"
+                               Height="24"
+                               HorizontalAlignment="Right"
                                VerticalAlignment="Center"
-                               RenderOptions.BitmapScalingMode="HighQuality"
-                               SnapsToDevicePixels="True"
-                               UseLayoutRounding="True"/>
+                               Margin="0,0,8,0"
+                               Visibility="Collapsed"
+                               ToolTipService.InitialShowDelay="0"
+                               Source="{x:Static core:Theme.IconWarning}">
 
-                        <TextBlock x:Name="NavVanillaText"
-                                   Text="{x:Static lang:Resources.MainLabelsVanilla}"
-                                   VerticalAlignment="Center"/>
+                            <Image.ToolTip>
 
-                    </StackPanel>
+                                <ToolTip>
 
-                </Button>
+                                    <TextBlock Text="{x:Static lang:Resources.PlayerNameWarning}"
+                                               TextWrapping="Wrap"
+                                               Width="220"/>
 
-                <!-- Modpacks -->
-                <Button x:Name="ModpacksButton"
-                        Click="ModpacksButton_Click"
-                        Style="{StaticResource SidebarButtonStyle}">
+                                </ToolTip>
 
-                    <StackPanel x:Name="ModpacksStackPanel" Orientation="Horizontal">
+                            </Image.ToolTip>
 
-                        <Image Source="{x:Static core:Theme.IconModpacks}"
-                               Width="22"
-                               Height="22"
-                               Margin="10,0,12,0"
-                               VerticalAlignment="Center"
-                               RenderOptions.BitmapScalingMode="HighQuality"
-                               SnapsToDevicePixels="True"
-                               UseLayoutRounding="True"/>
+                        </Image>
 
-                        <TextBlock x:Name="NavModpacksText"
-                                   Text="{x:Static lang:Resources.MainLabelsModpacks}"
-                                   VerticalAlignment="Center"/>
+                        <!-- Player Name Text Field -->
+                        <TextBox x:Name="PlayerNameTextBox"
+                                 Margin="0,0,24,0"
+                                 Background="{x:Static core:Theme.Transparent}"
+                                 Foreground="{x:Static core:Theme.White}"
+                                 CaretBrush="{x:Static core:Theme.White}"
+                                 SelectionBrush="{x:Static core:Theme.Blue}"
+                                 SelectionOpacity="0.35"
+                                 BorderThickness="0"
+                                 FontSize="16"
+                                 FontWeight="SemiBold"
+                                 Padding="0,-2,0,0"
+                                 TextAlignment="Center"
+                                 HorizontalContentAlignment="Center"
+                                 VerticalContentAlignment="Center"
+                                 TextChanged="PlayerNameTextBox_TextChanged"
+                                 KeyDown="PlayerNameTextBox_LostFocus"/>
 
-                    </StackPanel>
+                    </Grid>
 
-                </Button>
+                </Border>
 
-                <!-- Configs -->
-                <Button x:Name="ConfigsButton"
-                        Click="ConfigsButton_Click"
-                        Style="{StaticResource SidebarButtonStyle}">
-
-                    <StackPanel x:Name="ConfigsStackPanel" Orientation="Horizontal">
-
-                        <Image Source="{x:Static core:Theme.IconConfigs}"
-                               Width="22"
-                               Height="22"
-                               Margin="10,0,12,0"
-                               VerticalAlignment="Center"
-                               RenderOptions.BitmapScalingMode="HighQuality"
-                               SnapsToDevicePixels="True"
-                               UseLayoutRounding="True"/>
-
-                        <TextBlock x:Name="NavConfigsText"
-                                   Text="{x:Static lang:Resources.MainLabelsConfigs}"
-                                   VerticalAlignment="Center"/>
-
-                    </StackPanel>
-
-                </Button>
-
-            </StackPanel>
+            </Grid>
 
         </Border>
 

@@ -3,7 +3,11 @@ using AsLauncher.Models;
 using AsLauncher.Services;
 using AsLauncher.Views.Pages;
 using System.ComponentModel;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -11,6 +15,7 @@ namespace AsLauncher
 {
     public partial class MainWindow : Window
     {
+        // Initialize
         public MainWindow()
         {
             InitializeComponent();
@@ -45,10 +50,16 @@ namespace AsLauncher
 
                     break;
             }
+
+            PlayerNameTextBox.Text = SettingsManager.Settings.PlayerName;
+
+            PreviewMouseDown += (_, _) => Keyboard.ClearFocus();
         }
 
+        // Sidebar state
         private bool _sidebarCollapsed = false;
 
+        // Update sidebar state
         private void UpdateSidebarState()
         {
             if (_sidebarCollapsed)
@@ -79,6 +90,7 @@ namespace AsLauncher
             }
         }
 
+        // Sidebar toggle button click event
         private void SidebarToggleButton_Click(object sender, RoutedEventArgs e)
         {
             _sidebarCollapsed = !_sidebarCollapsed;
@@ -86,6 +98,7 @@ namespace AsLauncher
             UpdateSidebarState();
         }
 
+        // General button click event
         private void GeneralButton_Click(object sender, RoutedEventArgs e)
         {
             SettingsManager.Settings.LastPage = LauncherPage.General;
@@ -95,6 +108,7 @@ namespace AsLauncher
             MainContent.Content = new GeneralPage();
         }
 
+        // Vanila button click event
         private void VanillaButton_Click(object sender, RoutedEventArgs e)
         {
             SettingsManager.Settings.LastPage = LauncherPage.Vanilla;
@@ -104,6 +118,7 @@ namespace AsLauncher
             MainContent.Content = new VanillaPage();
         }
 
+        // Modpacks button click event
         private void ModpacksButton_Click(object sender, RoutedEventArgs e)
         {
             SettingsManager.Settings.LastPage = LauncherPage.Modpacks;
@@ -113,6 +128,7 @@ namespace AsLauncher
             MainContent.Content = new ModpacksPage();
         }
 
+        // Configs button click event
         private void ConfigsButton_Click(object sender, RoutedEventArgs e)
         {
             SettingsManager.Settings.LastPage = LauncherPage.Configs;
@@ -122,11 +138,50 @@ namespace AsLauncher
             MainContent.Content = new ConfigsPage();
         }
 
+        // Window closing event
         private void MainWindow_Closing(object? sender, CancelEventArgs e)
         {
             JavaRuntimeManager.CleanupDeletedFolder();
 
             MinecraftVersionManager.CleanupDeletedFolder();
+        }
+
+        // Player name text box text changed event
+        private void PlayerNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string name = PlayerNameTextBox.Text;
+
+            SettingsManager.Settings.PlayerName = name;
+
+            SettingsManager.Save();
+
+            bool isEmpty = string.IsNullOrWhiteSpace(name);
+
+            PlayerNameWarning.Visibility = isEmpty
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+
+            bool hasInvalidChars = !Regex.IsMatch(name, @"^[a-zA-Z0-9_]*$");
+
+            PlayerNameAttention.Visibility = hasInvalidChars
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+        }
+
+        // Player name text box lost focus event
+        private void PlayerNameTextBox_LostFocus(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                Keyboard.ClearFocus();
+                e.Handled = true;
+            }
+        }
+
+        // Root grid mouse down event
+        private void RootGrid_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Keyboard.ClearFocus();
         }
     }
 }

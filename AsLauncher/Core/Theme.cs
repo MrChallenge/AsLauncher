@@ -24,6 +24,11 @@ namespace AsLauncher.Core
 
         public static BitmapImage IconConfigs => new(new Uri("pack://application:,,,/Assets/Textures/IconConfigs.png"));
 
+        public static BitmapImage IconWarning => new(new Uri("pack://application:,,,/Assets/Textures/IconWarning.png"));
+
+        public static BitmapImage IconAttention => new(new Uri("pack://application:,,,/Assets/Textures/IconAttention.png"));
+
+
         // CheckBoxMark
         public static readonly Geometry CheckBoxMark = Geometry.Parse("M 5 9 L 7 11 L 12 6");
 
@@ -77,5 +82,16 @@ namespace AsLauncher.Core
         public static readonly TimeSpan InstallStateDelay = TimeSpan.FromMilliseconds(300);
 
         public static readonly TimeSpan CorruptedStateDelay = TimeSpan.FromMilliseconds(500);
+
+        // Limits
+        public static int DownloadLibrariesLimit { get; set; } = 16;
+
+        public static int DownloadAssetsLimit { get; set; } = 16;
+
+        // Autogen player name
+        public static string GenerateDefaultPlayerName()
+        {
+            return $"AsPlayer{Random.Shared.Next(0000, 9999)}";
+        }
     }
 }

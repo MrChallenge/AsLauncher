@@ -17,12 +17,12 @@ namespace AsLauncher
                 MessageBox.Show(ex.ToString(), "Startup Crash");
             }
         }
-        /*
+
         public App()
         {
             AllocConsole();
         }
-        */
+
         [DllImport("kernel32.dll")]
         private static extern bool AllocConsole();
     }

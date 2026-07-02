@@ -213,6 +213,86 @@ namespace AsLauncher.Views.Components
             }
         }
 
+        // Install process
+        private async Task InstallProcess(bool cleanupBeforeInstall)
+        {
+            if (Version == null)
+                return;
+
+            try
+            {
+                Version.CancellationTokenSource = new();
+
+                Version.Progress = 0;
+
+                Version.IsProgressVisible = Visibility.Visible;
+
+                if (cleanupBeforeInstall)
+                {
+                    MinecraftVersionManager.CleanupIncompleteVersion(Version.Id);
+                }
+
+                Version.InstallState = MinecraftVersionInstallState.Downloading;
+
+                await MinecraftVersionManager.InstallVersionAsync(Version, Version.CancellationTokenSource.Token);
+
+                Console.WriteLine("InstallVersionAsync finished");
+
+                Version.InstallState = MinecraftVersionInstallState.Installing;
+
+                Console.WriteLine("State -> Installing");
+
+                bool valid = MinecraftVersionManager.ValidateVersion(Version.Id);
+
+                Console.WriteLine($"ValidateVersion = {valid}");
+
+                if (!valid)
+                {
+                    MinecraftVersionManager.CleanupIncompleteVersion(Version.Id);
+
+                    Console.WriteLine("CleanupIncompleteVersion finished");
+                }
+
+                await Task.Delay(Theme.InstallStateDelay);
+
+                Console.WriteLine("Delay finished");
+
+                Version.InstallState = valid
+                    ? MinecraftVersionInstallState.Installed
+                    : MinecraftVersionInstallState.NotInstalled;
+
+                Console.WriteLine($"Final state = {Version.InstallState}");
+
+                Version.Progress = 100;
+
+                Version.IsProgressVisible = Visibility.Collapsed;
+
+                Console.WriteLine("InstallProcess finished");
+            }
+            catch (OperationCanceledException)
+            {
+                Version.Progress = 0;
+
+                Version.IsProgressVisible = Visibility.Collapsed;
+
+                MinecraftVersionManager.CleanupIncompleteVersion(Version.Id);
+
+                Version.InstallState = MinecraftVersionInstallState.NotInstalled;
+            }
+            catch (Exception ex)
+            {
+                Version.Progress = 0;
+
+                Version.IsProgressVisible = Visibility.Collapsed;
+
+                MinecraftVersionManager.CleanupIncompleteVersion(Version.Id);
+
+                MessageBox.Show(ex.Message);
+
+                Version.InstallState = MinecraftVersionInstallState.NotInstalled;
+            }
+        }
+
         // Install manager
         private async void MinecraftVersionButton_Click(object sender, RoutedEventArgs e)
         {
@@ -224,46 +304,7 @@ namespace AsLauncher.Views.Components
                 // Installing
                 case MinecraftVersionInstallState.NotInstalled:
 
-                    try
-                    {
-                        Version.CancellationTokenSource = new();
-
-                        Version.Progress = 0;
-                        Version.IsProgressVisible = Visibility.Visible;
-
-                        Version.InstallState = MinecraftVersionInstallState.Downloading;
-
-                        await MinecraftVersionManager.InstallVersionAsync(Version, Version.CancellationTokenSource.Token);
-
-                        Version.InstallState = MinecraftVersionInstallState.Installing;
-
-                        await Task.Delay(Theme.InstallStateDelay);
-
-                        Version.InstallState = MinecraftVersionInstallState.Installed;
-
-                        Version.Progress = 100;
-                        Version.IsProgressVisible = Visibility.Collapsed;
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        Version.Progress = 0;
-                        Version.IsProgressVisible = Visibility.Collapsed;
-
-                        MinecraftVersionManager.CleanupIncompleteVersion(Version.Id);
-
-                        Version.InstallState = MinecraftVersionInstallState.NotInstalled;
-                    }
-                    catch (Exception ex)
-                    {
-                        Version.Progress = 0;
-                        Version.IsProgressVisible = Visibility.Collapsed;
-
-                        MinecraftVersionManager.CleanupIncompleteVersion(Version.Id);
-
-                        MessageBox.Show(ex.Message);
-
-                        Version.InstallState = MinecraftVersionInstallState.NotInstalled;
-                    }
+                    await InstallProcess(false);
 
                     break;
 
@@ -277,54 +318,32 @@ namespace AsLauncher.Views.Components
                 // Launching
                 case MinecraftVersionInstallState.Installed:
                     {
-                        using JsonDocument document = MinecraftVersionManager.LoadVersionJson(Version.Id);
-                        
-                        string mainClass = document.RootElement
-                                                   .GetProperty("mainClass")
-                                                   .GetString()!;
-
-                        string classPath = MinecraftVersionManager.BuildClassPath(Version.Id);
-
-                        MessageBox.Show($"MainClass:\n{mainClass}\n\nClasspath entries:{classPath.Split(System.IO.Path.PathSeparator).Length}");
-
-                        List<string> jvmArguments = MinecraftVersionManager.GetJvmArguments(Version.Id);
-
-                        List<string> gameArguments = MinecraftVersionManager.GetGameArguments(Version.Id);
-
-                        MessageBox.Show($"JVM: {jvmArguments.Count}\nGame: {gameArguments.Count}");
+                        await MinecraftLaunchManager.LaunchAsync(Version.Id);
 
                         break;
                     }
 
                 // Removed -> Restoring
                 case MinecraftVersionInstallState.Removed:
-
+                    
                     Version.InstallState = MinecraftVersionInstallState.Installing;
 
                     await Task.Delay(Theme.InstallStateDelay);
 
                     MinecraftVersionManager.RestoreVersion(Version.Id);
 
-                    Version.InstallState = MinecraftVersionInstallState.Installed;
+                    bool restoreValid = MinecraftVersionManager.ValidateVersion(Version.Id);
+
+                    Version.InstallState = restoreValid
+                        ? MinecraftVersionInstallState.Installed
+                        : MinecraftVersionInstallState.NotInstalled;
 
                     break;
 
                 // Corrupted -> Reinstalling
                 case MinecraftVersionInstallState.Reinstall:
 
-                    MinecraftVersionManager.CleanupIncompleteVersion(Version.Id);
-
-                    Version.CancellationTokenSource = new();
-
-                    Version.InstallState = MinecraftVersionInstallState.Downloading;
-
-                    await MinecraftVersionManager.InstallVersionAsync(Version, Version.CancellationTokenSource.Token);
-
-                    Version.InstallState = MinecraftVersionInstallState.Installing;
-
-                    await Task.Delay(Theme.InstallStateDelay);
-
-                    Version.InstallState = MinecraftVersionInstallState.Installed;
+                    await InstallProcess(true);
 
                     break;
             }

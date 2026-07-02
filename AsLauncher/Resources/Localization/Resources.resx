@@ -124,13 +124,13 @@
     <value>Reinstall</value>
   </data>
   <data name="ButtonRemoving" xml:space="preserve">
-    <value>Removing</value>
+    <value>Removing...</value>
   </data>
   <data name="ButtonRemove" xml:space="preserve">
     <value>Remove</value>
   </data>
   <data name="ButtonInstalling" xml:space="preserve">
-    <value>Installing</value>
+    <value>Installing...</value>
   </data>
   <data name="ButtonInstalled" xml:space="preserve">
     <value>Installed</value>
@@ -165,6 +165,12 @@
   <data name="ButtonLaunch" xml:space="preserve">
     <value>Launch</value>
   </data>
+  <data name="ButtonLaunching" xml:space="preserve">
+    <value>Launching...</value>
+  </data>
+  <data name="ButtonLaunched" xml:space="preserve">
+    <value>Launched</value>
+  </data>
   <data name="MinecraftVersionRelease" xml:space="preserve">
     <value>Release</value>
   </data>
@@ -187,12 +193,33 @@
     <value>Java Runtimes</value>
   </data>
   <data name="TextNoInternet" xml:space="preserve">
-    <value>404 Not Found</value>
+    <value>404 Network eror</value>
   </data>
   <data name="JavaArguments" xml:space="preserve">
     <value>Java Arguments</value>
   </data>
   <data name="MemoryUsage" xml:space="preserve">
     <value>Memory Usage</value>
+  </data>
+  <data name="PlayerNameAttention" xml:space="preserve">
+    <value>Many servers don't support non-standard symbol characters!</value>
+  </data>
+  <data name="PlayerNameWarning" xml:space="preserve">
+    <value>Input field can't be empty!</value>
+  </data>
+  <data name="JavaDesc_universal" xml:space="preserve">
+    <value>Universal, working with all.</value>
+  </data>
+  <data name="JavaDesc_modpack" xml:space="preserve">
+    <value>Better for hard modpacks.</value>
+  </data>
+  <data name="JavaDesc_vanilaOrLiteModpack" xml:space="preserve">
+    <value>Better for vanilla or lite modpacks.</value>
+  </data>
+  <data name="JavaDesc_hardModpackOrLongPlay" xml:space="preserve">
+    <value>Good for hard modpacks and long sessions. Whick support from community - there may be bugs!</value>
+  </data>
+  <data name="JavaDesc_alternative" xml:space="preserve">
+    <value>If there are performance problems with Liberica.</value>
   </data>
 </root>

@@ -24,6 +24,7 @@
     <None Remove="Assets\Logo\AsLauncher.png" />
     <None Remove="Assets\Logo\AsLauncher.svg" />
     <None Remove="Assets\Textures\ExpandButton.png" />
+    <None Remove="Assets\Textures\IconAttention.png" />
     <None Remove="Assets\Textures\IconConfigs.png" />
     <None Remove="Assets\Textures\IconGeneral.png" />
     <None Remove="Assets\Textures\IconModpacks.png" />
@@ -47,10 +48,12 @@
     <Resource Include="Assets\Logo\AsLauncher.png" />
     <Resource Include="Assets\Logo\AsLauncher.svg" />
     <Resource Include="Assets\Textures\ExpandButton.png" />
+    <Resource Include="Assets\Textures\IconAttention.png" />
     <Resource Include="Assets\Textures\IconConfigs.png" />
     <Resource Include="Assets\Textures\IconGeneral.png" />
     <Resource Include="Assets\Textures\IconModpacks.png" />
     <Resource Include="Assets\Textures\IconVanilla.png" />
+    <Resource Include="Assets\Textures\IconWarning.png" />
     <Resource Include="Assets\Textures\RemoveButton.png" />
   </ItemGroup>
 

@@ -25,7 +25,11 @@
                 <Setter Property="Background" Value="{x:Static core:Theme.Background}"/>
                 <Setter Property="Foreground" Value="{x:Static core:Theme.White}"/>
                 <Setter Property="BorderBrush" Value="{x:Static core:Theme.ProgressBar}"/>
+                <Setter Property="Placement" Value="Top"/>
+                <Setter Property="PlacementTarget" Value="{Binding RelativeSource={RelativeSource Self}}"/>
                 <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="ToolTipService.InitialShowDelay" Value="100"/>
+                <Setter Property="ToolTipService.ShowDuration" Value="2147483647"/>
                 <Setter Property="Padding" Value="14"/>
                 <Setter Property="FontSize" Value="13"/>
                 <Setter Property="MaxWidth" Value="320"/>

@@ -97,7 +97,7 @@ namespace AsLauncher.Resources.Localization {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Installing.
+        ///   Ищет локализованную строку, похожую на Installing....
         /// </summary>
         public static string ButtonInstalling {
             get {
@@ -111,6 +111,24 @@ namespace AsLauncher.Resources.Localization {
         public static string ButtonLaunch {
             get {
                 return ResourceManager.GetString("ButtonLaunch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Launched.
+        /// </summary>
+        public static string ButtonLaunched {
+            get {
+                return ResourceManager.GetString("ButtonLaunched", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Launching....
+        /// </summary>
+        public static string ButtonLaunching {
+            get {
+                return ResourceManager.GetString("ButtonLaunching", resourceCulture);
             }
         }
         
@@ -133,7 +151,7 @@ namespace AsLauncher.Resources.Localization {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Removing.
+        ///   Ищет локализованную строку, похожую на Removing....
         /// </summary>
         public static string ButtonRemoving {
             get {
@@ -165,6 +183,51 @@ namespace AsLauncher.Resources.Localization {
         public static string JavaArguments {
             get {
                 return ResourceManager.GetString("JavaArguments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на If there are performance problems with Liberica..
+        /// </summary>
+        public static string JavaDesc_alternative {
+            get {
+                return ResourceManager.GetString("JavaDesc_alternative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Good for hard modpacks and long sessions. Whick support from community - there may be bugs!.
+        /// </summary>
+        public static string JavaDesc_hardModpackOrLongPlay {
+            get {
+                return ResourceManager.GetString("JavaDesc_hardModpackOrLongPlay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Better for hard modpacks..
+        /// </summary>
+        public static string JavaDesc_modpack {
+            get {
+                return ResourceManager.GetString("JavaDesc_modpack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Universal, working with all..
+        /// </summary>
+        public static string JavaDesc_universal {
+            get {
+                return ResourceManager.GetString("JavaDesc_universal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Better for vanilla or lite modpacks..
+        /// </summary>
+        public static string JavaDesc_vanilaOrLiteModpack {
+            get {
+                return ResourceManager.GetString("JavaDesc_vanilaOrLiteModpack", resourceCulture);
             }
         }
         
@@ -286,7 +349,25 @@ namespace AsLauncher.Resources.Localization {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на 404 Not Found.
+        ///   Ищет локализованную строку, похожую на Many servers don&apos;t support non-standard symbol characters!.
+        /// </summary>
+        public static string PlayerNameAttention {
+            get {
+                return ResourceManager.GetString("PlayerNameAttention", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Input field can&apos;t be empty!.
+        /// </summary>
+        public static string PlayerNameWarning {
+            get {
+                return ResourceManager.GetString("PlayerNameWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на 404 Network eror.
         /// </summary>
         public static string TextNoInternet {
             get {

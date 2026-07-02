@@ -245,5 +245,69 @@ namespace AsLauncher.Services
                 }
             }
         }
+
+        // Get java.exe path
+        public static string? GetJavaExecutable(string runtimeFolder)
+        {
+            string runtimePath = Path.Combine(RuntimesFolder, runtimeFolder);
+
+            if (!Directory.Exists(runtimePath))
+                return null;
+
+            return Directory
+                .GetFiles(runtimePath, "java.exe", SearchOption.AllDirectories)
+                .FirstOrDefault();
+        }
+
+        // Get javaw.exe path
+        public static string? GetJavawExecutable(string runtimeFolder)
+        {
+            string runtimePath = Path.Combine(RuntimesFolder, runtimeFolder);
+
+            if (!Directory.Exists(runtimePath))
+                return null;
+
+            return Directory
+                .GetFiles(runtimePath, "javaw.exe", SearchOption.AllDirectories)
+                .FirstOrDefault();
+        }
+
+        // Get Runtime for Java version
+        public static JavaRuntimeEntry? GetRuntimeForJavaVersion(int javaVersion)
+        {
+            JavaRuntimeRegistry registry = JavaRuntimeRegistryService.Load();
+
+            foreach (var group in registry.Groups)
+            {
+                foreach (var runtime in group.JavaRuntimes)
+                {
+                    if (!IsRuntimeInstalled(runtime.RuntimeFolder))
+                        continue;
+
+                    if (javaVersion >= 25 && runtime.RuntimeFolder.Contains("25"))
+                    {
+                        return runtime;
+                    }
+
+                    if (javaVersion >= 21 && runtime.RuntimeFolder.Contains("21"))
+                    {
+                        return runtime;
+                    }
+
+                    // Java 17 is absolutely compatible with versions requiring Java 16
+                    if (javaVersion >= 16 && runtime.RuntimeFolder.Contains("17"))
+                    {
+                        return runtime;
+                    }
+
+                    if (javaVersion == 8 && runtime.RuntimeFolder.Contains("8"))
+                    {
+                        return runtime;
+                    }
+                }
+            }
+
+            return null;
+        }
     }
 }

@@ -138,6 +138,12 @@ namespace AsLauncher.Views.Pages
 
             foreach (var version in versions)
             {
+                Console.WriteLine(
+                    $"{version.Id} " +
+                    $"Installed={MinecraftVersionManager.IsVersionInstalled(version.Id)} " +
+                    $"Corrupted={MinecraftVersionManager.IsVersionCorrupted(version.Id)} " +
+                    $"Deleted={MinecraftVersionManager.IsVersionDeleted(version.Id)}");
+
                 if (MinecraftVersionManager.IsVersionCorrupted(version.Id))
                 {
                     version.InstallState = MinecraftVersionInstallState.Corrupted;
@@ -148,6 +154,8 @@ namespace AsLauncher.Views.Pages
 
                         version.InstallState = MinecraftVersionInstallState.Reinstall;
                     });
+
+                    Console.WriteLine($"{version.Id} -> Corrupted");
                 }
 
                 else if (!internetAvailable &&
@@ -160,6 +168,8 @@ namespace AsLauncher.Views.Pages
                 else if (MinecraftVersionManager.IsVersionInstalled(version.Id))
                 {
                     version.InstallState = MinecraftVersionInstallState.Installed;
+
+                    Console.WriteLine($"{version.Id} -> Installed");
                 }
 
                 else if (MinecraftVersionManager.IsVersionDeleted(version.Id))
@@ -170,6 +180,8 @@ namespace AsLauncher.Views.Pages
                 else
                 {
                     version.InstallState = MinecraftVersionInstallState.NotInstalled;
+
+                    Console.WriteLine($"{version.Id} -> NotInstalled");
                 }
             }
 
@@ -207,4 +219,3 @@ namespace AsLauncher.Views.Pages
         }
     }
 }
-

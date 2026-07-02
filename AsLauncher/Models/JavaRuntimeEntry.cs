@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
-using System.Threading;
 using System.Windows;
+
+using Localization = AsLauncher.Resources.Localization.Resources;
 
 namespace AsLauncher.Models
 {
@@ -43,12 +44,14 @@ namespace AsLauncher.Models
 
         public string DownloadUrl { get; set; } = "";
 
-        public string Description { get; set; } = "";
+        public string DescriptionKey { get; set; } = "";
+
+        public string Description => Localization.ResourceManager.GetString(DescriptionKey) ?? DescriptionKey;
 
         public JavaRuntimeInstallState InstallState
         {
             get => _installState;
-
+            
             set
             {
                 _installState = value;
