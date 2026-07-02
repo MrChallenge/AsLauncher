@@ -41,6 +41,7 @@
 
   <ItemGroup>
     <Folder Include="ViewModels\" />
+    <Folder Include="AsLauncher_JavaAgent\" />
   </ItemGroup>
 
   <ItemGroup>
