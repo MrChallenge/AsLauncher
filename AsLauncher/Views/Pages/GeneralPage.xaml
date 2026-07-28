@@ -16,11 +16,13 @@
                     VerticalAlignment="Center"
                     MaxWidth="700">
 
+            <!-- Logo -->
             <Image Source="{x:Static core:Theme.LauncherLogo}"
                    Width="96"
                    Height="96"
                    Margin="0,0,0,20"/>
 
+            <!-- Name -->
             <TextBlock Text="AsLauncher"
                        Foreground="{x:Static core:Theme.White}"
                        FontSize="42"
@@ -28,6 +30,7 @@
                        HorizontalAlignment="Center"
                        Margin="0,0,0,25"/>
 
+            <!-- Desc -->
             <TextBlock Text="{x:Static lang:Resources.PagespaceGeneralDesc}"
                        Foreground="{x:Static core:Theme.LightGrey}"
                        FontSize="16"

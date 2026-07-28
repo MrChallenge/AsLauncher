@@ -222,4 +222,40 @@
   <data name="JavaDesc_alternative" xml:space="preserve">
     <value>If there are performance problems with Liberica.</value>
   </data>
+  <data name="Progress_Start" xml:space="preserve">
+    <value>Preparing checkup version...</value>
+    <comment>1</comment>
+  </data>
+  <data name="Progress_VersionJson" xml:space="preserve">
+    <value>Checkup version file...</value>
+    <comment>2</comment>
+  </data>
+  <data name="Progress_ClientJar" xml:space="preserve">
+    <value>Checkup game client...</value>
+    <comment>3</comment>
+  </data>
+  <data name="Progress_VersionJsonRead" xml:space="preserve">
+    <value>Reading version description...</value>
+    <comment>4</comment>
+  </data>
+  <data name="Progress_AssetIndex" xml:space="preserve">
+    <value>Checkup asset index...</value>
+    <comment>5</comment>
+  </data>
+  <data name="Progress_AssetIndexFile" xml:space="preserve">
+    <value>Checkup asset index file...</value>
+    <comment>6</comment>
+  </data>
+  <data name="Progress_AssetIndexRead" xml:space="preserve">
+    <value>Reading asset index...</value>
+    <comment>7</comment>
+  </data>
+  <data name="Progress_Assets" xml:space="preserve">
+    <value>Checkup game resources...</value>
+    <comment>8</comment>
+  </data>
+  <data name="Progress_Finish" xml:space="preserve">
+    <value>Checkup completed.</value>
+    <comment>9</comment>
+  </data>
 </root>

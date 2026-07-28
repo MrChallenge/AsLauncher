@@ -1,9 +1,9 @@
-﻿using AsLauncher.Models;
-using AsLauncher.Services;
+﻿using AsLauncher.Core;
+using AsLauncher.Core.Logger;
+using AsLauncher.Models;
 using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using System.Windows;
 
 namespace AsLauncher.Services
@@ -262,10 +262,21 @@ namespace AsLauncher.Services
 
             string output = await process.StandardOutput.ReadToEndAsync();
 
+            Logger.Debug(LoggerConfig.Java, output);
+
+            if (!string.IsNullOrWhiteSpace(output))
+            {
+                Logger.Debug(LoggerConfig.Java, output);
+            }
+
             string error = await process.StandardError.ReadToEndAsync();
 
-            Console.WriteLine(output);
-            Console.WriteLine(error);
+            Logger.Error(LoggerConfig.Java, error);
+
+            if (!string.IsNullOrWhiteSpace(error))
+            {
+                Logger.Error(LoggerConfig.Java, error);
+            }
 
             return;
         }
@@ -282,6 +293,10 @@ namespace AsLauncher.Services
             string versionType = MinecraftVersionManager.GetVersionType(versionId);
 
             string nativesDir = Path.Combine(MinecraftVersionManager.VersionsFolder, versionId, "natives");
+
+            string startupWidth = Theme.StartupWidth;
+
+            string startupHeight = Theme.StartupHeight;
 
             argument = argument.Replace("${version_name}", versionId);
             argument = argument.Replace("${game_directory}", gameDir);
@@ -303,8 +318,8 @@ namespace AsLauncher.Services
 
             argument = argument.Replace("${version_type}", versionType);
 
-            argument = argument.Replace("${resolution_width}", "854");
-            argument = argument.Replace("${resolution_height}", "480");
+            argument = argument.Replace("${resolution_width}", startupWidth);
+            argument = argument.Replace("${resolution_height}", startupHeight);
 
             return argument;
         }

@@ -1,16 +1,12 @@
 ﻿using AsLauncher.Core;
+using AsLauncher.Core.Logger;
 using AsLauncher.Models;
-using AsLauncher.Resources.Localization;
 using AsLauncher.Services;
 using System.ComponentModel;
-using System.Text.Json;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Shapes;
-using System.IO;
 
-using Localization = AsLauncher.Resources.Localization.Resources;
+using Lang = AsLauncher.Resources.Localization.Resources;
 
 namespace AsLauncher.Views.Components
 {
@@ -25,18 +21,21 @@ namespace AsLauncher.Views.Components
 
         }
 
+        // Dependency Properties
         public static readonly DependencyProperty VersionProperty = DependencyProperty.Register(
             nameof(Version),
             typeof(MinecraftVersionEntry),
             typeof(MinecraftVersionCard),
             new PropertyMetadata(null, OnVersionChanged));
 
+        // Version property
         public MinecraftVersionEntry Version
         {
             get => (MinecraftVersionEntry)GetValue(VersionProperty);
             set => SetValue(VersionProperty, value);
         }
 
+        // Update buttons based on version's install state
         private void UpdateMinecraftVersionButtons()
         {
             if (Version == null)
@@ -46,9 +45,8 @@ namespace AsLauncher.Views.Components
 
             switch (Version.InstallState)
             {
-                // Install
-                case MinecraftVersionInstallState.NotInstalled:
-                    MinecraftVersionMainButton.ButtonContent = Localization.ButtonInstall;
+               case MinecraftVersionInstallState.NotInstalled:   // Install
+                    MinecraftVersionMainButton.ButtonContent = Lang.ButtonInstall;
                     MinecraftVersionMainButton.IsEnabled = true;
 
                     MinecraftVersionMainButton.ButtonBorderBrush = Theme.Transparent;
@@ -57,9 +55,8 @@ namespace AsLauncher.Views.Components
 
                     break;
 
-                // Cancel
-                case MinecraftVersionInstallState.Downloading:
-                    MinecraftVersionMainButton.ButtonContent = Localization.ButtonCancel;
+               case MinecraftVersionInstallState.Downloading:   // Cancel
+                    MinecraftVersionMainButton.ButtonContent = Lang.ButtonCancel;
                     MinecraftVersionMainButton.IsEnabled = true;
 
                     MinecraftVersionMainButton.ButtonBorderBrush = Theme.Transparent;
@@ -68,9 +65,8 @@ namespace AsLauncher.Views.Components
 
                     break;
 
-                // Installing
-                case MinecraftVersionInstallState.Installing:
-                    MinecraftVersionMainButton.ButtonContent = Localization.ButtonInstalling;
+               case MinecraftVersionInstallState.Installing:   // Installing
+                    MinecraftVersionMainButton.ButtonContent = Lang.ButtonInstalling;
                     MinecraftVersionMainButton.IsEnabled = false;
 
                     MinecraftVersionMainButton.ButtonBorderBrush = Theme.Blue;
@@ -79,9 +75,8 @@ namespace AsLauncher.Views.Components
 
                     break;
 
-                // Launch
-                case MinecraftVersionInstallState.Installed:
-                    MinecraftVersionMainButton.ButtonContent = Localization.ButtonLaunch;
+                case MinecraftVersionInstallState.Installed:   // Launch
+                    MinecraftVersionMainButton.ButtonContent = Lang.ButtonLaunch;
                     MinecraftVersionMainButton.IsEnabled = true;
 
                     MinecraftVersionMainButton.ButtonBorderBrush = Theme.Transparent;
@@ -97,9 +92,8 @@ namespace AsLauncher.Views.Components
 
                     break;
 
-                // Removing
-                case MinecraftVersionInstallState.Removing:
-                    MinecraftVersionMainButton.ButtonContent = Localization.ButtonRemoving;
+               case MinecraftVersionInstallState.Removing:   // Removing
+                    MinecraftVersionMainButton.ButtonContent = Lang.ButtonRemoving;
                     MinecraftVersionMainButton.IsEnabled = false;
 
                     MinecraftVersionMainButton.ButtonBorderBrush = Theme.Red;
@@ -108,9 +102,8 @@ namespace AsLauncher.Views.Components
 
                     break;
 
-                // Restore
-                case MinecraftVersionInstallState.Removed:
-                    MinecraftVersionMainButton.ButtonContent = Localization.ButtonRestore;
+               case MinecraftVersionInstallState.Removed:   // Restore
+                    MinecraftVersionMainButton.ButtonContent = Lang.ButtonRestore;
                     MinecraftVersionMainButton.IsEnabled = true;
 
                     MinecraftVersionMainButton.ButtonBorderBrush = Theme.Transparent;
@@ -119,10 +112,9 @@ namespace AsLauncher.Views.Components
 
                     break;
 
-                // Corrupted
-                case MinecraftVersionInstallState.Corrupted:
+                case MinecraftVersionInstallState.Corrupted:   // Corrupted
 
-                    MinecraftVersionMainButton.ButtonContent = Localization.ButtonCorrupted;
+                    MinecraftVersionMainButton.ButtonContent = Lang.ButtonCorrupted;
                     MinecraftVersionMainButton.IsEnabled = false;
 
                     MinecraftVersionMainButton.ButtonBorderBrush = Theme.Yellow;
@@ -131,9 +123,8 @@ namespace AsLauncher.Views.Components
 
                     break;
 
-                // Reinstall
-                case MinecraftVersionInstallState.Reinstall:
-                    MinecraftVersionMainButton.ButtonContent = Localization.ButtonReinstall;
+                case MinecraftVersionInstallState.Reinstall:   // Reinstall
+                    MinecraftVersionMainButton.ButtonContent = Lang.ButtonReinstall;
                     MinecraftVersionMainButton.IsEnabled = true;
 
                     MinecraftVersionMainButton.ButtonBorderBrush = Theme.Transparent;
@@ -142,9 +133,8 @@ namespace AsLauncher.Views.Components
 
                     break;
 
-                // Unavailable
-                case MinecraftVersionInstallState.Unavailable:
-                    MinecraftVersionMainButton.ButtonContent = Localization.ButtonUnavailable;
+                case MinecraftVersionInstallState.Unavailable:   // Unavailable
+                    MinecraftVersionMainButton.ButtonContent = Lang.ButtonUnavailable;
                     MinecraftVersionMainButton.IsEnabled = false;
 
                     MinecraftVersionMainButton.ButtonBorderBrush = Theme.Grey;
@@ -163,24 +153,19 @@ namespace AsLauncher.Views.Components
 
             switch (Version.Type)
             {
-                case "release": VersionTypeIndicator.Fill = Theme.Green;
-
+                case MinecraftVersionType.Release:VersionTypeIndicator.Fill = Theme.Green;
                     break;
 
-                case "snapshot": VersionTypeIndicator.Fill = Theme.Yellow;
-
+                case MinecraftVersionType.Snapshot:VersionTypeIndicator.Fill = Theme.Yellow;
                     break;
 
-                case "old_beta": VersionTypeIndicator.Fill = Theme.Red;
-
+                case MinecraftVersionType.OldBeta:VersionTypeIndicator.Fill = Theme.Red;
                     break;
 
-                case "old_alpha": VersionTypeIndicator.Fill = Theme.LightBlue;
-
+                case MinecraftVersionType.OldAlpha:VersionTypeIndicator.Fill = Theme.LightBlue;
                     break;
 
-                default: VersionTypeIndicator.Fill = Theme.White;
-
+                default:VersionTypeIndicator.Fill = Theme.White;
                     break;
             }
         }
@@ -223,9 +208,12 @@ namespace AsLauncher.Views.Components
             {
                 Version.CancellationTokenSource = new();
 
-                Version.Progress = 0;
+                Version.DownloadProgress = 0;
+                Version.SetupProgress = 0;
+                Version.SetupStatus = "";
 
-                Version.IsProgressVisible = Visibility.Visible;
+                Version.ProgressBarBrush = Theme.LightBlue;
+                Version.IsDownloadProgressVisible = Visibility.Visible;
 
                 if (cleanupBeforeInstall)
                 {
@@ -236,58 +224,75 @@ namespace AsLauncher.Views.Components
 
                 await MinecraftVersionManager.InstallVersionAsync(Version, Version.CancellationTokenSource.Token);
 
-                Console.WriteLine("InstallVersionAsync finished");
+                Logger.Info(LoggerConfig.Versions, $"Version {Version.Id} downloaded.");
 
                 Version.InstallState = MinecraftVersionInstallState.Installing;
 
-                Console.WriteLine("State -> Installing");
+                Logger.Info(LoggerConfig.Versions, $"Validating {Version.Id}...");
 
-                bool valid = MinecraftVersionManager.ValidateVersion(Version.Id);
+                Version.IsDownloadProgressVisible = Visibility.Collapsed;
 
-                Console.WriteLine($"ValidateVersion = {valid}");
+                Version.ProgressBarBrush = Theme.Green;
+                Version.IsSetupProgressVisible = Visibility.Visible;
+
+                bool valid = await MinecraftVersionManager.ValidateVersionAsync(Version.Id,
+                    progress => Dispatcher.Invoke(() => Version.SetupProgress = progress),
+                    status => Dispatcher.Invoke(() => Version.SetupStatus = status));
+
+                Logger.Info(LoggerConfig.Versions, valid
+                    ? $"Version {Version.Id} validated successfully."
+                    : $"Version {Version.Id} validation failed.");
+
+                Version.IsSetupProgressVisible = Visibility.Collapsed;
+                Version.SetupProgress = 0;
+                Version.SetupStatus = "";
 
                 if (!valid)
                 {
                     MinecraftVersionManager.CleanupIncompleteVersion(Version.Id);
 
-                    Console.WriteLine("CleanupIncompleteVersion finished");
+                    Logger.Warning(LoggerConfig.Versions, $"Incomplete installation of {Version.Id} was removed.");
                 }
 
                 await Task.Delay(Theme.InstallStateDelay);
-
-                Console.WriteLine("Delay finished");
 
                 Version.InstallState = valid
                     ? MinecraftVersionInstallState.Installed
                     : MinecraftVersionInstallState.NotInstalled;
 
-                Console.WriteLine($"Final state = {Version.InstallState}");
+                Logger.Success(LoggerConfig.Versions, $"{Version.Id} installed successfully.");
 
-                Version.Progress = 100;
-
-                Version.IsProgressVisible = Visibility.Collapsed;
-
-                Console.WriteLine("InstallProcess finished");
+                Version.IsDownloadProgressVisible = Visibility.Collapsed;
             }
-            catch (OperationCanceledException)
+            catch (OperationCanceledException)   // if canceled
             {
-                Version.Progress = 0;
+                Version.DownloadProgress = 0;
+                Version.SetupProgress = 0;
+                Version.SetupStatus = "";
 
-                Version.IsProgressVisible = Visibility.Collapsed;
+                Version.IsDownloadProgressVisible = Visibility.Collapsed;
+
+                Version.IsSetupProgressVisible = Visibility.Collapsed;
 
                 MinecraftVersionManager.CleanupIncompleteVersion(Version.Id);
+
+                Logger.Info(LoggerConfig.Versions, $"Installation of {Version.Id} cancelled.");
 
                 Version.InstallState = MinecraftVersionInstallState.NotInstalled;
             }
-            catch (Exception ex)
+            catch (Exception ex)   // if eror happens
             {
-                Version.Progress = 0;
+                Version.DownloadProgress = 0;
+                Version.SetupProgress = 0;
+                Version.SetupStatus = "";
 
-                Version.IsProgressVisible = Visibility.Collapsed;
+                Version.IsDownloadProgressVisible = Visibility.Collapsed;
+
+                Version.IsSetupProgressVisible = Visibility.Collapsed;
 
                 MinecraftVersionManager.CleanupIncompleteVersion(Version.Id);
 
-                MessageBox.Show(ex.Message);
+                Logger.Error(LoggerConfig.Versions, ex.ToString());
 
                 Version.InstallState = MinecraftVersionInstallState.NotInstalled;
             }
@@ -301,38 +306,34 @@ namespace AsLauncher.Views.Components
 
             switch (Version.InstallState)
             {
-                // Installing
-                case MinecraftVersionInstallState.NotInstalled:
+                case MinecraftVersionInstallState.NotInstalled:   // Installing
 
                     await InstallProcess(false);
 
                     break;
 
-                // Downloading -> Canceling
-                case MinecraftVersionInstallState.Downloading:
+                case MinecraftVersionInstallState.Downloading:   // Downloading -> Canceling
 
                     Version.CancellationTokenSource?.Cancel();
 
                     break;
 
-                // Launching
-                case MinecraftVersionInstallState.Installed:
+                case MinecraftVersionInstallState.Installed:   // Launching
                     {
                         await MinecraftLaunchManager.LaunchAsync(Version.Id);
 
                         break;
                     }
 
-                // Removed -> Restoring
-                case MinecraftVersionInstallState.Removed:
-                    
+                case MinecraftVersionInstallState.Removed:   // Removed -> Restoring
+
                     Version.InstallState = MinecraftVersionInstallState.Installing;
 
                     await Task.Delay(Theme.InstallStateDelay);
 
                     MinecraftVersionManager.RestoreVersion(Version.Id);
 
-                    bool restoreValid = MinecraftVersionManager.ValidateVersion(Version.Id);
+                    bool restoreValid = await MinecraftVersionManager.ValidateVersionAsync(Version.Id, null, null);
 
                     Version.InstallState = restoreValid
                         ? MinecraftVersionInstallState.Installed
@@ -340,8 +341,7 @@ namespace AsLauncher.Views.Components
 
                     break;
 
-                // Corrupted -> Reinstalling
-                case MinecraftVersionInstallState.Reinstall:
+                case MinecraftVersionInstallState.Reinstall:   // Corrupted -> Reinstalling
 
                     await InstallProcess(true);
 

@@ -2,7 +2,6 @@
 using AsLauncher.Models;
 using System.IO.Compression;
 using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace AsLauncher.Services
 {

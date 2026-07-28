@@ -64,6 +64,8 @@ namespace AsLauncher.Core
         // Green
         public static readonly Brush Green = (Brush)new BrushConverter().ConvertFrom("#16A34A")!;
 
+        public static readonly Brush LightGreen = (Brush)new BrushConverter().ConvertFrom("#4FE887")!;
+
         // Blue
         public static readonly Brush Blue = (Brush)new BrushConverter().ConvertFrom("#5865F2")!;
 
@@ -77,6 +79,8 @@ namespace AsLauncher.Core
 
     // Variables
         // Delays
+        public static readonly TimeSpan ForcedDelay = TimeSpan.FromMilliseconds(50);
+
         public static readonly TimeSpan InternetCheckInterval = TimeSpan.FromSeconds(10);
 
         public static readonly TimeSpan InstallStateDelay = TimeSpan.FromMilliseconds(300);
@@ -93,5 +97,10 @@ namespace AsLauncher.Core
         {
             return $"AsPlayer{Random.Shared.Next(0000, 9999)}";
         }
+
+        // Client startup settings
+        public static string StartupWidth = "854";
+
+        public static string StartupHeight = "480";
     }
 }

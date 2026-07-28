@@ -6,6 +6,7 @@ namespace AsLauncher.Core
 {
     public class ProgressWidthConverter : IMultiValueConverter
     {
+        // Convert ProgressBar value to width based on maximum value and total width
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             if (values.Length < 3)

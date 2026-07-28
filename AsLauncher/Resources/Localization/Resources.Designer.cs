@@ -367,6 +367,87 @@ namespace AsLauncher.Resources.Localization {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Checkup asset index....
+        /// </summary>
+        public static string Progress_AssetIndex {
+            get {
+                return ResourceManager.GetString("Progress_AssetIndex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Checkup asset index file....
+        /// </summary>
+        public static string Progress_AssetIndexFile {
+            get {
+                return ResourceManager.GetString("Progress_AssetIndexFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Reading asset index....
+        /// </summary>
+        public static string Progress_AssetIndexRead {
+            get {
+                return ResourceManager.GetString("Progress_AssetIndexRead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Checkup game resources....
+        /// </summary>
+        public static string Progress_Assets {
+            get {
+                return ResourceManager.GetString("Progress_Assets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Checkup game client....
+        /// </summary>
+        public static string Progress_ClientJar {
+            get {
+                return ResourceManager.GetString("Progress_ClientJar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Checkup completed..
+        /// </summary>
+        public static string Progress_Finish {
+            get {
+                return ResourceManager.GetString("Progress_Finish", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Preparing checkup version....
+        /// </summary>
+        public static string Progress_Start {
+            get {
+                return ResourceManager.GetString("Progress_Start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Checkup version file....
+        /// </summary>
+        public static string Progress_VersionJson {
+            get {
+                return ResourceManager.GetString("Progress_VersionJson", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Reading version description....
+        /// </summary>
+        public static string Progress_VersionJsonRead {
+            get {
+                return ResourceManager.GetString("Progress_VersionJsonRead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на 404 Network eror.
         /// </summary>
         public static string TextNoInternet {

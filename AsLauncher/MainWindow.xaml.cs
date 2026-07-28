@@ -35,19 +35,15 @@ namespace AsLauncher
             switch (SettingsManager.Settings.LastPage)
             {
                 case LauncherPage.Vanilla: MainContent.Content = new VanillaPage();
-
                     break;
 
                 case LauncherPage.Modpacks: MainContent.Content = new ModpacksPage();
-
                     break;
 
                 case LauncherPage.Configs: MainContent.Content = new ConfigsPage();
-
                     break;
 
                 default: MainContent.Content = new GeneralPage();
-
                     break;
             }
 

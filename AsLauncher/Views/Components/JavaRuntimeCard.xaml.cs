@@ -2,12 +2,9 @@
 using AsLauncher.Services;
 using System.Windows;
 using System.Windows.Controls;
-using System.Collections.Generic;
 using AsLauncher.Core;
-using AsLauncher.Resources.Localization;
-using AsLauncher.Views.Components;
 
-using Localization = AsLauncher.Resources.Localization.Resources;
+using Lang = AsLauncher.Resources.Localization.Resources;
 
 namespace AsLauncher.Views.Components
 {
@@ -71,7 +68,7 @@ namespace AsLauncher.Views.Components
             {
                 // Install
                 case JavaRuntimeInstallState.NotInstalled:
-                    JavaRuntimeMainButton.ButtonContent = Localization.ButtonInstall;
+                    JavaRuntimeMainButton.ButtonContent = Lang.ButtonInstall;
                     JavaRuntimeMainButton.IsEnabled = true;
 
                     JavaRuntimeMainButton.ButtonBackground = Theme.Green;
@@ -82,7 +79,7 @@ namespace AsLauncher.Views.Components
 
                 // Cancel
                 case JavaRuntimeInstallState.Downloading:
-                    JavaRuntimeMainButton.ButtonContent = Localization.ButtonCancel;
+                    JavaRuntimeMainButton.ButtonContent = Lang.ButtonCancel;
                     JavaRuntimeMainButton.IsEnabled = true;
 
                     JavaRuntimeMainButton.ButtonBackground = Theme.Blue;
@@ -93,7 +90,7 @@ namespace AsLauncher.Views.Components
 
                 // Installing
                 case JavaRuntimeInstallState.Installing:
-                    JavaRuntimeMainButton.ButtonContent = Localization.ButtonInstalling;
+                    JavaRuntimeMainButton.ButtonContent = Lang.ButtonInstalling;
                     JavaRuntimeMainButton.IsEnabled = false;
 
                     JavaRuntimeMainButton.ButtonBackground = Theme.Transparent;
@@ -104,7 +101,7 @@ namespace AsLauncher.Views.Components
 
                 // Remove
                 case JavaRuntimeInstallState.Installed:
-                    JavaRuntimeMainButton.ButtonContent = Localization.ButtonRemove;
+                    JavaRuntimeMainButton.ButtonContent = Lang.ButtonRemove;
                     JavaRuntimeMainButton.IsEnabled = true;
 
                     JavaRuntimeMainButton.ButtonBackground = Theme.Red;
@@ -115,7 +112,7 @@ namespace AsLauncher.Views.Components
 
                 // Removing
                 case JavaRuntimeInstallState.Removing:
-                    JavaRuntimeMainButton.ButtonContent = Localization.ButtonRemoving;
+                    JavaRuntimeMainButton.ButtonContent = Lang.ButtonRemoving;
                     JavaRuntimeMainButton.IsEnabled = false;
 
                     JavaRuntimeMainButton.ButtonBackground = Theme.Transparent;
@@ -126,7 +123,7 @@ namespace AsLauncher.Views.Components
 
                 // Restore
                 case JavaRuntimeInstallState.Removed:
-                    JavaRuntimeMainButton.ButtonContent = Localization.ButtonRestore;
+                    JavaRuntimeMainButton.ButtonContent = Lang.ButtonRestore;
                     JavaRuntimeMainButton.IsEnabled = true;
 
                     JavaRuntimeMainButton.ButtonBackground = Theme.White;
@@ -136,7 +133,7 @@ namespace AsLauncher.Views.Components
                     break;
 
                 case JavaRuntimeInstallState.Unavailable:
-                    JavaRuntimeMainButton.ButtonContent = Localization.ButtonUnavailable;
+                    JavaRuntimeMainButton.ButtonContent = Lang.ButtonUnavailable;
 
                     JavaRuntimeMainButton.IsEnabled = false;
 
@@ -165,7 +162,7 @@ namespace AsLauncher.Views.Components
 
                     try
                     {
-                        runtime.InstallState = JavaRuntimeInstallState.Downloading;
+                        runtime.InstallState = JavaRuntimeInstallState.Downloading;   // Downloading
 
                         runtime.IsProgressVisible = Visibility.Visible;
 
@@ -201,7 +198,7 @@ namespace AsLauncher.Views.Components
                             ? JavaRuntimeInstallState.Installed
                             : JavaRuntimeInstallState.NotInstalled;
                     }
-                    catch (OperationCanceledException)
+                    catch (OperationCanceledException)   // if canceled: delete downloaded file
                     {
                         runtime.IsProgressVisible = Visibility.Collapsed;
 
@@ -211,7 +208,7 @@ namespace AsLauncher.Views.Components
 
                         runtime.InstallState = JavaRuntimeInstallState.NotInstalled;
                     }
-                    catch (Exception ex)
+                    catch (Exception ex)   // if eror happens: delete downloaded file
                     {
                         runtime.IsProgressVisible = Visibility.Collapsed;
 
@@ -224,13 +221,13 @@ namespace AsLauncher.Views.Components
 
                     break;
 
-                case JavaRuntimeInstallState.Downloading:
+                case JavaRuntimeInstallState.Downloading:   // Cancel
 
                     runtime.CancellationTokenSource?.Cancel();
 
                     break;
 
-                case JavaRuntimeInstallState.Installed:
+                case JavaRuntimeInstallState.Installed:   // Remove
 
                     runtime.InstallState = JavaRuntimeInstallState.Removing;
 
@@ -244,7 +241,7 @@ namespace AsLauncher.Views.Components
 
                     break;
 
-                case JavaRuntimeInstallState.Removed:
+                case JavaRuntimeInstallState.Removed:   // Restore
 
                     runtime.InstallState = JavaRuntimeInstallState.Installing;
 

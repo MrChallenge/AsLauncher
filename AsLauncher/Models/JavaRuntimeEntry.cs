@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 
-using Localization = AsLauncher.Resources.Localization.Resources;
+using Lang = AsLauncher.Resources.Localization.Resources;
 
 namespace AsLauncher.Models
 {
@@ -46,7 +46,7 @@ namespace AsLauncher.Models
 
         public string DescriptionKey { get; set; } = "";
 
-        public string Description => Localization.ResourceManager.GetString(DescriptionKey) ?? DescriptionKey;
+        public string Description => Lang.ResourceManager.GetString(DescriptionKey) ?? DescriptionKey;
 
         public JavaRuntimeInstallState InstallState
         {

@@ -17,6 +17,7 @@
 
             </Grid.RowDefinitions>
 
+            <!-- Page Title -->
             <TextBlock Grid.Row="0"
                        Text="{x:Static lang:Resources.MinecraftVersionsList}"
                        FontSize="24"
@@ -34,6 +35,7 @@
 
                 </Grid.ColumnDefinitions>
 
+                <!-- CheckBoxes -->
                 <StackPanel Grid.Column="0"
                             Orientation="Horizontal"
                             VerticalAlignment="Center">
@@ -83,6 +85,7 @@
                         CornerRadius="6"
                         VerticalAlignment="Center">
 
+                    <!-- Version search TextBlock -->
                     <Grid>
 
                         <TextBlock Text="{x:Static lang:Resources.MinecraftVersionSearchExample}"
@@ -130,6 +133,7 @@
 
             </Grid>
 
+            <!-- Minecraft versions ListBox -->
             <ListBox x:Name="VersionList"
                      Grid.Row="2"
                      ItemsSource="{Binding Versions}"
@@ -143,7 +147,7 @@
 
                     <DataTemplate>
 
-                        <components:MinecraftVersionCard Version="{Binding}" />
+                        <components:MinecraftVersionCard Version="{Binding}"/>
 
                     </DataTemplate>
 
@@ -181,7 +185,8 @@
             </ListBox>
 
         </Grid>
-        
+
+        <!-- Text: No internet connection -->
         <TextBlock x:Name="NoInternetText"
                    Text="{x:Static lang:Resources.TextNoInternet}"
                    Visibility="Collapsed"

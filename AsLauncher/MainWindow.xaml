@@ -91,6 +91,7 @@
 
                 <StackPanel Margin="20">
 
+                    <!-- Sidebar toggle button-->
                     <Button x:Name="SidebarToggleButton"
                             Width="32"
                             Height="32"

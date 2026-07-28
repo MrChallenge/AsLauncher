@@ -1,10 +1,13 @@
 ﻿using AsLauncher.Core;
+using AsLauncher.Core.Logger;
 using AsLauncher.Models;
 using System.IO;
 using System.IO.Compression;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text.Json;
+
+using Lang = AsLauncher.Resources.Localization.Resources;
 
 namespace AsLauncher.Services
 {
@@ -39,14 +42,55 @@ namespace AsLauncher.Services
             Directory.CreateDirectory(AssetObjectsFolder);
         }
 
+        // Initialization flag
+        private static bool _initialized;
+
+        // Initialize async (load cache and sync versions)
+        public static async Task InitializeAsync()
+        {
+            if (_initialized)
+                return;
+
+            MinecraftVersionCacheStorage.Load();
+
+            await MinecraftVersionSyncService.SyncAsync();
+
+            _initialized = true;
+        }
+
+        // Check if version dir exists
+        public static bool VersionDirectoryExists(string versionId)
+        {
+            return Directory.Exists(Path.Combine(VersionsFolder, versionId));
+        }
+
         // Check if version is installed
         public static bool IsVersionInstalled(string versionId)
         {
-            bool installed = ValidateVersion(versionId);
+            return ValidateVersion(versionId);
+        }
 
-            Console.WriteLine($"IsVersionInstalled({versionId}) = {installed}");
+        // Get installed versions IDs
+        public static HashSet<string> GetInstalledVersionIds()
+        {
+            if (!Directory.Exists(VersionsFolder))
+                return new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-            return installed;
+            return Directory.EnumerateDirectories(VersionsFolder)
+                            .Select(Path.GetFileName)
+                            .Where(name => !string.IsNullOrEmpty(name))
+                            .Cast<string>()
+                            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        }
+
+        // Create state context for version install states
+        public static MinecraftVersionStateContext CreateStateContext(bool internetAvailable)
+        {
+            return new MinecraftVersionStateContext
+            {
+                InstalledVersions = GetInstalledVersionIds(),
+                InternetAvailable = internetAvailable
+            };
         }
 
         // Check if version is deleted
@@ -55,6 +99,24 @@ namespace AsLauncher.Services
             string deletedPath = Path.Combine(DeletedFolder, versionId + ".deleted");
 
             return Directory.Exists(deletedPath);
+        }
+
+        // Get version install state
+        public static MinecraftVersionInstallState GetVersionState(string versionId, MinecraftVersionStateContext context)
+        {
+            if (IsVersionDeleted(versionId))
+                return MinecraftVersionInstallState.Removed;
+
+            if (!context.InstalledVersions.Contains(versionId))
+            {
+                return context.InternetAvailable
+                    ? MinecraftVersionInstallState.NotInstalled
+                    : MinecraftVersionInstallState.Unavailable;
+            }
+
+            return ValidateVersionFast(versionId)
+                ? MinecraftVersionInstallState.Installed
+                : MinecraftVersionInstallState.Corrupted;
         }
 
         // Delete version (move to deleted folder)
@@ -114,7 +176,9 @@ namespace AsLauncher.Services
         // Install process : parsing version.json and download client.jar
         public static async Task InstallVersionAsync(MinecraftVersionEntry version, CancellationToken token)
         {
-            string versionFolder = Path.Combine(VersionsFolder, version.Id);
+            Logger.Info(LoggerConfig.Versions, $"Installing Minecraft {version.Id}...");
+
+            string versionFolder = MinecraftPathService.GetVersionFolder(version.Id);
 
             Directory.CreateDirectory(versionFolder);
 
@@ -124,9 +188,9 @@ namespace AsLauncher.Services
 
             token.ThrowIfCancellationRequested();
 
-            string versionJsonPath = Path.Combine(versionFolder, $"{version.Id}.json");
+            string versionJsonPath = MinecraftPathService.GetVersionJsonPath(version.Id);
 
-            string clientJarPath = Path.Combine(versionFolder, $"{version.Id}.jar");
+            string clientJarPath = MinecraftPathService.GetClientJarPath(version.Id);
 
             await File.WriteAllTextAsync(versionJsonPath, versionJson);
 
@@ -143,9 +207,9 @@ namespace AsLauncher.Services
                                        .GetProperty("url")
                                        .GetString()!;
 
-            Task clientTask = DownloadFileWithProgressAsync(client, clientUrl, clientJarPath, token, progress =>
+            Task clientTask = DownloadFileWithProgressAsync(client, clientUrl, clientJarPath, token, downloadProgress =>
             {
-                version.Progress = progress;
+                version.DownloadProgress = downloadProgress;
             });
 
             token.ThrowIfCancellationRequested();
@@ -158,9 +222,7 @@ namespace AsLauncher.Services
 
             await Task.WhenAll(clientTask, librariesTask, assetIndexTask);
 
-            Console.WriteLine($"Client finished for {version.Id}");
-            Console.WriteLine($"Libraries finished for {version.Id}");
-            Console.WriteLine($"Asset index finished for {version.Id}");
+            Logger.Success(LoggerConfig.Versions, $"Version {version.Id} downloaded successfully.");
 
             token.ThrowIfCancellationRequested();
 
@@ -169,13 +231,15 @@ namespace AsLauncher.Services
                                           .GetProperty("id")
                                           .GetString()!;
 
-            string assetIndexPath = Path.Combine(AssetsFolder, "indexes", $"{assetIndexId}.json");
+            string assetIndexPath = MinecraftPathService.GetAssetIndexPath(assetIndexId);
 
             using JsonDocument assetIndexDocument = JsonDocument.Parse(await File.ReadAllTextAsync(assetIndexPath));
 
+            Logger.Info(LoggerConfig.Assets, $"Downloading assets for {version.Id}...");
+
             await DownloadAssetsAsync(assetIndexDocument, client, token);
 
-            Console.WriteLine($"Assets finished for {version.Id}");
+            Logger.Success(LoggerConfig.Assets, $"Assets downloaded for {version.Id}.");
         }
 
         // Download with progress
@@ -184,7 +248,7 @@ namespace AsLauncher.Services
             string url,
             string destination,
             CancellationToken token,
-            Action<double>? progressCallback = null)
+            Action<double>? downloadProgressCallback = null)
         {
             using HttpResponseMessage response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, token);
 
@@ -210,9 +274,9 @@ namespace AsLauncher.Services
 
                 if (totalBytes.HasValue)
                 {
-                    double progress = (double)totalRead / totalBytes.Value * 100;
+                    double downloadProgress = (double)totalRead / totalBytes.Value * 100;
 
-                    progressCallback?.Invoke(progress);
+                    downloadProgressCallback?.Invoke(downloadProgress);
                 }
             }
         }
@@ -266,14 +330,14 @@ namespace AsLauncher.Services
         {
             string versionFolder = Path.Combine(VersionsFolder, versionId);
 
-            Console.WriteLine($"Version folder exists: {Directory.Exists(versionFolder)}");
-
             if (!Directory.Exists(versionFolder))
+            {
                 return false;
+            }
 
             bool valid = ValidateVersion(versionId);
 
-            Console.WriteLine($"ValidateVersion({versionId}) = {valid}");
+            Logger.Debug(LoggerConfig.Versions, $"Version validation ({versionId}): {(valid ? "Valid" : "Corrupted")}");
 
             return !valid;
         }
@@ -330,7 +394,7 @@ namespace AsLauncher.Services
                     versions.Add(new MinecraftVersionEntry
                     {
                         Id = versionId,
-                        Type = "release"
+                        Type = MinecraftVersionType.Release
                     });
                 }
             }
@@ -345,7 +409,7 @@ namespace AsLauncher.Services
                     versions.Add(new MinecraftVersionEntry
                     {
                         Id = versionId,
-                        Type = "release",
+                        Type = MinecraftVersionType.Release,
                         InstallState = MinecraftVersionInstallState.Removed
                     });
                 }
@@ -362,6 +426,23 @@ namespace AsLauncher.Services
             return JsonDocument.Parse(File.ReadAllText(path));
         }
 
+        // Validate versions quickly (page refresh)
+        public static bool ValidateVersionFast(string versionId)
+        {
+            string versionFolder = Path.Combine(VersionsFolder, versionId);
+
+            if (!Directory.Exists(versionFolder))
+                return false;
+
+            if (!File.Exists(GetVersionJsonPath(versionId)))
+                return false;
+
+            if (!File.Exists(GetVersionJarPath(versionId)))
+                return false;
+
+            return true;
+        }
+
         // Chunky download files
         private static async Task DownloadFileAsync(HttpClient client, string url, string destination, CancellationToken token)
         {
@@ -374,18 +455,6 @@ namespace AsLauncher.Services
             await using FileStream output = new(destination, FileMode.Create, FileAccess.Write, FileShare.None, 8192, true);
 
             await input.CopyToAsync(output, token);
-        }
-
-        // Hash scan (SHA1)
-        private static string ComputeSha1(string filePath)
-        {
-            using FileStream stream = File.OpenRead(filePath);
-
-            using SHA1 sha1 = SHA1.Create();
-
-            byte[] hash = sha1.ComputeHash(stream);
-
-            return Convert.ToHexString(hash).ToLowerInvariant();
         }
 
         // Download libraries
@@ -403,7 +472,7 @@ namespace AsLauncher.Services
 
             int totalLibraries = libraries.EnumerateArray().Count();
 
-            Console.WriteLine($"Libraries total: {totalLibraries}");
+            Logger.Info(LoggerConfig.Libraries, $"Downloading {totalLibraries} libraries for {versionId}...");
 
             foreach (JsonElement library in libraries.EnumerateArray())
             {
@@ -432,6 +501,8 @@ namespace AsLauncher.Services
 
                         string localNativeJar = Path.Combine(LibrariesFolder, nativePath);
 
+                        Logger.Debug(LoggerConfig.Libraries, $"Extracting {Path.GetFileName(localNativeJar)}...");
+
                         Directory.CreateDirectory(Path.GetDirectoryName(localNativeJar)!);
 
                         if (!File.Exists(localNativeJar))
@@ -451,23 +522,20 @@ namespace AsLauncher.Services
 
                 Directory.CreateDirectory(Path.GetDirectoryName(localPath)!);
 
-                //string expectedSha1 = artifact.GetProperty("sha1").GetString()!;
+                string expectedSha1 = artifact.GetProperty("sha1").GetString()!;
+
+                if (MinecraftVersionIntegrityService.VerifyFile(localPath, expectedSha1))
+                {
+                    skippedLibraries++;
+
+                    continue;
+                }
 
                 if (File.Exists(localPath))
                 {
-                    /*string actualSha1 = ComputeSha1(localPath);
+                    Logger.Warning(LoggerConfig.Libraries, $"SHA1 mismatch: {Path.GetFileName(localPath)}. Redownloading.");
 
-                    if (actualSha1.Equals(expectedSha1, StringComparison.OrdinalIgnoreCase))
-                    {
-                        skippedLibraries++;
-
-                        continue;
-                    }
-
-                    File.Delete(localPath);*/
-
-                    skippedLibraries++; // убрать по раскрытии SHA1
-                    continue;
+                    File.Delete(localPath);
                 }
 
                 downloadTasks.Add(Task.Run(async () =>
@@ -482,7 +550,7 @@ namespace AsLauncher.Services
 
                         if (current % 25 == 0)
                         {
-                            Console.WriteLine($"Libraries: Downloaded {current}/{totalLibraries}");
+                            Logger.Debug(LoggerConfig.Libraries, $"Downloaded {current}/{totalLibraries} libraries.");
                         }
                     }
                     finally
@@ -494,10 +562,9 @@ namespace AsLauncher.Services
 
             await Task.WhenAll(downloadTasks);
 
-            Console.WriteLine(
-                $"Libraries: Processed={processedLibraries}, " +
-                $"Downloaded={downloadedLibraries}, " +
-                $"Skipped={skippedLibraries}");
+            Logger.Success(LoggerConfig.Libraries, $"Processed={processedLibraries}," +
+                                                   $"Downloaded={downloadedLibraries}," +
+                                                   $"Skipped={skippedLibraries}");
         }
 
         // Extract natives
@@ -516,9 +583,11 @@ namespace AsLauncher.Services
         {
             JsonElement assetIndex = document.RootElement.GetProperty("assetIndex");
 
-            string assetIndexId = assetIndex.GetProperty("id").GetString()!;
+            string assetIndexId = assetIndex.GetProperty("id")
+                                            .GetString()!;
 
-            string assetIndexUrl = assetIndex.GetProperty("url").GetString()!;
+            string assetIndexUrl = assetIndex.GetProperty("url")
+                                             .GetString()!;
 
             string indexesFolder = Path.Combine(AssetsFolder, "indexes");
 
@@ -547,7 +616,7 @@ namespace AsLauncher.Services
 
             int totalAssets = objects.EnumerateObject().Count();
 
-            Console.WriteLine($"Assets total: {totalAssets}");
+            Logger.Info(LoggerConfig.Assets, $"Assets total: {totalAssets}");
 
             int processedAssets = 0;
             int downloadedAssets = 0;
@@ -565,33 +634,28 @@ namespace AsLauncher.Services
 
                         string hash = asset.Value.GetProperty("hash").GetString()!;
 
-                        string folder = hash.Substring(0, 2);
+                        string url = MinecraftPathService.GetAssetObjectUrl(hash);
 
-                        string url = $"https://resources.download.minecraft.net/{folder}/{hash}";
-
-                        string localFolder = Path.Combine(AssetObjectsFolder, folder);
+                        string localFolder = MinecraftPathService.GetAssetObjectFolder(hash);
 
                         Directory.CreateDirectory(localFolder);
 
-                        string localPath = Path.Combine(localFolder, hash);
+                        string localPath = MinecraftPathService.GetAssetObjectPath(hash);
 
                         Interlocked.Increment(ref processedAssets);
 
+                        if (MinecraftVersionIntegrityService.VerifyFile(localPath, hash))
+                        {
+                            Interlocked.Increment(ref skippedAssets);
+
+                            return;
+                        }
+
                         if (File.Exists(localPath))
                         {
-                            /*string actualSha1 = ComputeSha1(localPath);
+                            Logger.Warning(LoggerConfig.Assets, $"SHA1 mismatch: {hash}. Redownloading.");
 
-                            if (actualSha1.Equals(hash, StringComparison.OrdinalIgnoreCase))
-                            {
-                                Interlocked.Increment(ref skippedAssets);
-
-                                return;
-                            }
-                            
-                            File.Delete(localPath);*/
-                            
-                            Interlocked.Increment(ref skippedAssets); // убрать по раскрытии SHA1
-                            return;
+                            File.Delete(localPath);
                         }
 
                         await DownloadFileAsync(client, url, localPath, token);
@@ -600,10 +664,9 @@ namespace AsLauncher.Services
 
                         if (downloaded % 100 == 0)
                         {
-                            Console.WriteLine(
-                                $"Assets: {processedAssets}/{totalAssets}, " +
-                                $"Downloaded={downloadedAssets}, " +
-                                $"Skipped={skippedAssets}");
+                            Logger.Debug(LoggerConfig.Assets, $"Assets: {processedAssets}/{totalAssets}," +
+                                                              $"Downloaded={downloadedAssets}," +
+                                                              $"Skipped={skippedAssets}");
                         }
                     }
                     finally
@@ -617,51 +680,101 @@ namespace AsLauncher.Services
 
             await Task.WhenAll(downloadTasks);
 
-            Console.WriteLine(
-                $"Assets: Processed={processedAssets}, " +
-                $"Downloaded={downloadedAssets}, " +
-                $"Skipped={skippedAssets}");
+            Logger.Success(LoggerConfig.Assets, $"Processed={processedAssets}," +
+                                                $"Downloaded={downloadedAssets}," +
+                                                $"Skipped={skippedAssets}");
         }
 
-        // Validate version.json and version.jar
-        public static bool ValidateVersion(string versionId)
+        // Validate all required version files and assets
+        public static bool ValidateVersion(string versionId,
+            Action<double>? setupProgressCallback = null,
+            Action<string>? setupStatusCallback = null)
         {
+            // Progress stages
+            const double ProgressStart = 0;
+            const double ProgressVersionJson = 10;
+            const double ProgressClientJar = 20;
+            const double ProgressVersionJsonRead = 30;
+            const double ProgressAssetIndex = 40;
+            const double ProgressAssetIndexFile = 50;
+            const double ProgressAssetIndexRead = 60;
+            const double ProgressAssets = 70;
+            const double ProgressFinish = 100;
+
+            // Report current validation stage
+            void ReportProgress(double progress, string status)
+            {
+                setupStatusCallback?.Invoke(status);
+                setupProgressCallback?.Invoke(progress);
+
+                Thread.Sleep(Theme.ForcedDelay);
+            }
+
+            // Start
+            ReportProgress(ProgressStart, Lang.Progress_Start);
+
+            // Check version.json
+            ReportProgress(ProgressVersionJson, Lang.Progress_VersionJson);
+
             if (!File.Exists(GetVersionJsonPath(versionId)))
                 return false;
+
+            // Check version.jar
+            ReportProgress(ProgressClientJar, Lang.Progress_ClientJar);
 
             if (!File.Exists(GetVersionJarPath(versionId)))
                 return false;
 
+            // Read version.json
+            ReportProgress(ProgressVersionJsonRead, Lang.Progress_VersionJsonRead);
+
             using JsonDocument document = LoadVersionJson(versionId);
 
             if (!document.RootElement.TryGetProperty("assetIndex", out JsonElement assetIndex))
-            {
                 return false;
-            }
 
-            string assetIndexId = assetIndex
-                .GetProperty("id")
-                .GetString()!;
+            // Read asset index information
+            ReportProgress(ProgressAssetIndex, Lang.Progress_AssetIndex);
 
-            string assetIndexPath = Path.Combine(
-                AssetsFolder,
-                "indexes",
-                $"{assetIndexId}.json");
+            string assetIndexId = assetIndex.GetProperty("id")
+                                            .GetString()!;
+
+            string assetIndexPath = Path.Combine(AssetsFolder, "indexes", $"{assetIndexId}.json");
+
+            // Check asset index file
+            ReportProgress(ProgressAssetIndexFile, Lang.Progress_AssetIndexFile);
 
             if (!File.Exists(assetIndexPath))
-            {
                 return false;
-            }
+
+            // Read asset index
+            ReportProgress(ProgressAssetIndexRead, Lang.Progress_AssetIndexRead);
 
             using JsonDocument assetIndexDocument = JsonDocument.Parse(File.ReadAllText(assetIndexPath));
 
             JsonElement objects = assetIndexDocument.RootElement.GetProperty("objects");
 
-            foreach (JsonProperty asset in objects.EnumerateObject())
+            JsonProperty[] assets = objects.EnumerateObject().ToArray();
+
+            int totalAssets = assets.Length;
+
+            if (totalAssets == 0)
             {
-                string hash = asset.Value
-                                   .GetProperty("hash")
-                                   .GetString()!;
+                ReportProgress(ProgressFinish, Lang.Progress_Finish);
+
+                return true;
+            }
+
+            int checkedAssets = 0;
+
+            ReportProgress(ProgressAssets, Lang.Progress_Assets);
+
+            foreach (JsonProperty asset in assets)
+            {
+                checkedAssets++;
+
+                string hash = asset.Value.GetProperty("hash")
+                                         .GetString()!;
 
                 string folder = hash.Substring(0, 2);
 
@@ -671,9 +784,25 @@ namespace AsLauncher.Services
                 {
                     return false;
                 }
+
+                // Update progress while validating asset files
+                double progress = ProgressAssets + checkedAssets * (ProgressFinish - ProgressAssets) / totalAssets;
+
+                setupProgressCallback?.Invoke(progress);
             }
 
+            // Finish
+            ReportProgress(ProgressFinish, Lang.Progress_Finish);
+
             return true;
+        }
+
+        // Validate version async
+        public static Task<bool> ValidateVersionAsync(string versionId,
+            Action<double>? progress,
+            Action<string>? status)
+        {
+            return Task.Run(() => ValidateVersion(versionId, progress, status));
         }
 
         // Build classpath recursively for launch
@@ -771,7 +900,7 @@ namespace AsLauncher.Services
                                   .GetInt32();
             }
 
-            Console.WriteLine($"Version {versionId} has no javaVersion section. Using Java 8.");
+            Logger.Info(LoggerConfig.Java, $"Version {versionId} does not specify Java version. Using Java 8.");
 
             return 8;
         }

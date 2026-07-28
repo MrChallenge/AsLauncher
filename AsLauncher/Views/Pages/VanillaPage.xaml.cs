@@ -10,8 +10,10 @@ namespace AsLauncher.Views.Pages
 {
     public partial class VanillaPage : UserControl
     {
+        // Observable collection of versions to be displayed in UI
         public ObservableCollection<MinecraftVersionEntry> Versions { get; } = new();
 
+        // All versions loaded from service
         private List<MinecraftVersionEntry> AllVersions = new();
 
         // Initialize
@@ -67,16 +69,16 @@ namespace AsLauncher.Views.Pages
 
             foreach (var version in AllVersions)
             {
-                if (version.Type == "release" && ReleaseCheckBox.IsChecked != true)
+                if (version.Type == MinecraftVersionType.Release && ReleaseCheckBox.IsChecked != true)
                     continue;
 
-                if (version.Type == "snapshot" && SnapshotCheckBox.IsChecked != true)
+                if (version.Type == MinecraftVersionType.Snapshot && SnapshotCheckBox.IsChecked != true)
                     continue;
 
-                if (version.Type == "old_beta" && BetaCheckBox.IsChecked != true)
+                if (version.Type == MinecraftVersionType.OldBeta && BetaCheckBox.IsChecked != true)
                     continue;
 
-                if (version.Type == "old_alpha" && AlphaCheckBox.IsChecked != true)
+                if (version.Type == MinecraftVersionType.OldAlpha && AlphaCheckBox.IsChecked != true)
                     continue;
 
                 if (!string.IsNullOrWhiteSpace(search) && !MatchesSearch(version.Id, search))
@@ -136,60 +138,13 @@ namespace AsLauncher.Views.Pages
 
             bool internetAvailable = await MinecraftVersionManager.HasInternetAsync();
 
-            foreach (var version in versions)
-            {
-                Console.WriteLine(
-                    $"{version.Id} " +
-                    $"Installed={MinecraftVersionManager.IsVersionInstalled(version.Id)} " +
-                    $"Corrupted={MinecraftVersionManager.IsVersionCorrupted(version.Id)} " +
-                    $"Deleted={MinecraftVersionManager.IsVersionDeleted(version.Id)}");
-
-                if (MinecraftVersionManager.IsVersionCorrupted(version.Id))
-                {
-                    version.InstallState = MinecraftVersionInstallState.Corrupted;
-
-                    _ = Dispatcher.InvokeAsync(async () =>
-                    {
-                        await Task.Delay(Theme.CorruptedStateDelay);
-
-                        version.InstallState = MinecraftVersionInstallState.Reinstall;
-                    });
-
-                    Console.WriteLine($"{version.Id} -> Corrupted");
-                }
-
-                else if (!internetAvailable &&
-                         !MinecraftVersionManager.IsVersionInstalled(version.Id) &&
-                         !MinecraftVersionManager.IsVersionDeleted(version.Id))
-                {
-                    version.InstallState = MinecraftVersionInstallState.Unavailable;
-                }
-
-                else if (MinecraftVersionManager.IsVersionInstalled(version.Id))
-                {
-                    version.InstallState = MinecraftVersionInstallState.Installed;
-
-                    Console.WriteLine($"{version.Id} -> Installed");
-                }
-
-                else if (MinecraftVersionManager.IsVersionDeleted(version.Id))
-                {
-                    version.InstallState = MinecraftVersionInstallState.Removed;
-                }
-
-                else
-                {
-                    version.InstallState = MinecraftVersionInstallState.NotInstalled;
-
-                    Console.WriteLine($"{version.Id} -> NotInstalled");
-                }
-            }
-
             AllVersions = versions.ToList();
 
             _settingsLoaded = true;
 
             RefreshVersions();
+
+            _ = UpdateInstallStatesAsync(internetAvailable);
         }
 
         // Check internet connection every 5 seconds
@@ -216,6 +171,37 @@ namespace AsLauncher.Views.Pages
                         : MinecraftVersionInstallState.Unavailable;
                 }
             }
+        }
+
+        // Update install states for all versions based on internet availability
+        private async Task UpdateInstallStatesAsync(bool internetAvailable)
+        {
+            var context = MinecraftVersionManager.CreateStateContext(internetAvailable);
+
+            var options = new ParallelOptions
+            {
+                MaxDegreeOfParallelism = Environment.ProcessorCount
+            };
+
+            await Parallel.ForEachAsync(AllVersions, options, async (version, token) =>
+            {
+                var state = MinecraftVersionManager.GetVersionState(version.Id, context);
+
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    version.InstallState = state;
+                });
+
+                if (state == MinecraftVersionInstallState.Corrupted)
+                {
+                    await Task.Delay(Theme.CorruptedStateDelay, token);
+
+                    await Dispatcher.InvokeAsync(() =>
+                    {
+                        version.InstallState = MinecraftVersionInstallState.Reinstall;
+                    });
+                }
+            });
         }
     }
 }

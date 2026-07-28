@@ -34,6 +34,7 @@ namespace AsLauncher.Views.Components
             set => SetValue(ButtonContentProperty, value);
         }
 
+        // ButtonBackground property
         public static readonly DependencyProperty ButtonBackgroundProperty = DependencyProperty.Register(
             nameof(ButtonBackground),
             typeof(Brush),
@@ -46,6 +47,7 @@ namespace AsLauncher.Views.Components
             set => SetValue(ButtonBackgroundProperty, value);
         }
 
+        // ButtonForeground property
         public static readonly DependencyProperty ButtonForegroundProperty = DependencyProperty.Register(
             nameof(ButtonForeground),
             typeof(Brush),
@@ -58,6 +60,7 @@ namespace AsLauncher.Views.Components
             set => SetValue(ButtonForegroundProperty, value);
         }
 
+        // ButtonBackground property
         public static readonly DependencyProperty ButtonBorderBrushProperty = DependencyProperty.Register(
             nameof(ButtonBorderBrush),
             typeof(Brush),

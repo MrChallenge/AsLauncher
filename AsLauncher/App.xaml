@@ -9,43 +9,58 @@
 
         <ResourceDictionary>
 
+            <!-- Load CheckBox Template-->
             <ResourceDictionary.MergedDictionaries>
 
                 <ResourceDictionary Source="Resources\Styles\CheckBox.xaml"/>
                 
             </ResourceDictionary.MergedDictionaries>
 
+            <!-- Load custom ProgressBar converter-->
             <core:ProgressWidthConverter x:Key="ProgressWidthConverter"/>
 
+            <!-- ToolTip Template -->
             <Style TargetType="ToolTip">
 
-                <Setter Property="ToolTipService.InitialShowDelay" Value="0"/>
-                <Setter Property="ToolTipService.BetweenShowDelay" Value="0"/>
-                <Setter Property="ToolTipService.ShowDuration" Value="60000"/>
+                <Setter Property="ToolTipService.BetweenShowDelay" Value="1"/>
+                <Setter Property="ToolTipService.InitialShowDelay" Value="100"/>
+                <Setter Property="ToolTipService.ShowDuration" Value="2147483647"/>
+
                 <Setter Property="Background" Value="{x:Static core:Theme.Background}"/>
                 <Setter Property="Foreground" Value="{x:Static core:Theme.White}"/>
                 <Setter Property="BorderBrush" Value="{x:Static core:Theme.ProgressBar}"/>
-                <Setter Property="Placement" Value="Top"/>
-                <Setter Property="PlacementTarget" Value="{Binding RelativeSource={RelativeSource Self}}"/>
+
                 <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="ToolTipService.InitialShowDelay" Value="100"/>
-                <Setter Property="ToolTipService.ShowDuration" Value="2147483647"/>
-                <Setter Property="Padding" Value="14"/>
+                <Setter Property="Placement" Value="Top"/>
+
+                <Setter Property="Padding" Value="5"/>
                 <Setter Property="FontSize" Value="13"/>
                 <Setter Property="MaxWidth" Value="320"/>
+                
                 <Setter Property="Template">
 
                     <Setter.Value>
 
                         <ControlTemplate TargetType="ToolTip">
 
-                            <Border Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="10">
+                            <Border Background="{x:Static core:Theme.Transparent}" CornerRadius="8" Padding="5">
 
-                                <ContentPresenter Margin="2"/>
+                                <Border Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        Padding="{TemplateBinding Padding}"
+                                        CornerRadius="8">
 
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                                    <Border.Effect>
+
+                                        <DropShadowEffect BlurRadius="8" ShadowDepth="3" Opacity="0.15"/>
+
+                                    </Border.Effect>
+
+                                </Border>
+                                
                             </Border>
 
                         </ControlTemplate>
@@ -56,12 +71,15 @@
 
             </Style>
 
+            <!-- ProgressBar Template-->
             <Style x:Key="ModernProgressBar" TargetType="ProgressBar">
 
-                <Setter Property="Height" Value="6"/>
                 <Setter Property="Background" Value="{x:Static core:Theme.ProgressBar}"/>
                 <Setter Property="Foreground" Value="{x:Static core:Theme.LightBlue}"/>
+                
+                <Setter Property="Height" Value="6"/>
                 <Setter Property="BorderThickness" Value="0"/>
+                
                 <Setter Property="Template">
 
                     <Setter.Value>
@@ -73,9 +91,9 @@
                                 <Border Background="{TemplateBinding Background}" CornerRadius="3"/>
 
                                 <Border x:Name="PART_Indicator"
-                                    Background="{TemplateBinding Foreground}"
-                                    CornerRadius="3"
-                                    HorizontalAlignment="Left">
+                                        Background="{TemplateBinding Foreground}"
+                                        CornerRadius="3"
+                                        HorizontalAlignment="Left">
 
                                     <Border.Width>
 
