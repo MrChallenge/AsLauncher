@@ -242,6 +242,24 @@ namespace AsLauncher.Services
             Logger.Success(LoggerConfig.Assets, $"Assets downloaded for {version.Id}.");
         }
 
+        // Install version by ID (find in cache and download)
+        public static async Task InstallVersionAsync(string versionId, CancellationToken token = default)
+        {
+            MinecraftVersionInfo? versionInfo = MinecraftVersionCacheService.Find(versionId);
+
+            if (versionInfo == null)
+                throw new Exception($"Version {versionId} not found.");
+
+            MinecraftVersionEntry version = new()
+            {
+                Id = versionInfo.Id,
+                Type = versionInfo.Type,
+                Url = versionInfo.Url
+            };
+
+            await InstallVersionAsync(version, token);
+        }
+
         // Download with progress
         private static async Task DownloadFileWithProgressAsync(
             HttpClient client,

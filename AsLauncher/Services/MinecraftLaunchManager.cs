@@ -226,6 +226,24 @@ namespace AsLauncher.Services
                 return;
             }
 
+            if (!MinecraftVersionIntegrityService.ValidateIntegrity(versionId))
+            {
+                Logger.Warning(LoggerConfig.Versions, $"Detected corrupted Minecraft files for {versionId}. Starting automatic repair...");
+
+                await MinecraftVersionManager.InstallVersionAsync(versionId);
+
+                if (!MinecraftVersionIntegrityService.ValidateIntegrity(versionId))
+                {
+                    Logger.Error(LoggerConfig.Versions, $"Automatic repair failed for {versionId}.");
+
+                    MessageBox.Show("Не удалось восстановить повреждённые файлы.");
+
+                    return;
+                }
+
+                Logger.Success(LoggerConfig.Versions, $"Integrity restored for {versionId}. Launch continues.");
+            }
+
             MinecraftAccount account = MinecraftAccountManager.GetCurrentAccount();
 
             string classPath = MinecraftVersionManager.BuildClassPath(versionId);

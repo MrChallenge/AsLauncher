@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Security.Cryptography;
+using System.Text.Json;
 
 namespace AsLauncher.Services
 {
@@ -43,7 +44,25 @@ namespace AsLauncher.Services
 
         private static bool ValidateClient(string versionId)
         {
-            return true;
+            string versionJsonPath = MinecraftPathService.GetVersionJsonPath(versionId);
+
+            string clientJarPath = MinecraftPathService.GetClientJarPath(versionId);
+
+            if (!File.Exists(versionJsonPath))
+                return false;
+
+            if (!File.Exists(clientJarPath))
+                return false;
+
+            using JsonDocument document = JsonDocument.Parse(File.ReadAllText(versionJsonPath));
+
+            string expectedSha1 = document.RootElement
+                                          .GetProperty("downloads")
+                                          .GetProperty("client")
+                                          .GetProperty("sha1")
+                                          .GetString()!;
+
+            return VerifyFile(clientJarPath, expectedSha1);
         }
 
         private static bool ValidateLibraries(string versionId)
