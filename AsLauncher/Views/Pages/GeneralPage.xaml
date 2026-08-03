@@ -20,7 +20,8 @@
             <Image Source="{x:Static core:Theme.LauncherLogo}"
                    Width="96"
                    Height="96"
-                   Margin="0,0,0,20"/>
+                   Margin="0,0,0,20"
+                   MouseLeftButtonUp="LauncherLogo_MouseLeftButtonUp"/>
 
             <!-- Name -->
             <TextBlock Text="AsLauncher"

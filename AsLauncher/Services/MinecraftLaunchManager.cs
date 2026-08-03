@@ -203,68 +203,100 @@ namespace AsLauncher.Services
             return allowed ?? false;
         }
 
+        // Build Java Agent argument
+        private static string BuildJavaAgentArgument()
+        {
+            string? javaAgent = Directory.GetFiles(AppContext.BaseDirectory, "AsLauncher_JavaAgent-*.jar")
+                                         .Select(Path.GetFileName)
+                                         .FirstOrDefault();
+
+            if (javaAgent == null)
+                return "";
+
+            string agentPath = Path.Combine(AppContext.BaseDirectory, javaAgent);
+
+            return $"-javaagent:\"{agentPath}\"";
+        }
+
         // Launch Minecraft with specified version
         public static async Task LaunchAsync(string versionId)
         {
+            Logger.Info(LoggerConfig.JavaSource, $"========== Launching Minecraft {versionId} ==========");
+
             int javaVersion = MinecraftVersionManager.GetRequiredJavaVersion(versionId);
+
+            Logger.Debug(LoggerConfig.JavaSource, $"Required Java version: {javaVersion}");
 
             JavaRuntimeEntry? runtime = JavaRuntimeManager.GetRuntimeForJavaVersion(javaVersion);
 
             if (runtime == null)
             {
-                MessageBox.Show($"Java {javaVersion} не установлена.");
-
+                Logger.Error(LoggerConfig.JavaSource, $"Java {javaVersion} runtime not found.");
+                MessageBox.Show($"Java {javaVersion} not installed.");
                 return;
             }
+
+            Logger.Debug(LoggerConfig.JavaSource, $"Java runtime: {runtime.RuntimeFolder}");
 
             string? javaPath = JavaRuntimeManager.GetJavawExecutable(runtime.RuntimeFolder);
 
             if (javaPath == null)
             {
-                MessageBox.Show($"Не найден javaw.exe");
-
+                Logger.Error(LoggerConfig.JavaSource, $"javaw.exe not found in runtime.");
+                MessageBox.Show("Not found javaw.exe");
                 return;
             }
 
-            if (!MinecraftVersionIntegrityService.ValidateIntegrity(versionId))
+            Logger.Debug(LoggerConfig.JavaSource, $"Java executable: {javaPath}");
+
+            Logger.Info(LoggerConfig.VersionsSource, "Checking Minecraft integrity...");
+
+            if (!await MinecraftVersionIntegrityService.EnsureIntegrityAsync(versionId))
             {
-                Logger.Warning(LoggerConfig.Versions, $"Detected corrupted Minecraft files for {versionId}. Starting automatic repair...");
-
-                await MinecraftVersionManager.InstallVersionAsync(versionId);
-
-                if (!MinecraftVersionIntegrityService.ValidateIntegrity(versionId))
-                {
-                    Logger.Error(LoggerConfig.Versions, $"Automatic repair failed for {versionId}.");
-
-                    MessageBox.Show("Не удалось восстановить повреждённые файлы.");
-
-                    return;
-                }
-
-                Logger.Success(LoggerConfig.Versions, $"Integrity restored for {versionId}. Launch continues.");
+                Logger.Error(LoggerConfig.VersionsSource, "Integrity check failed. Launch aborted.");
+                return;
             }
+
+            Logger.Success(LoggerConfig.VersionsSource, "Integrity check completed.");
 
             MinecraftAccount account = MinecraftAccountManager.GetCurrentAccount();
 
+            Logger.Debug(LoggerConfig.JavaSource, $"Account: {account.UserName}");
+
             string classPath = MinecraftVersionManager.BuildClassPath(versionId);
+
+            Logger.Debug(LoggerConfig.JavaSource, "Classpath built.");
 
             string mainClass = GetMainClass(versionId);
 
+            Logger.Debug(LoggerConfig.JavaSource, $"Main class: {mainClass}");
+
             string jvmArguments = BuildJvmArguments(versionId, account);
+
+            Logger.Debug(LoggerConfig.JavaSource, "JVM arguments built.");
 
             string gameArguments = BuildGameArguments(versionId, account);
 
-            var javaAgent = Directory.GetFiles(AppContext.BaseDirectory, "AsLauncher_JavaAgent-*.jar")
-                                     .Select(Path.GetFileName)
-                                     .FirstOrDefault();
+            Logger.Debug(LoggerConfig.JavaSource, "Game arguments built.");
 
-            string agentPath = Path.Combine(AppContext.BaseDirectory, javaAgent!);
+            string javaAgentArgument = BuildJavaAgentArgument();
 
-            jvmArguments += $" -javaagent:\"{agentPath}\"";
+            if (!string.IsNullOrEmpty(javaAgentArgument))
+            {
+                jvmArguments += $" {javaAgentArgument}";
+
+                Logger.Debug(LoggerConfig.JavaSource, "Java Agent: enabled.");
+            }
+            else
+            {
+                Logger.Debug(LoggerConfig.JavaSource, "Java Agent: disabled.");
+            }
 
             string finalCommand = $"{jvmArguments} -cp \"{classPath}\" {mainClass} {gameArguments}";
 
             File.WriteAllText("launch.txt", finalCommand);
+
+            Logger.Debug(LoggerConfig.JavaSource, "Launch command built.");
 
             ProcessStartInfo startInfo = new()
             {
@@ -276,27 +308,28 @@ namespace AsLauncher.Services
                 CreateNoWindow = false
             };
 
+            Logger.Info(LoggerConfig.JavaSource, "Starting Minecraft process...");
+
             Process process = Process.Start(startInfo)!;
 
-            string output = await process.StandardOutput.ReadToEndAsync();
+            Logger.Success(LoggerConfig.JavaSource, $"Minecraft started. PID={process.Id}");
 
-            Logger.Debug(LoggerConfig.Java, output);
+            // Minecraft output
+            string output = await process.StandardOutput.ReadToEndAsync();
 
             if (!string.IsNullOrWhiteSpace(output))
             {
-                Logger.Debug(LoggerConfig.Java, output);
+                Logger.Debug(LoggerConfig.JavaSource, output);
             }
 
             string error = await process.StandardError.ReadToEndAsync();
 
-            Logger.Error(LoggerConfig.Java, error);
-
             if (!string.IsNullOrWhiteSpace(error))
             {
-                Logger.Error(LoggerConfig.Java, error);
+                Logger.Error(LoggerConfig.JavaSource, error);
             }
 
-            return;
+            Logger.Debug(LoggerConfig.JavaSource, $"Minecraft process output streams closed. PID={process.Id}");
         }
 
         // Replace variables in argument string with actual values

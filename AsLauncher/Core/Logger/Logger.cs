@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace AsLauncher.Core.Logger;
 
@@ -16,6 +17,8 @@ public static class Logger
             return;
         }
 
+        EnableAnsiColors();
+
         Directory.CreateDirectory(LoggerConfig.LogsFolder);
 
         string path = Path.Combine(LoggerConfig.LogsFolder,
@@ -29,6 +32,31 @@ public static class Logger
         Info(LoggerConfig.Launcher, LoggerConfig.LoggerWorking);
     }
 
+    private const int StdOutputHandle = -11;
+    private const uint EnableVirtualTerminalProcessing = 0x0004;
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern IntPtr GetStdHandle(int nStdHandle);
+
+    [DllImport("kernel32.dll")]
+    private static extern bool GetConsoleMode(IntPtr hConsoleHandle, out uint lpMode);
+
+    [DllImport("kernel32.dll")]
+    private static extern bool SetConsoleMode(IntPtr hConsoleHandle, uint dwMode);
+
+    private static void EnableAnsiColors()
+    {
+        if (!OperatingSystem.IsWindows())
+            return;
+
+        IntPtr handle = GetStdHandle(StdOutputHandle);
+
+        if (!GetConsoleMode(handle, out uint mode))
+            return;
+
+        SetConsoleMode(handle, mode | EnableVirtualTerminalProcessing);
+    }
+
     public static void Info(string source, string message) => Write(LoggerEntry.Info, source, message);
 
     public static void Success(string source, string message) => Write(LoggerEntry.Success, source, message);
@@ -39,7 +67,7 @@ public static class Logger
 
     public static void Debug(string source, string message) => Write(LoggerEntry.Debug, source, message);
 
-    private static (string Name, ConsoleColor Color) GetEntryInfo(LoggerEntry entry)
+    private static (string Name, string Color) GetEntryInfo(LoggerEntry entry)
     {
         return entry switch
         {
@@ -53,7 +81,7 @@ public static class Logger
 
             LoggerEntry.Debug => (LoggerConfig.DebugEntry, LoggerConfig.DebugColor),
 
-            _ => (LoggerConfig.UnknownSource, ConsoleColor.White)
+            _ => (LoggerConfig.UnknownSource, LoggerConfig.InfoColor)
         };
     }
 
@@ -70,39 +98,38 @@ public static class Logger
         lock (_lock)
         {
             // [<time>]
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write(LoggerConfig.InfoColor);
             Console.Write("[");
 
-            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.Write(LoggerConfig.DebugColor);
             Console.Write(time);
 
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write(LoggerConfig.InfoColor);
             Console.Write("] ");
 
             // [<ENTRY>]
             Console.Write("[");
 
-            Console.ForegroundColor = color;
+            Console.Write(color);
             Console.Write(entryName);
 
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write(LoggerConfig.InfoColor);
             Console.Write("] ");
 
             // [<Source>]
             Console.Write("[");
 
-            Console.ForegroundColor = color;
+            Console.Write(color);
             Console.Write(source);
 
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write(LoggerConfig.InfoColor);
             Console.Write("] ");
 
             // Message
-            Console.ForegroundColor = color;
-
+            Console.Write(color);
             Console.WriteLine(message);
 
-            Console.ResetColor();
+            Console.Write(LoggerConfig.ResetColor);
 
             _writer?.WriteLine(line);
         }
@@ -115,5 +142,63 @@ public static class Logger
             _writer?.Dispose();
             _writer = null;
         }
+    }
+
+    // Prints current logger color palette to console
+    public static void PrintColorPalette()
+    {
+        lock (_lock)
+        {
+            Console.WriteLine();
+            Console.WriteLine("================ AsLauncher Logger Color Palette ================");
+            Console.WriteLine();
+
+            PrintColor(LoggerConfig.InfoEntry, LoggerConfig.InfoColor);
+            PrintColor(LoggerConfig.SuccessEntry, LoggerConfig.SuccessColor);
+            PrintColor(LoggerConfig.WarningEntry, LoggerConfig.WarningColor);
+            PrintColor(LoggerConfig.ErrorEntry, LoggerConfig.ErrorColor);
+            PrintColor(LoggerConfig.DebugEntry, LoggerConfig.DebugColor);
+
+            Console.WriteLine();
+
+            PrintColor(LoggerConfig.VersionsSource, LoggerConfig.VersionColor);
+            PrintColor(LoggerConfig.JavaSource, LoggerConfig.JavaColor);
+            PrintColor(LoggerConfig.AssetsSource, LoggerConfig.AssetsColor);
+            PrintColor(LoggerConfig.LibrariesSource, LoggerConfig.LibrariesColor);
+            PrintColor(LoggerConfig.NetworkSource, LoggerConfig.NetworkColor);
+            PrintColor(LoggerConfig.DownloaderSource, LoggerConfig.DownloaderColor);
+            PrintColor(LoggerConfig.CacheSource, LoggerConfig.CacheColor);
+            PrintColor(LoggerConfig.ModLoaderSource, LoggerConfig.ModLoaderColor);
+
+            Console.WriteLine();
+            Console.WriteLine("=================================================================");
+            Console.WriteLine();
+        }
+    }
+
+    private static void PrintColor(string name, string color)
+    {
+        // Color sample
+        Console.Write(color);
+        Console.Write("███");
+
+        Console.Write(LoggerConfig.ResetColor);
+        Console.Write("  ");
+
+        // [<SOURCE>]
+        Console.Write(LoggerConfig.ResetColor);
+        Console.Write("[");
+
+        Console.Write(color);
+        Console.Write(name);
+
+        Console.Write(LoggerConfig.ResetColor);
+        Console.Write("] ");
+
+        // Message
+        Console.Write(color);
+        Console.WriteLine("Something broke again. I'm too lazy to fix it.");
+
+        Console.Write(LoggerConfig.ResetColor);
     }
 }

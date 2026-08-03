@@ -176,7 +176,7 @@ namespace AsLauncher.Services
         // Install process : parsing version.json and download client.jar
         public static async Task InstallVersionAsync(MinecraftVersionEntry version, CancellationToken token)
         {
-            Logger.Info(LoggerConfig.Versions, $"Installing Minecraft {version.Id}...");
+            Logger.Info(LoggerConfig.VersionsSource, $"Installing Minecraft {version.Id}...");
 
             string versionFolder = MinecraftPathService.GetVersionFolder(version.Id);
 
@@ -222,7 +222,7 @@ namespace AsLauncher.Services
 
             await Task.WhenAll(clientTask, librariesTask, assetIndexTask);
 
-            Logger.Success(LoggerConfig.Versions, $"Version {version.Id} downloaded successfully.");
+            Logger.Success(LoggerConfig.VersionsSource, $"Version {version.Id} downloaded successfully.");
 
             token.ThrowIfCancellationRequested();
 
@@ -235,11 +235,11 @@ namespace AsLauncher.Services
 
             using JsonDocument assetIndexDocument = JsonDocument.Parse(await File.ReadAllTextAsync(assetIndexPath));
 
-            Logger.Info(LoggerConfig.Assets, $"Downloading assets for {version.Id}...");
+            Logger.Info(LoggerConfig.AssetsSource, $"Downloading assets for {version.Id}...");
 
             await DownloadAssetsAsync(assetIndexDocument, client, token);
 
-            Logger.Success(LoggerConfig.Assets, $"Assets downloaded for {version.Id}.");
+            Logger.Success(LoggerConfig.AssetsSource, $"Assets downloaded for {version.Id}.");
         }
 
         // Install version by ID (find in cache and download)
@@ -355,7 +355,7 @@ namespace AsLauncher.Services
 
             bool valid = ValidateVersion(versionId);
 
-            Logger.Debug(LoggerConfig.Versions, $"Version validation ({versionId}): {(valid ? "Valid" : "Corrupted")}");
+            Logger.Debug(LoggerConfig.VersionsSource, $"Version validation ({versionId}): {(valid ? "Valid" : "Corrupted")}");
 
             return !valid;
         }
@@ -490,7 +490,7 @@ namespace AsLauncher.Services
 
             int totalLibraries = libraries.EnumerateArray().Count();
 
-            Logger.Info(LoggerConfig.Libraries, $"Downloading {totalLibraries} libraries for {versionId}...");
+            Logger.Info(LoggerConfig.LibrariesSource, $"Downloading {totalLibraries} libraries for {versionId}...");
 
             foreach (JsonElement library in libraries.EnumerateArray())
             {
@@ -519,7 +519,7 @@ namespace AsLauncher.Services
 
                         string localNativeJar = Path.Combine(LibrariesFolder, nativePath);
 
-                        Logger.Debug(LoggerConfig.Libraries, $"Extracting {Path.GetFileName(localNativeJar)}...");
+                        Logger.Debug(LoggerConfig.LibrariesSource, $"Extracting {Path.GetFileName(localNativeJar)}...");
 
                         Directory.CreateDirectory(Path.GetDirectoryName(localNativeJar)!);
 
@@ -551,7 +551,7 @@ namespace AsLauncher.Services
 
                 if (File.Exists(localPath))
                 {
-                    Logger.Warning(LoggerConfig.Libraries, $"SHA1 mismatch: {Path.GetFileName(localPath)}. Redownloading.");
+                    Logger.Warning(LoggerConfig.LibrariesSource, $"SHA1 mismatch: {Path.GetFileName(localPath)}. Redownloading.");
 
                     File.Delete(localPath);
                 }
@@ -568,7 +568,7 @@ namespace AsLauncher.Services
 
                         if (current % 25 == 0)
                         {
-                            Logger.Debug(LoggerConfig.Libraries, $"Downloaded {current}/{totalLibraries} libraries.");
+                            Logger.Debug(LoggerConfig.LibrariesSource, $"Downloaded {current}/{totalLibraries} libraries.");
                         }
                     }
                     finally
@@ -580,9 +580,9 @@ namespace AsLauncher.Services
 
             await Task.WhenAll(downloadTasks);
 
-            Logger.Success(LoggerConfig.Libraries, $"Processed={processedLibraries}," +
-                                                   $"Downloaded={downloadedLibraries}," +
-                                                   $"Skipped={skippedLibraries}");
+            Logger.Success(LoggerConfig.LibrariesSource, $"Processed={processedLibraries}," +
+                                                         $"Downloaded={downloadedLibraries}," +
+                                                         $"Skipped={skippedLibraries}");
         }
 
         // Extract natives
@@ -634,7 +634,7 @@ namespace AsLauncher.Services
 
             int totalAssets = objects.EnumerateObject().Count();
 
-            Logger.Info(LoggerConfig.Assets, $"Assets total: {totalAssets}");
+            Logger.Info(LoggerConfig.AssetsSource, $"Assets total: {totalAssets}");
 
             int processedAssets = 0;
             int downloadedAssets = 0;
@@ -671,7 +671,7 @@ namespace AsLauncher.Services
 
                         if (File.Exists(localPath))
                         {
-                            Logger.Warning(LoggerConfig.Assets, $"SHA1 mismatch: {hash}. Redownloading.");
+                            Logger.Warning(LoggerConfig.AssetsSource, $"SHA1 mismatch: {hash}. Redownloading.");
 
                             File.Delete(localPath);
                         }
@@ -682,9 +682,9 @@ namespace AsLauncher.Services
 
                         if (downloaded % 100 == 0)
                         {
-                            Logger.Debug(LoggerConfig.Assets, $"Assets: {processedAssets}/{totalAssets}," +
-                                                              $"Downloaded={downloadedAssets}," +
-                                                              $"Skipped={skippedAssets}");
+                            Logger.Debug(LoggerConfig.AssetsSource, $"Assets: {processedAssets}/{totalAssets}," +
+                                                                    $"Downloaded={downloadedAssets}," +
+                                                                    $"Skipped={skippedAssets}");
                         }
                     }
                     finally
@@ -698,9 +698,103 @@ namespace AsLauncher.Services
 
             await Task.WhenAll(downloadTasks);
 
-            Logger.Success(LoggerConfig.Assets, $"Processed={processedAssets}," +
-                                                $"Downloaded={downloadedAssets}," +
-                                                $"Skipped={skippedAssets}");
+            Logger.Success(LoggerConfig.AssetsSource, $"Processed={processedAssets}," +
+                                                      $"Downloaded={downloadedAssets}," +
+                                                      $"Skipped={skippedAssets}");
+        }
+
+        // Repair assets only
+        public static async Task RepairAssetsAsync(string versionId, CancellationToken token = default)
+        {
+            Logger.Info(LoggerConfig.AssetsSource, $"Repairing assets for Minecraft {versionId}...");
+
+            string versionJsonPath = MinecraftPathService.GetVersionJsonPath(versionId);
+
+            if (!File.Exists(versionJsonPath))
+                throw new FileNotFoundException($"Version JSON not found for {versionId}.", versionJsonPath);
+
+            using JsonDocument document = JsonDocument.Parse(await File.ReadAllTextAsync(versionJsonPath, token));
+
+            HttpClient client = HttpClient;
+
+            await DownloadAssetIndexAsync(document, client, token);
+
+            token.ThrowIfCancellationRequested();
+
+            string assetIndexId = document.RootElement
+                                          .GetProperty("assetIndex")
+                                          .GetProperty("id")
+                                          .GetString()!;
+
+            string assetIndexPath = MinecraftPathService.GetAssetIndexPath(assetIndexId);
+
+            using JsonDocument assetIndexDocument = JsonDocument.Parse(await File.ReadAllTextAsync(assetIndexPath, token));
+
+            await DownloadAssetsAsync(assetIndexDocument, client, token);
+
+            Logger.Success(LoggerConfig.AssetsSource, $"Assets repaired for Minecraft {versionId}.");
+        }
+
+        // Repair libraries only
+        public static async Task RepairLibrariesAsync(string versionId, CancellationToken token = default)
+        {
+            Logger.Info(LoggerConfig.LibrariesSource, $"Repairing libraries for Minecraft {versionId}...");
+
+            string versionJsonPath = MinecraftPathService.GetVersionJsonPath(versionId);
+
+            if (!File.Exists(versionJsonPath))
+                throw new FileNotFoundException($"Version JSON not found for {versionId}.", versionJsonPath);
+
+            using JsonDocument document = JsonDocument.Parse(await File.ReadAllTextAsync(versionJsonPath, token));
+
+            await DownloadLibrariesAsync(versionId, document, HttpClient, token);
+
+            Logger.Success(LoggerConfig.LibrariesSource, $"Libraries repaired for Minecraft {versionId}.");
+        }
+
+        // Repair client.jar only
+        public static async Task RepairClientAsync(string versionId, CancellationToken token = default)
+        {
+            Logger.Info(LoggerConfig.VersionsSource, $"Repairing client for Minecraft {versionId}...");
+
+            string versionJsonPath = MinecraftPathService.GetVersionJsonPath(versionId);
+
+            if (!File.Exists(versionJsonPath))
+                throw new FileNotFoundException($"Version JSON not found for {versionId}.", versionJsonPath);
+
+            using JsonDocument document = JsonDocument.Parse(await File.ReadAllTextAsync(versionJsonPath, token));
+
+            JsonElement clientDownload = document.RootElement
+                                                 .GetProperty("downloads")
+                                                 .GetProperty("client");
+
+            string clientUrl = clientDownload.GetProperty("url")
+                                             .GetString()!;
+
+            string expectedSha1 = clientDownload.GetProperty("sha1")
+                                                .GetString()!;
+
+            string clientJarPath = MinecraftPathService.GetClientJarPath(versionId);
+
+            if (MinecraftVersionIntegrityService.VerifyFile(clientJarPath, expectedSha1))
+            {
+                Logger.Success(LoggerConfig.VersionsSource, $"Client for Minecraft {versionId} is already valid.");
+
+                return;
+            }
+
+            if (File.Exists(clientJarPath))
+            {
+                Logger.Warning(LoggerConfig.VersionsSource, $"Client SHA1 mismatch for {versionId}. Redownloading.");
+
+                File.Delete(clientJarPath);
+            }
+
+            token.ThrowIfCancellationRequested();
+
+            await DownloadFileAsync(HttpClient, clientUrl, clientJarPath, token);
+
+            Logger.Success(LoggerConfig.VersionsSource, $"Client repaired for Minecraft {versionId}.");
         }
 
         // Validate all required version files and assets
@@ -918,7 +1012,7 @@ namespace AsLauncher.Services
                                   .GetInt32();
             }
 
-            Logger.Info(LoggerConfig.Java, $"Version {versionId} does not specify Java version. Using Java 8.");
+            Logger.Info(LoggerConfig.JavaSource, $"Version {versionId} does not specify Java version. Using Java 8.");
 
             return 8;
         }

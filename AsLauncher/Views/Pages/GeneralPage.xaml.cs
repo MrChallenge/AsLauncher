@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using AsLauncher.Core.Logger;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace AsLauncher.Views.Pages
 {
@@ -7,6 +9,11 @@ namespace AsLauncher.Views.Pages
         public GeneralPage()
         {
             InitializeComponent();
+        }
+
+        private void LauncherLogo_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            Logger.PrintColorPalette();
         }
     }
 }

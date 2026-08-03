@@ -224,11 +224,11 @@ namespace AsLauncher.Views.Components
 
                 await MinecraftVersionManager.InstallVersionAsync(Version, Version.CancellationTokenSource.Token);
 
-                Logger.Info(LoggerConfig.Versions, $"Version {Version.Id} downloaded.");
+                Logger.Info(LoggerConfig.VersionsSource, $"Version {Version.Id} downloaded.");
 
                 Version.InstallState = MinecraftVersionInstallState.Installing;
 
-                Logger.Info(LoggerConfig.Versions, $"Validating {Version.Id}...");
+                Logger.Info(LoggerConfig.VersionsSource, $"Validating {Version.Id}...");
 
                 Version.IsDownloadProgressVisible = Visibility.Collapsed;
 
@@ -239,7 +239,7 @@ namespace AsLauncher.Views.Components
                     progress => Dispatcher.Invoke(() => Version.SetupProgress = progress),
                     status => Dispatcher.Invoke(() => Version.SetupStatus = status));
 
-                Logger.Info(LoggerConfig.Versions, valid
+                Logger.Info(LoggerConfig.VersionsSource, valid
                     ? $"Version {Version.Id} validated successfully."
                     : $"Version {Version.Id} validation failed.");
 
@@ -251,7 +251,7 @@ namespace AsLauncher.Views.Components
                 {
                     MinecraftVersionManager.CleanupIncompleteVersion(Version.Id);
 
-                    Logger.Warning(LoggerConfig.Versions, $"Incomplete installation of {Version.Id} was removed.");
+                    Logger.Warning(LoggerConfig.VersionsSource, $"Incomplete installation of {Version.Id} was removed.");
                 }
 
                 await Task.Delay(Theme.InstallStateDelay);
@@ -260,7 +260,7 @@ namespace AsLauncher.Views.Components
                     ? MinecraftVersionInstallState.Installed
                     : MinecraftVersionInstallState.NotInstalled;
 
-                Logger.Success(LoggerConfig.Versions, $"{Version.Id} installed successfully.");
+                Logger.Success(LoggerConfig.VersionsSource, $"{Version.Id} installed successfully.");
 
                 Version.IsDownloadProgressVisible = Visibility.Collapsed;
             }
@@ -276,7 +276,7 @@ namespace AsLauncher.Views.Components
 
                 MinecraftVersionManager.CleanupIncompleteVersion(Version.Id);
 
-                Logger.Info(LoggerConfig.Versions, $"Installation of {Version.Id} cancelled.");
+                Logger.Info(LoggerConfig.VersionsSource, $"Installation of {Version.Id} cancelled.");
 
                 Version.InstallState = MinecraftVersionInstallState.NotInstalled;
             }
@@ -292,7 +292,7 @@ namespace AsLauncher.Views.Components
 
                 MinecraftVersionManager.CleanupIncompleteVersion(Version.Id);
 
-                Logger.Error(LoggerConfig.Versions, ex.ToString());
+                Logger.Error(LoggerConfig.VersionsSource, ex.ToString());
 
                 Version.InstallState = MinecraftVersionInstallState.NotInstalled;
             }
