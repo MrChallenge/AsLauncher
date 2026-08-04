@@ -85,11 +85,30 @@ public static class Logger
         };
     }
 
+    private static string GetSourceColor(string source)
+    {
+        return source switch
+        {
+            LoggerConfig.VersionsSource => LoggerConfig.VersionColor,
+            LoggerConfig.JavaSource => LoggerConfig.JavaColor,
+            LoggerConfig.AssetsSource => LoggerConfig.AssetsColor,
+            LoggerConfig.LibrariesSource => LoggerConfig.LibrariesColor,
+            LoggerConfig.NetworkSource => LoggerConfig.NetworkColor,
+            LoggerConfig.DownloaderSource => LoggerConfig.DownloaderColor,
+            LoggerConfig.CacheSource => LoggerConfig.CacheColor,
+            LoggerConfig.ModLoaderSource => LoggerConfig.ModLoaderColor,
+
+            _ => LoggerConfig.InfoColor
+        };
+    }
+
     private static void Write(LoggerEntry entry, string source, string message)
     {
         string time = DateTime.Now.ToString(LoggerConfig.TimeFormat);
 
         var (entryName, color) = GetEntryInfo(entry);
+
+        string sourceColor = GetSourceColor(source);
 
         message ??= string.Empty;
 
@@ -107,20 +126,20 @@ public static class Logger
             Console.Write(LoggerConfig.InfoColor);
             Console.Write("] ");
 
+            // [<Source>]
+            Console.Write("[");
+
+            Console.Write(sourceColor);
+            Console.Write(source);
+
+            Console.Write(LoggerConfig.InfoColor);
+            Console.Write("] ");
+
             // [<ENTRY>]
             Console.Write("[");
 
             Console.Write(color);
             Console.Write(entryName);
-
-            Console.Write(LoggerConfig.InfoColor);
-            Console.Write("] ");
-
-            // [<Source>]
-            Console.Write("[");
-
-            Console.Write(color);
-            Console.Write(source);
 
             Console.Write(LoggerConfig.InfoColor);
             Console.Write("] ");

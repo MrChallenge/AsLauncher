@@ -31,7 +31,7 @@ namespace AsLauncher.Services
             return actualSha1.Equals(expectedSha1, StringComparison.OrdinalIgnoreCase);
         }
 
-        // <==========================================> Validate Minecraft Version Integrity <==========================================>
+        // ========================================== Validate Minecraft Version Integrity ==========================================
 
         // Validate assets
         public static bool ValidateAssets(string versionId)
@@ -156,7 +156,7 @@ namespace AsLauncher.Services
             return true;
         }
 
-        // <==========================================> Ensure Minecraft version integrity <==========================================>
+        // ========================================== Ensure Minecraft version integrity ==========================================
 
         // Ensure assets integrity, repair if necessary
         private static async Task<bool> EnsureAssetsAsync(string versionId)

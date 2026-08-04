@@ -203,21 +203,6 @@ namespace AsLauncher.Services
             return allowed ?? false;
         }
 
-        // Build Java Agent argument
-        private static string BuildJavaAgentArgument()
-        {
-            string? javaAgent = Directory.GetFiles(AppContext.BaseDirectory, "AsLauncher_JavaAgent-*.jar")
-                                         .Select(Path.GetFileName)
-                                         .FirstOrDefault();
-
-            if (javaAgent == null)
-                return "";
-
-            string agentPath = Path.Combine(AppContext.BaseDirectory, javaAgent);
-
-            return $"-javaagent:\"{agentPath}\"";
-        }
-
         // Launch Minecraft with specified version
         public static async Task LaunchAsync(string versionId)
         {
@@ -279,7 +264,7 @@ namespace AsLauncher.Services
 
             Logger.Debug(LoggerConfig.JavaSource, "Game arguments built.");
 
-            string javaAgentArgument = BuildJavaAgentArgument();
+            string javaAgentArgument = JavaAgentManager.BuildArgument(versionId);
 
             if (!string.IsNullOrEmpty(javaAgentArgument))
             {

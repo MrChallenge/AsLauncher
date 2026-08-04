@@ -41,12 +41,12 @@ public static class LoggerConfig
     public const string ErrorColor = "\x1b[38;2;230;52;65m";
     public const string DebugColor = "\x1b[38;2;150;150;160m";
 
-    public const string VersionColor = "\x1b[38;2;36;99;187m";
+    public const string VersionColor = "\x1b[38;2;70;170;255m";
     public const string JavaColor = "\x1b[38;2;255;135;35m";
     public const string AssetsColor = "\x1b[38;2;235;105;160m";
     public const string LibrariesColor = "\x1b[38;2;50;190;200m";
-    public const string NetworkColor = "\x1b[38;2;155;110;220m";
-    public const string DownloaderColor = "\x1b[38;2;70;170;255m";
+    public const string NetworkColor = "\x1b[38;2;249;241;165m";
+    public const string DownloaderColor = "\x1b[38;2;30;105;213m";
     public const string CacheColor = "\x1b[38;2;125;210;95m";
     public const string ModLoaderColor = "\x1b[38;2;175;120;255m";
 
