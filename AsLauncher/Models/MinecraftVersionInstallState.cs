@@ -10,6 +10,13 @@
         Removed,
         Corrupted,
         Reinstall,
-        Unavailable
+        Unavailable,
+        Checking,
+        Fixing,
+        Preparing,
+        Building,
+        Starting,
+        Running,
+        Stopping
     }
 }

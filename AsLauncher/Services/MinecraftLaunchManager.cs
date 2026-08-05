@@ -10,6 +10,9 @@ namespace AsLauncher.Services
 {
     public static class MinecraftLaunchManager
     {
+        // Minecraft process reference
+        private static Process? _minecraftProcess;
+
         // Get Main class from <version>.json
         public static string GetMainClass(string versionId)
         {
@@ -204,7 +207,7 @@ namespace AsLauncher.Services
         }
 
         // Launch Minecraft with specified version
-        public static async Task LaunchAsync(string versionId)
+        public static async Task LaunchAsync(string versionId, Action<MinecraftVersionInstallState>? stateChanged = null)
         {
             Logger.Info(LoggerConfig.JavaSource, $"========== Launching Minecraft {versionId} ==========");
 
@@ -217,7 +220,9 @@ namespace AsLauncher.Services
             if (runtime == null)
             {
                 Logger.Error(LoggerConfig.JavaSource, $"Java {javaVersion} runtime not found.");
+
                 MessageBox.Show($"Java {javaVersion} not installed.");
+
                 return;
             }
 
@@ -228,27 +233,41 @@ namespace AsLauncher.Services
             if (javaPath == null)
             {
                 Logger.Error(LoggerConfig.JavaSource, $"javaw.exe not found in runtime.");
+
                 MessageBox.Show("Not found javaw.exe");
+
                 return;
             }
 
             Logger.Debug(LoggerConfig.JavaSource, $"Java executable: {javaPath}");
 
+            stateChanged?.Invoke(MinecraftVersionInstallState.Checking);
+
             Logger.Info(LoggerConfig.VersionsSource, "Checking Minecraft integrity...");
 
-            if (!await MinecraftVersionIntegrityService.EnsureIntegrityAsync(versionId))
+            if (!await MinecraftVersionIntegrityService.EnsureIntegrityAsync(versionId,
+                () => stateChanged?.Invoke(MinecraftVersionInstallState.Fixing)))
             {
                 Logger.Error(LoggerConfig.VersionsSource, "Integrity check failed. Launch aborted.");
+
                 return;
             }
 
             Logger.Success(LoggerConfig.VersionsSource, "Integrity check completed.");
 
+            stateChanged?.Invoke(MinecraftVersionInstallState.Preparing);
+
             MinecraftAccount account = MinecraftAccountManager.GetCurrentAccount();
+
+            await Task.Delay(Theme.ForcedDelay);
 
             Logger.Debug(LoggerConfig.JavaSource, $"Account: {account.UserName}");
 
+            stateChanged?.Invoke(MinecraftVersionInstallState.Building);
+
             string classPath = MinecraftVersionManager.BuildClassPath(versionId);
+
+            await Task.Delay(Theme.ForcedDelay);
 
             Logger.Debug(LoggerConfig.JavaSource, "Classpath built.");
 
@@ -293,28 +312,84 @@ namespace AsLauncher.Services
                 CreateNoWindow = false
             };
 
+            stateChanged?.Invoke(MinecraftVersionInstallState.Starting);
+
             Logger.Info(LoggerConfig.JavaSource, "Starting Minecraft process...");
 
-            Process process = Process.Start(startInfo)!;
+            _minecraftProcess = Process.Start(startInfo);
 
-            Logger.Success(LoggerConfig.JavaSource, $"Minecraft started. PID={process.Id}");
+            if (_minecraftProcess == null)
+            {
+                Logger.Error(LoggerConfig.JavaSource, "Failed to start Minecraft process.");
 
-            // Minecraft output
-            string output = await process.StandardOutput.ReadToEndAsync();
+                stateChanged?.Invoke(MinecraftVersionInstallState.Installed);
+                
+                return;
+            }
+
+            await Task.Delay(Theme.BigForcedDelay);
+
+            Logger.Success(LoggerConfig.JavaSource, $"Minecraft started. PID={_minecraftProcess.Id}");
+
+            stateChanged?.Invoke(MinecraftVersionInstallState.Running);
+
+            int processId = _minecraftProcess.Id;
+
+            Task<string> outputTask = _minecraftProcess.StandardOutput.ReadToEndAsync();
+            Task<string> errorTask = _minecraftProcess.StandardError.ReadToEndAsync();
+
+            await _minecraftProcess.WaitForExitAsync();
+
+            stateChanged?.Invoke(MinecraftVersionInstallState.Stopping);
+
+            string output = await outputTask;
+            string error = await errorTask;
 
             if (!string.IsNullOrWhiteSpace(output))
             {
                 Logger.Debug(LoggerConfig.JavaSource, output);
             }
 
-            string error = await process.StandardError.ReadToEndAsync();
-
             if (!string.IsNullOrWhiteSpace(error))
             {
                 Logger.Error(LoggerConfig.JavaSource, error);
             }
 
-            Logger.Debug(LoggerConfig.JavaSource, $"Minecraft process output streams closed. PID={process.Id}");
+            Logger.Debug(LoggerConfig.JavaSource, $"Minecraft process exited. PID={processId}");
+
+            await Task.Delay(Theme.StoppingProcess);
+
+            _minecraftProcess.Dispose();
+            _minecraftProcess = null;
+
+            stateChanged?.Invoke(MinecraftVersionInstallState.Installed);
+        }
+
+        // Stop Minecraft process if running
+        public static async Task StopAsync()
+        {
+            Process? process = _minecraftProcess;
+
+            if (process == null)
+                return;
+
+            if (process.HasExited)
+                return;
+
+            Logger.Warning(LoggerConfig.JavaSource, $"Force stopping Minecraft process. PID={process.Id}");
+
+            try
+            {
+                process.Kill(entireProcessTree: true);
+
+                await process.WaitForExitAsync();
+
+                Logger.Success(LoggerConfig.JavaSource, $"Minecraft process force stopped. PID={process.Id}");
+            }
+            catch (InvalidOperationException)
+            {
+                Logger.Debug(LoggerConfig.JavaSource, "Minecraft process already exited.");
+            }
         }
 
         // Replace variables in argument string with actual values

@@ -29,8 +29,10 @@ namespace AsLauncher.Core
         public static BitmapImage IconAttention => new(new Uri("pack://application:,,,/Assets/Textures/IconAttention.png"));
 
 
-        // CheckBoxMark
+        // Geometry painted objects
         public static readonly Geometry CheckBoxMark = Geometry.Parse("M 5 9 L 7 11 L 12 6");
+
+        public static readonly Geometry StopButtonSymbol = Geometry.Parse("M 3 3 L 11 11 M 11 3 L 3 11");
 
         // Transparent
         public static readonly Brush Invisible = (Brush)new BrushConverter().ConvertFrom("#01000000")!;
@@ -79,13 +81,17 @@ namespace AsLauncher.Core
 
     // Variables
         // Delays
-        public static readonly TimeSpan ForcedDelay = TimeSpan.FromMilliseconds(50);
+        public static readonly TimeSpan ForcedDelay = TimeSpan.FromMilliseconds(100);
+
+        public static readonly TimeSpan BigForcedDelay = TimeSpan.FromMilliseconds(300);
 
         public static readonly TimeSpan InternetCheckInterval = TimeSpan.FromSeconds(10);
 
         public static readonly TimeSpan InstallStateDelay = TimeSpan.FromMilliseconds(300);
 
         public static readonly TimeSpan CorruptedStateDelay = TimeSpan.FromMilliseconds(500);
+
+        public static readonly TimeSpan StoppingProcess = TimeSpan.FromSeconds(3);
 
         // Limits
         public static int DownloadLibrariesLimit { get; set; } = 16;

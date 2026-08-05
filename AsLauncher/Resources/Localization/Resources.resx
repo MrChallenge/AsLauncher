@@ -258,4 +258,25 @@
     <value>Checkup completed.</value>
     <comment>9</comment>
   </data>
+  <data name="ButtonChecking" xml:space="preserve">
+    <value>Checking...</value>
+  </data>
+  <data name="ButtonFixing" xml:space="preserve">
+    <value>Fixing...</value>
+  </data>
+  <data name="ButtonPreparing" xml:space="preserve">
+    <value>Preparing...</value>
+  </data>
+  <data name="ButtonBuilding" xml:space="preserve">
+    <value>Building...</value>
+  </data>
+  <data name="ButtonStarting" xml:space="preserve">
+    <value>Starting...</value>
+  </data>
+  <data name="ButtonRunning" xml:space="preserve">
+    <value>Running</value>
+  </data>
+  <data name="ButtonStopping" xml:space="preserve">
+    <value>Stopping...</value>
+  </data>
 </root>

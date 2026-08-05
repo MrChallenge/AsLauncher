@@ -249,4 +249,25 @@
   <data name="Progress_Finish" xml:space="preserve">
     <value>Проверка завершена.</value>
   </data>
+  <data name="ButtonChecking" xml:space="preserve">
+    <value>Проверка...</value>
+  </data>
+  <data name="ButtonFixing" xml:space="preserve">
+    <value>Починка...</value>
+  </data>
+  <data name="ButtonPreparing" xml:space="preserve">
+    <value>Подготовка...</value>
+  </data>
+  <data name="ButtonBuilding" xml:space="preserve">
+    <value>Сборка...</value>
+  </data>
+  <data name="ButtonStarting" xml:space="preserve">
+    <value>Запуск...</value>
+  </data>
+  <data name="ButtonRunning" xml:space="preserve">
+    <value>Запущено</value>
+  </data>
+  <data name="ButtonStopping" xml:space="preserve">
+    <value>Остановка...</value>
+  </data>
 </root>

@@ -159,10 +159,12 @@ namespace AsLauncher.Services
         // ========================================== Ensure Minecraft version integrity ==========================================
 
         // Ensure assets integrity, repair if necessary
-        private static async Task<bool> EnsureAssetsAsync(string versionId)
+        private static async Task<bool> EnsureAssetsAsync(string versionId, Action? fixingStarted = null)
         {
             if (ValidateAssets(versionId))
                 return true;
+
+            fixingStarted?.Invoke();
 
             Logger.Warning(LoggerConfig.AssetsSource, $"Detected corrupted assets for {versionId}. Starting automatic repair...");
 
@@ -183,10 +185,12 @@ namespace AsLauncher.Services
         }
 
         // Ensure libraries integrity, repair if necessary
-        private static async Task<bool> EnsureLibrariesAsync(string versionId)
+        private static async Task<bool> EnsureLibrariesAsync(string versionId, Action? fixingStarted = null)
         {
             if (ValidateLibraries(versionId))
                 return true;
+
+            fixingStarted?.Invoke();
 
             Logger.Warning(LoggerConfig.LibrariesSource, $"Detected corrupted libraries for {versionId}. Starting automatic repair...");
 
@@ -207,10 +211,12 @@ namespace AsLauncher.Services
         }
 
         // Ensure client.jar integrity, repair if necessary
-        private static async Task<bool> EnsureClientAsync(string versionId)
+        private static async Task<bool> EnsureClientAsync(string versionId, Action? fixingStarted = null)
         {
             if (ValidateClient(versionId))
                 return true;
+
+            fixingStarted?.Invoke();
 
             Logger.Warning(LoggerConfig.VersionsSource, $"Detected corrupted client for {versionId}. Starting automatic repair...");
 
@@ -231,15 +237,15 @@ namespace AsLauncher.Services
         }
 
         // Ensure integrity of Minecraft version, repair if necessary
-        public static async Task<bool> EnsureIntegrityAsync(string versionId)
+        public static async Task<bool> EnsureIntegrityAsync(string versionId, Action? fixingStarted = null)
         {
-            if (!await EnsureAssetsAsync(versionId))
+            if (!await EnsureAssetsAsync(versionId, fixingStarted))
                 return false;
 
-            if (!await EnsureLibrariesAsync(versionId))
+            if (!await EnsureLibrariesAsync(versionId, fixingStarted))
                 return false;
 
-            if (!await EnsureClientAsync(versionId))
+            if (!await EnsureClientAsync(versionId, fixingStarted))
                 return false;
 
             return true;

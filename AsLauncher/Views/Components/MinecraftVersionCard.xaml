@@ -135,6 +135,31 @@
 
                 </components:ActionButton>
 
+                <!-- Stop Button -->
+                <components:ActionButton Grid.Column="2"
+                                         x:Name="MinecraftVersionStopButton"
+                                         Click="StopButton_Click"
+                                         Width="28"
+                                         Height="28"
+                                         Margin="6,0,0,0"
+                                         Visibility="Collapsed"
+                                         ButtonBackground="{x:Static core:Theme.Red}">
+
+                    <components:ActionButton.ButtonContent>
+
+                        <Path Data="{x:Static core:Theme.StopButtonSymbol}"
+                              Stroke="{x:Static core:Theme.White}"
+                              StrokeThickness="2"
+                              StrokeStartLineCap="Round"
+                              StrokeEndLineCap="Round"
+                              Width="14"
+                              Height="14"
+                              Stretch="Uniform"/>
+
+                    </components:ActionButton.ButtonContent>
+
+                </components:ActionButton>
+
             </Grid>
 
         </Grid>

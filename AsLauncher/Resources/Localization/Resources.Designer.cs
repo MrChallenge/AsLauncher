@@ -61,6 +61,15 @@ namespace AsLauncher.Resources.Localization {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Building....
+        /// </summary>
+        public static string ButtonBuilding {
+            get {
+                return ResourceManager.GetString("ButtonBuilding", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Cancel.
         /// </summary>
         public static string ButtonCancel {
@@ -70,11 +79,29 @@ namespace AsLauncher.Resources.Localization {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Checking....
+        /// </summary>
+        public static string ButtonChecking {
+            get {
+                return ResourceManager.GetString("ButtonChecking", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Corrupted.
         /// </summary>
         public static string ButtonCorrupted {
             get {
                 return ResourceManager.GetString("ButtonCorrupted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Fixing....
+        /// </summary>
+        public static string ButtonFixing {
+            get {
+                return ResourceManager.GetString("ButtonFixing", resourceCulture);
             }
         }
         
@@ -133,6 +160,15 @@ namespace AsLauncher.Resources.Localization {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Preparing....
+        /// </summary>
+        public static string ButtonPreparing {
+            get {
+                return ResourceManager.GetString("ButtonPreparing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Reinstall.
         /// </summary>
         public static string ButtonReinstall {
@@ -165,6 +201,33 @@ namespace AsLauncher.Resources.Localization {
         public static string ButtonRestore {
             get {
                 return ResourceManager.GetString("ButtonRestore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Running.
+        /// </summary>
+        public static string ButtonRunning {
+            get {
+                return ResourceManager.GetString("ButtonRunning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Starting....
+        /// </summary>
+        public static string ButtonStarting {
+            get {
+                return ResourceManager.GetString("ButtonStarting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Stopping....
+        /// </summary>
+        public static string ButtonStopping {
+            get {
+                return ResourceManager.GetString("ButtonStopping", resourceCulture);
             }
         }
         
